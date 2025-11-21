@@ -24,6 +24,7 @@ import { metricsRouter } from './routes/metrics.js';
 import { cacheRouter } from './routes/cache.js';
 import { prometheusRouter } from './routes/prometheus.js';
 import { swaggerRouter } from './routes/swagger.js';
+import { agentSessionsRouter } from './routes/agent-sessions.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { requestLogger } from './middleware/request-logger.js';
 
@@ -57,6 +58,7 @@ export function createApp(): Express {
     app.use('/api/v1/health', healthRouter);
     app.use('/api/v1/metrics', metricsRouter);
     app.use('/api/v1/cache', cacheRouter);
+    app.use('/api/v1/agent-sessions', agentSessionsRouter);
     app.use('/metrics', prometheusRouter);
     app.use('/api-docs', swaggerRouter);
 
@@ -70,6 +72,7 @@ export function createApp(): Express {
                 health: 'GET /api/v1/health',
                 metrics: 'GET /api/v1/metrics',
                 cache: 'GET /api/v1/cache/stats',
+                agentSessions: 'POST /api/v1/agent-sessions',
                 prometheus: 'GET /metrics',
                 docs: 'GET /api-docs'
             }
