@@ -1,0 +1,32 @@
+{
+    "name": "engine-ops",
+    "version": "0.1.0",
+    "description": "Engine optimization operations platform",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "test": "echo \"No tests specified yet\" && exit 0",
+        "lint": "eslint . --ext .ts",
+        "format": "prettier --write .",
+        "docs": "typedoc --out docs/api"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hummbl-dev/engine-ops.git"
+    },
+    "author": "Hummbl Dev",
+    "license": "SEE LICENSE IN LICENSE",
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "@typescript-eslint/parser": "^6.0.0",
+        "eslint": "^8.0.0",
+        "prettier": "^3.0.0",
+        "ts-node": "^10.9.1",
+        "typedoc": "^0.28.14",
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "zod": "^4.1.12"
+    }
+}
