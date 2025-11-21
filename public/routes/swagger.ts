@@ -24,7 +24,7 @@ export const swaggerRouter = Router();
 
 // Load OpenAPI spec
 const openApiPath = path.join(__dirname, '../../docs/openapi.yaml');
-const openApiSpec = yaml.load(fs.readFileSync(openApiPath, 'utf8'));
+const openApiSpec = yaml.load(fs.readFileSync(openApiPath, 'utf8')) as any;
 
 // Swagger UI options
 const swaggerOptions = {
