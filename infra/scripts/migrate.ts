@@ -129,12 +129,9 @@ function printHelp() {
     console.log('  npm run migrate verify\n');
 }
 
-// Run if called directly
-// Check if this module is being run directly (works with both ESM and CommonJS)
-const isMainModule = require.main === module;
-if (isMainModule) {
-    main().catch(error => {
-        console.error('Fatal error:', error);
-        process.exit(1);
-    });
-}
+// Run if called directly (relies on shebang and npm script)
+// This file is executed via npm script, so we always run main()
+main().catch(error => {
+    console.error('Fatal error:', error);
+    process.exit(1);
+});

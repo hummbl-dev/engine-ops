@@ -76,6 +76,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -130,6 +132,8 @@ jobs:
     needs: [deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -218,6 +222,9 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
+      issues: write
     if: ${{ inputs.auto_switch || github.event_name == 'workflow_dispatch' }}
     
     steps:
@@ -295,6 +302,8 @@ jobs:
     name: Send Notification
     needs: [switch-traffic]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: always()
     
     steps:

@@ -25,6 +25,13 @@ export enum ApiVersion {
 }
 
 /**
+ * Extended Request interface with API version
+ */
+export interface ApiVersionRequest extends Request {
+    apiVersion: string;
+}
+
+/**
  * API version detection and validation middleware
  * Supports version detection from:
  * - URL path: /api/v1/...
@@ -64,7 +71,7 @@ export function apiVersionMiddleware(req: Request, res: Response, next: NextFunc
     }
 
     // Store version in request for use by handlers
-    (req as any).apiVersion = version;
+    (req as ApiVersionRequest).apiVersion = version;
 
     // Add version to response headers
     res.setHeader('X-API-Version', version);
@@ -81,7 +88,7 @@ export function deprecationWarningMiddleware(
     sunsetDate?: string
 ) {
     return (req: Request, res: Response, next: NextFunction): void => {
-        const version = (req as any).apiVersion;
+        const version = (req as ApiVersionRequest).apiVersion;
 
         if (version === deprecatedVersion) {
             res.setHeader('Warning', `299 - "API version ${deprecatedVersion} is deprecated. ${message}"`);
@@ -105,7 +112,7 @@ export class ApiVersionTransformer {
     /**
      * Transform request from older version to current internal format
      */
-    static transformRequestV1ToV2(body: any): any {
+    static transformRequestV1ToV2(body: Record<string, any>): Record<string, any> {
         // Example transformation: add default values for new fields
         return {
             ...body,
@@ -117,7 +124,7 @@ export class ApiVersionTransformer {
     /**
      * Transform response from internal format to older version
      */
-    static transformResponseV2ToV1(data: any): any {
+    static transformResponseV2ToV1(data: Record<string, any>): Record<string, any> {
         // Example transformation: remove new fields not present in v1
         const { version, metadata, ...v1Data } = data;
         return v1Data;
@@ -126,8 +133,8 @@ export class ApiVersionTransformer {
     /**
      * Apply transformation based on API version
      */
-    static transformRequest(req: Request): any {
-        const version = (req as any).apiVersion;
+    static transformRequest(req: Request): Record<string, any> {
+        const version = (req as ApiVersionRequest).apiVersion;
 
         if (version === ApiVersion.V1 && req.body) {
             return this.transformRequestV1ToV2(req.body);
@@ -139,7 +146,7 @@ export class ApiVersionTransformer {
     /**
      * Transform response based on requested API version
      */
-    static transformResponse(data: any, version: string): any {
+    static transformResponse(data: Record<string, any>, version: string): Record<string, any> {
         if (version === ApiVersion.V1) {
             return this.transformResponseV2ToV1(data);
         }
@@ -152,7 +159,7 @@ export class ApiVersionTransformer {
  * Middleware to automatically transform requests/responses
  */
 export function autoTransformMiddleware(req: Request, res: Response, next: NextFunction): void {
-    const version = (req as any).apiVersion;
+    const version = (req as ApiVersionRequest).apiVersion;
 
     // Transform request body
     if (req.body) {
@@ -161,7 +168,7 @@ export function autoTransformMiddleware(req: Request, res: Response, next: NextF
 
     // Wrap res.json to transform responses
     const originalJson = res.json.bind(res);
-    res.json = function(data: any) {
+    res.json = function(data: Record<string, any>) {
         const transformed = ApiVersionTransformer.transformResponse(data, version);
         return originalJson(transformed);
     };

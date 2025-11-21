@@ -97,6 +97,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || inputs.environment == 'staging'
     environment: staging
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -160,6 +162,8 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.environment == 'production'
     environment: production
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -277,6 +281,8 @@ jobs:
     needs: [deploy-production]
     runs-on: ubuntu-latest
     if: success()
+    permissions:
+      contents: write
     
     steps:
       - name: Update deployment status
@@ -312,6 +318,8 @@ jobs:
     name: Send Notifications
     needs: [deploy-production]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: always()
     
     steps:

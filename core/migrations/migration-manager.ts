@@ -13,6 +13,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
 
 /**
  * Migration definition interface
@@ -104,18 +105,11 @@ export class MigrationManager {
     }
 
     /**
-     * Calculate checksum for a migration
+     * Calculate checksum for a migration using SHA-256
      */
     private calculateChecksum(migration: Migration): string {
         const content = migration.up.toString() + migration.down.toString();
-        // Simple checksum calculation (in production, use crypto)
-        let hash = 0;
-        for (let i = 0; i < content.length; i++) {
-            const char = content.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return hash.toString(36);
+        return crypto.createHash('sha256').update(content).digest('hex');
     }
 
     /**
