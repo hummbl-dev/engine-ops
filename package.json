@@ -1,8 +1,22 @@
 {
-    "name": "engine-ops",
+    "name": "hummbl-engine-ops",
     "version": "0.1.0",
-    "description": "Engine optimization operations platform",
-    "main": "dist/index.js",
+    "description": "High-performance engine optimization operations platform for computing, data processing, and infrastructure management",
+    "main": "dist/public/api.js",
+    "types": "dist/public/api.d.ts",
+    "files": [
+        "dist",
+        "LICENSE",
+        "README.md"
+    ],
+    "keywords": [
+        "optimization",
+        "engine",
+        "scheduling",
+        "resource-management",
+        "bin-packing",
+        "infrastructure"
+    ],
     "scripts": {
         "build": "tsc",
         "test": "echo \"No tests specified yet\" && exit 0",
@@ -14,8 +28,12 @@
         "type": "git",
         "url": "git+https://github.com/hummbl-dev/engine-ops.git"
     },
-    "author": "Hummbl Dev",
+    "author": "HUMMBL, LLC",
     "license": "SEE LICENSE IN LICENSE",
+    "bugs": {
+        "url": "https://github.com/hummbl-dev/engine-ops/issues"
+    },
+    "homepage": "https://github.com/hummbl-dev/engine-ops#readme",
     "devDependencies": {
         "@types/node": "^20.0.0",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
