@@ -15,10 +15,15 @@ import { IEngine, EngineConfig, OptimizationRequest, OptimizationResult } from '
 import { OptimizationRequestSchema } from '../schemas/validation.js';
 import { BinPackingOptimizer } from './algorithms/bin-packing.js';
 import { LeastLoadedScheduler } from './algorithms/least-loaded.js';
+import { LRUCache } from './caching/lru-cache.js';
+import { Logger, LogLevel } from './monitoring/logger.js';
+import { metricsCollector } from './monitoring/metrics.js';
 
 export class OptimizationEngine implements IEngine {
     private config: EngineConfig;
     private isInitialized: boolean = false;
+    private cache: LRUCache<string, OptimizationResult>;
+    private logger: Logger;
 
     constructor(config: EngineConfig = {}) {
         this.config = {
@@ -27,18 +32,30 @@ export class OptimizationEngine implements IEngine {
             verbose: false,
             ...config
         };
+
+        // Initialize cache
+        this.cache = new LRUCache({
+            maxSize: 100,
+            ttlMs: 300000, // 5 minutes
+            enableStats: true
+        });
+
+        // Initialize logger
+        this.logger = new Logger({
+            level: this.config.verbose ? LogLevel.DEBUG : LogLevel.INFO,
+            enableConsole: true,
+            enableTimestamps: true
+        });
     }
 
     public async init(config?: EngineConfig): Promise<void> {
         if (config) {
             this.config = { ...this.config, ...config };
+            this.logger.setLevel(this.config.verbose ? LogLevel.DEBUG : LogLevel.INFO);
         }
 
         this.isInitialized = true;
-
-        if (this.config.verbose) {
-            console.log('Optimization Engine initialized', this.config);
-        }
+        this.logger.info('Optimization Engine initialized', this.config as unknown as Record<string, unknown>);
     }
 
     public async optimize(request: OptimizationRequest): Promise<OptimizationResult> {
@@ -47,6 +64,21 @@ export class OptimizationEngine implements IEngine {
         }
 
         const startTime = Date.now();
+        const cacheKey = JSON.stringify(request);
+
+        // Check cache first
+        const cachedResult = this.cache.get(cacheKey);
+        if (cachedResult) {
+            this.logger.debug(`Cache hit for request ${request.id}`);
+            metricsCollector.record({
+                requestId: request.id,
+                type: request.type,
+                durationMs: Date.now() - startTime,
+                cacheHit: true,
+                timestamp: Date.now()
+            });
+            return cachedResult;
+        }
 
         try {
             // Validate request using Zod schema
@@ -55,9 +87,7 @@ export class OptimizationEngine implements IEngine {
                 throw new Error(`Validation failed: ${validation.error.message}`);
             }
 
-            if (this.config.verbose) {
-                console.log(`Processing request ${request.id} of type ${request.type}`);
-            }
+            this.logger.info(`Processing request ${request.id} of type ${request.type}`);
 
             let resultData: Record<string, unknown> = {};
 
@@ -95,7 +125,7 @@ export class OptimizationEngine implements IEngine {
 
             const durationMs = Date.now() - startTime;
 
-            return {
+            const optimizationResult: OptimizationResult = {
                 requestId: request.id,
                 success: true,
                 result: resultData,
@@ -104,15 +134,35 @@ export class OptimizationEngine implements IEngine {
                     score: 1.0
                 }
             };
+
+            // Cache the result
+            this.cache.set(cacheKey, optimizationResult);
+
+            // Record metrics
+            metricsCollector.record({
+                requestId: request.id,
+                type: request.type,
+                durationMs,
+                cacheHit: false,
+                timestamp: Date.now()
+            });
+
+            this.logger.info(`Request ${request.id} completed in ${durationMs}ms`);
+
+            return optimizationResult;
         } catch (error) {
             const durationMs = Date.now() - startTime;
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+            this.logger.error(`Request ${request.id} failed`, { durationMs }, error instanceof Error ? error : undefined);
 
             return {
                 requestId: request.id,
                 success: false,
-                error: error instanceof Error ? error.message : 'Unknown error',
+                error: errorMessage,
                 metrics: {
-                    durationMs
+                    durationMs,
+                    score: 0
                 }
             };
         }
@@ -120,8 +170,14 @@ export class OptimizationEngine implements IEngine {
 
     public async shutdown(): Promise<void> {
         this.isInitialized = false;
-        if (this.config.verbose) {
-            console.log('Optimization Engine shutdown');
-        }
+        this.cache.clear();
+        this.logger.info('Optimization Engine shutdown');
+    }
+
+    /**
+     * Get cache statistics
+     */
+    public getCacheStats() {
+        return this.cache.getStats();
     }
 }
