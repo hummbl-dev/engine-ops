@@ -184,6 +184,6 @@ See [LICENSE](LICENSE) for the Business Source License terms.
 
 ---
 
-**Copyright (c) 2024-present, Hummbl Dev**
+**Copyright (c) 2025, HUMMBL, LLC**
 
-Built with ❤️ for high-performance computing
+
