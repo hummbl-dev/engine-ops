@@ -217,6 +217,9 @@ export interface ICloudProvider {
 
     /**
      * Remove workload from a node
+     * Note: In the current implementation, workload tracking is simplified.
+     * A production implementation should maintain a mapping of workloads to nodes
+     * for accurate resource accounting.
      */
     removeWorkload(nodeId: string, workloadId: string): Promise<boolean>;
 

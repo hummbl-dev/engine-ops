@@ -27,7 +27,6 @@ import {
  */
 export class MultiCloudResourceManager implements IResourceManager {
     private providers: Map<CloudProvider, ICloudProvider> = new Map();
-    private allRegions: GeoRegion[] = [];
 
     registerProvider(provider: ICloudProvider): void {
         this.providers.set(provider.getProvider(), provider);
@@ -89,9 +88,6 @@ export class MultiCloudResourceManager implements IResourceManager {
 
     async scheduleWorkloadsWithGeoSharding(workloads: Workload[]): Promise<PlacementResult[]> {
         const results: PlacementResult[] = [];
-
-        // Load all regions from providers
-        await this.loadAllRegions();
 
         // Group workloads by preferred region or use geo-distribution strategy
         const workloadGroups = this.groupWorkloadsByGeo(workloads);
@@ -228,17 +224,6 @@ export class MultiCloudResourceManager implements IResourceManager {
     }
 
     /**
-     * Load all regions from registered providers
-     */
-    private async loadAllRegions(): Promise<void> {
-        this.allRegions = [];
-        for (const provider of this.providers.values()) {
-            const regions = await provider.getRegions();
-            this.allRegions.push(...regions);
-        }
-    }
-
-    /**
      * Group workloads by geographical region for geo-sharding
      */
     private groupWorkloadsByGeo(workloads: Workload[]): Record<string, Workload[]> {
@@ -263,24 +248,5 @@ export class MultiCloudResourceManager implements IResourceManager {
         }
 
         return groups;
-    }
-
-    /**
-     * Calculate geographical distance between two coordinates (Haversine formula)
-     */
-    private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-        const R = 6371; // Earth's radius in km
-        const dLat = this.toRad(lat2 - lat1);
-        const dLon = this.toRad(lon2 - lon1);
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
-
-    private toRad(degrees: number): number {
-        return degrees * (Math.PI / 180);
     }
 }
