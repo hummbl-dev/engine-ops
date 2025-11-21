@@ -24,6 +24,7 @@ import { metricsRouter } from './routes/metrics.js';
 import { cacheRouter } from './routes/cache.js';
 import { prometheusRouter } from './routes/prometheus.js';
 import { swaggerRouter } from './routes/swagger.js';
+import { costRouter } from './routes/cost.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { requestLogger } from './middleware/request-logger.js';
 
@@ -59,6 +60,7 @@ export function createApp(): Express {
     app.use('/api/v1/cache', cacheRouter);
     app.use('/metrics', prometheusRouter);
     app.use('/api-docs', swaggerRouter);
+    app.use('/cost', costRouter);
 
     // Root endpoint
     app.get('/', (_req, res) => {
