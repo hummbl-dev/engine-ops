@@ -120,13 +120,13 @@ spec:
             echo "---"
             echo "[$(date -u +"%Y-%m-%dT%H:%M:%SZ")] Running health check..."
             
-            # Get all engine-ops pods
+            # Get all engine-ops pods once and reuse
             PODS=$(kubectl get pods -l app=engine-ops -o json)
             
-            # Check each pod
-            echo "$PODS" | kubectl get pods -l app=engine-ops -o json | \
-            jq -r '.items[] | select(.status.phase != "Running" or (.status.containerStatuses[]?.ready == false)) | 
-                   "\(.metadata.name)|\(.status.phase)|\(.status.containerStatuses[0].restartCount // 0)"' | \
+            # Check each pod for unhealthy status
+            echo "$PODS" | \
+            jq -r '.items[] | select(.status.phase != "Running" or (.status.containerStatuses[]? | select(.ready == false))) | 
+                   "\(.metadata.name)|\(.status.phase)|\((.status.containerStatuses[0].restartCount) // 0)"' | \
             while IFS='|' read -r POD_NAME PHASE RESTART_COUNT; do
               if [ ! -z "$POD_NAME" ]; then
                 echo "Unhealthy pod detected: $POD_NAME (Phase: $PHASE, Restarts: $RESTART_COUNT)"
