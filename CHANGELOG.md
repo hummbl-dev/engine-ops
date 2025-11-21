@@ -5,20 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2025-11-21
 
 ### Added
-- Prometheus metrics endpoint (`/metrics`)
-- OpenTelemetry distributed tracing
-- Circuit breaker pattern for resilience
-- Retry logic with exponential backoff
-- API authentication (API keys + JWT)
-- Role-based access control (RBAC)
-- OpenAPI 3.0 specification
-- Swagger UI for API documentation
-- Comprehensive architecture documentation
-- Deployment guides for AWS, GCP, Azure
-- Troubleshooting guide
+- **Production Hardening**: Enterprise-grade reliability, security, and observability
+- **Prometheus Metrics**: `/metrics` endpoint with counters, histograms, gauges
+  - Request count, duration, cache hits/misses, active connections
+  - Default metrics: CPU, memory, event loop
+- **Circuit Breaker**: Failure isolation with automatic recovery
+  - States: CLOSED, OPEN, HALF_OPEN
+  - Configurable failure threshold and timeout
+- **Retry Policy**: Exponential backoff with jitter
+  - Configurable max retries and delays
+  - Custom retry predicates
+- **Authentication**: Multi-method authentication
+  - API key support (X-API-Key header)
+  - JWT token support (Bearer token)
+- **RBAC**: Role-based access control
+  - Permissions: READ, WRITE, ADMIN
+  - Roles: admin, user, readonly
+- **Documentation**:
+  - `CHANGELOG.md` - Complete version history
+  - `docs/ARCHITECTURE.md` - System architecture and diagrams
+
+### Dependencies
+- Added prom-client for Prometheus metrics
+- Added OpenTelemetry for distributed tracing
+- Added jsonwebtoken and bcrypt for authentication
+- Added swagger-ui-express for API documentation
+- Added artillery for load testing
 
 ## [0.2.0] - 2025-11-21
 
@@ -94,7 +109,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TypeScript-based optimization engine
 - npm package published as `hummbl-engine-ops`
 
-[Unreleased]: https://github.com/hummbl-dev/engine-ops/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/hummbl-dev/engine-ops/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/hummbl-dev/engine-ops/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hummbl-dev/engine-ops/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/hummbl-dev/engine-ops/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/hummbl-dev/engine-ops/releases/tag/v0.1.0

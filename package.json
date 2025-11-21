@@ -1,7 +1,7 @@
 {
     "name": "hummbl-engine-ops",
-    "version": "0.2.0",
-    "description": "High-performance optimization engine with REST API, caching, metrics, and Kubernetes deployment, data processing, and infrastructure management",
+    "version": "0.3.0",
+    "description": "Enterprise-grade optimization engine with REST API, WebSocket, advanced algorithms, multi-language SDKs, Prometheus metrics, authentication, and production hardening",
     "main": "dist/public/api.js",
     "types": "dist/public/api.d.ts",
     "files": [
