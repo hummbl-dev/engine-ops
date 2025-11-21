@@ -21,17 +21,20 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 
 # Install production dependencies only
 RUN npm ci --only=production
 
-# Copy built artifacts from builder stage
+# Copy built application
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
 
-# Set environment variables
-ENV NODE_ENV=production
+# Install production dependencies only
+RUN npm ci --only=production
 
-# Default command (can be overridden)
-CMD ["node", "dist/index.js"]
+# Expose API port
+EXPOSE 3000
+
+# Run the server
+CMD ["node", "dist/public/server.js"]

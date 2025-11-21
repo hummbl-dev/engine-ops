@@ -54,6 +54,13 @@ export class EngineOps {
   public async shutdown(): Promise<void> {
     await this.engine.shutdown();
   }
+
+  /**
+   * Get cache statistics
+   */
+  public getCacheStats() {
+    return this.engine.getCacheStats();
+  }
 }
 
 // Re-export types for public consumption
