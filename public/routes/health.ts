@@ -103,7 +103,9 @@ healthRouter.get('/ready', async (_req: Request, res: Response) => {
  * Get recent health check history
  */
 healthRouter.get('/history', (_req: Request, res: Response) => {
-    const limit = parseInt(_req.query.limit as string) || 50;
+    const limitParam = parseInt(_req.query.limit as string) || 50;
+    // Bound limit to prevent DoS attacks (min: 1, max: 500)
+    const limit = Math.max(1, Math.min(limitParam, 500));
     const history = healthTracker.getHealthHistory(limit);
 
     res.status(200).json({
@@ -118,7 +120,9 @@ healthRouter.get('/history', (_req: Request, res: Response) => {
  * Get remediation event log
  */
 healthRouter.get('/remediation', (_req: Request, res: Response) => {
-    const limit = parseInt(_req.query.limit as string) || 50;
+    const limitParam = parseInt(_req.query.limit as string) || 50;
+    // Bound limit to prevent DoS attacks (min: 1, max: 500)
+    const limit = Math.max(1, Math.min(limitParam, 500));
     const events = healthTracker.getRemediationLog(limit);
 
     res.status(200).json({
