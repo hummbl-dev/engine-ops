@@ -1,0 +1,131 @@
+# Copyright (c) 2025, HUMMBL, LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Self-Healing Infrastructure Demo
+#
+# This example demonstrates the self-healing capabilities of Engine-Ops:
+# 1. Automated health checks
+# 2. Automatic pod replacement on failure
+# 3. Remediation action logging
+#
+# Deploy this along with the main Engine-Ops deployment to see self-healing in action.
+
+---
+# Demo job that tests the self-healing capabilities
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: self-healing-demo
+  labels:
+    demo: self-healing
+spec:
+  template:
+    metadata:
+      labels:
+        demo: self-healing
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: demo
+        image: curlimages/curl:latest
+        env:
+        - name: ENGINE_OPS_URL
+          value: "http://engine-ops:3000"
+        command:
+        - /bin/sh
+        - -c
+        - |
+          #!/bin/sh
+          echo "=== Engine-Ops Self-Healing Demo ==="
+          echo ""
+          
+          echo "1. Checking main health endpoint..."
+          curl -s $ENGINE_OPS_URL/api/v1/health | jq '.'
+          echo ""
+          
+          echo "2. Checking liveness probe..."
+          curl -s $ENGINE_OPS_URL/api/v1/health/live | jq '.'
+          echo ""
+          
+          echo "3. Checking readiness probe..."
+          curl -s $ENGINE_OPS_URL/api/v1/health/ready | jq '.'
+          echo ""
+          
+          echo "4. Getting health history..."
+          curl -s "$ENGINE_OPS_URL/api/v1/health/history?limit=5" | jq '.'
+          echo ""
+          
+          echo "5. Checking remediation log..."
+          curl -s "$ENGINE_OPS_URL/api/v1/health/remediation?limit=10" | jq '.'
+          echo ""
+          
+          echo "6. Simulating a remediation event..."
+          curl -s -X POST $ENGINE_OPS_URL/api/v1/health/remediation \
+            -H "Content-Type: application/json" \
+            -d '{
+              "id": "demo-event-'$(date +%s)'",
+              "component": "demo-component",
+              "issue": "Simulated failure for testing",
+              "action": "Logged event for demonstration purposes",
+              "outcome": "success",
+              "metadata": {
+                "demo": true,
+                "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+              }
+            }' | jq '.'
+          echo ""
+          
+          echo "7. Verifying logged remediation event..."
+          sleep 2
+          curl -s "$ENGINE_OPS_URL/api/v1/health/remediation?limit=1" | jq '.events[0]'
+          echo ""
+          
+          echo "=== Demo Complete ==="
+          echo ""
+          echo "To see automatic pod replacement in action:"
+          echo "1. Kill a pod: kubectl delete pod -l app=engine-ops --force"
+          echo "2. Watch replacement: kubectl get pods -l app=engine-ops -w"
+          echo "3. Check remediation log: kubectl logs -l app=engine-ops-health-monitor"
+
+---
+# Example: Pod with intentional failure for testing self-healing
+# Uncomment to test automatic pod replacement
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: failing-pod-test
+#   labels:
+#     app: engine-ops
+#     test: self-healing
+# spec:
+#   containers:
+#   - name: test
+#     image: busybox:latest
+#     command:
+#     - /bin/sh
+#     - -c
+#     - |
+#       echo "Starting pod that will fail health checks..."
+#       sleep 30
+#       echo "Simulating failure..."
+#       exit 1
+#     livenessProbe:
+#       exec:
+#         command:
+#         - /bin/sh
+#         - -c
+#         - "exit 1"  # Always fail
+#       initialDelaySeconds: 35
+#       periodSeconds: 10
+#       failureThreshold: 1

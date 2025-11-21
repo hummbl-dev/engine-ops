@@ -1,0 +1,200 @@
+# Copyright (c) 2025, HUMMBL, LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+# ConfigMap for health monitoring configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: health-monitor-config
+  labels:
+    app: engine-ops-health-monitor
+data:
+  CHECK_INTERVAL: "30"  # seconds between health checks
+  REMEDIATION_ENABLED: "true"
+  LOG_LEVEL: "info"
+  ENGINE_OPS_URL: "http://engine-ops:3000"
+
+---
+# ServiceAccount for health monitor
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: health-monitor
+  labels:
+    app: engine-ops-health-monitor
+
+---
+# ClusterRole for health monitor to watch and manage pods
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: health-monitor
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch", "delete"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets", "statefulsets"]
+  verbs: ["get", "list", "watch"]
+
+---
+# ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: health-monitor
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: health-monitor
+subjects:
+- kind: ServiceAccount
+  name: health-monitor
+  namespace: default
+
+---
+# Deployment for health monitor
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: engine-ops-health-monitor
+  labels:
+    app: engine-ops-health-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: engine-ops-health-monitor
+  template:
+    metadata:
+      labels:
+        app: engine-ops-health-monitor
+    spec:
+      serviceAccountName: health-monitor
+      containers:
+      - name: monitor
+        image: bitnami/kubectl:latest
+        env:
+        - name: CHECK_INTERVAL
+          valueFrom:
+            configMapKeyRef:
+              name: health-monitor-config
+              key: CHECK_INTERVAL
+        - name: ENGINE_OPS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: health-monitor-config
+              key: ENGINE_OPS_URL
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        command:
+        - /bin/bash
+        - -c
+        - |
+          #!/bin/bash
+          echo "Starting Engine-Ops Health Monitor"
+          echo "Monitoring pods with label app=engine-ops"
+          echo "Check interval: ${CHECK_INTERVAL}s"
+          
+          while true; do
+            echo "---"
+            echo "[$(date -u +"%Y-%m-%dT%H:%M:%SZ")] Running health check..."
+            
+            # Get all engine-ops pods
+            PODS=$(kubectl get pods -l app=engine-ops -o json)
+            
+            # Check each pod
+            echo "$PODS" | kubectl get pods -l app=engine-ops -o json | \
+            jq -r '.items[] | select(.status.phase != "Running" or (.status.containerStatuses[]?.ready == false)) | 
+                   "\(.metadata.name)|\(.status.phase)|\(.status.containerStatuses[0].restartCount // 0)"' | \
+            while IFS='|' read -r POD_NAME PHASE RESTART_COUNT; do
+              if [ ! -z "$POD_NAME" ]; then
+                echo "Unhealthy pod detected: $POD_NAME (Phase: $PHASE, Restarts: $RESTART_COUNT)"
+                
+                # Log remediation event to Engine-Ops API
+                REMEDIATION_ID="remediation-$(date +%s)-$RANDOM"
+                curl -s -X POST "$ENGINE_OPS_URL/api/v1/health/remediation" \
+                  -H "Content-Type: application/json" \
+                  -d "{
+                    \"id\": \"$REMEDIATION_ID\",
+                    \"component\": \"kubernetes-pod\",
+                    \"issue\": \"Pod $POD_NAME in $PHASE phase with $RESTART_COUNT restarts\",
+                    \"action\": \"Kubernetes will automatically replace unhealthy pod\",
+                    \"outcome\": \"success\",
+                    \"metadata\": {
+                      \"podName\": \"$POD_NAME\",
+                      \"phase\": \"$PHASE\",
+                      \"restartCount\": $RESTART_COUNT,
+                      \"namespace\": \"$NAMESPACE\"
+                    }
+                  }" || echo "Failed to log remediation event"
+                
+                # Create Kubernetes event for auditability
+                kubectl create event warning \
+                  --for pod/$POD_NAME \
+                  --reason PodUnhealthy \
+                  --message "Pod detected as unhealthy by health monitor (Phase: $PHASE, Restarts: $RESTART_COUNT)" \
+                  2>/dev/null || true
+              fi
+            done
+            
+            # Check for pods in CrashLoopBackOff
+            CRASHLOOP_PODS=$(kubectl get pods -l app=engine-ops -o json | \
+                            jq -r '.items[] | select(.status.containerStatuses[]?.state.waiting.reason == "CrashLoopBackOff") | .metadata.name')
+            
+            for POD_NAME in $CRASHLOOP_PODS; do
+              echo "Pod in CrashLoopBackOff: $POD_NAME"
+              
+              # Get recent logs for diagnostics
+              echo "Collecting logs for diagnostics..."
+              kubectl logs $POD_NAME --tail=20 || echo "Could not collect logs"
+              
+              # Log detailed remediation event
+              REMEDIATION_ID="remediation-crashloop-$(date +%s)-$RANDOM"
+              curl -s -X POST "$ENGINE_OPS_URL/api/v1/health/remediation" \
+                -H "Content-Type: application/json" \
+                -d "{
+                  \"id\": \"$REMEDIATION_ID\",
+                  \"component\": \"kubernetes-pod\",
+                  \"issue\": \"Pod $POD_NAME in CrashLoopBackOff\",
+                  \"action\": \"Collected logs and monitoring for automatic restart\",
+                  \"outcome\": \"success\",
+                  \"metadata\": {
+                    \"podName\": \"$POD_NAME\",
+                    \"state\": \"CrashLoopBackOff\",
+                    \"namespace\": \"$NAMESPACE\"
+                  }
+                }" || echo "Failed to log remediation event"
+            done
+            
+            echo "[$(date -u +"%Y-%m-%dT%H:%M:%SZ")] Health check complete. Sleeping ${CHECK_INTERVAL}s..."
+            sleep $CHECK_INTERVAL
+          done
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+      restartPolicy: Always
