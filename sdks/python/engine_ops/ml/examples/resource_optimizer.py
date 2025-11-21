@@ -82,7 +82,8 @@ class ResourceOptimizerModel(BaseMLModel):
         self.training_metadata = {
             'training_samples': len(data),
             'request_types': list(self.resource_patterns.keys()),
-            'overall_metrics': self.performance_metrics
+            'overall_metrics': self.performance_metrics,
+            'baseline_workload_size': 100.0  # Standard baseline for workload scaling
         }
 
     def predict(self, input_data: Dict[str, Any]) -> PredictionResult:
@@ -130,7 +131,9 @@ class ResourceOptimizerModel(BaseMLModel):
         if 'workload_size' in input_data:
             workload_size = input_data['workload_size']
             if isinstance(workload_size, (int, float)):
-                scale = workload_size / 100.0
+                # Use consistent baseline across models (100 units)
+                baseline_size = self.training_metadata.get('baseline_workload_size', 100.0)
+                scale = workload_size / baseline_size
                 prediction['optimal_resources'] = {
                     k: v * scale for k, v in prediction['optimal_resources'].items()
                 }

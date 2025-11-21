@@ -54,7 +54,8 @@ class SimplePredictorModel(BaseMLModel):
             'training_samples': len(data),
             'avg_duration': self.avg_duration,
             'success_rate': self.success_rate,
-            'resource_types': list(self.resource_averages.keys())
+            'resource_types': list(self.resource_averages.keys()),
+            'baseline_workload_size': 100.0  # Baseline for scaling predictions
         }
 
     def predict(self, input_data: Dict[str, Any]) -> PredictionResult:
@@ -74,7 +75,9 @@ class SimplePredictorModel(BaseMLModel):
             workload_size = input_data['workload_size']
             if isinstance(workload_size, (int, float)):
                 # Scale predictions based on workload size
-                scale_factor = workload_size / 100.0  # Assume 100 is baseline
+                # Baseline workload size is 100 (configurable via model metadata)
+                baseline_size = self.training_metadata.get('baseline_workload_size', 100.0)
+                scale_factor = workload_size / baseline_size
                 prediction['expected_duration'] *= scale_factor
                 prediction['recommended_resources'] = {
                     k: v * scale_factor

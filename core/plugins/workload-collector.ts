@@ -23,6 +23,10 @@ export interface WorkloadCollectorConfig {
     aggregationWindowMs?: number;
 }
 
+// Constants
+const DEFAULT_MAX_DATA_POINTS = 10000;
+const DEFAULT_AGGREGATION_WINDOW_MS = 60000; // 1 minute
+
 /**
  * Collects and manages historical workload data
  */
@@ -32,9 +36,9 @@ export class WorkloadCollector {
 
     constructor(config: WorkloadCollectorConfig = {}) {
         this.config = {
-            maxDataPoints: config.maxDataPoints ?? 10000,
+            maxDataPoints: config.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS,
             enablePersistence: config.enablePersistence ?? false,
-            aggregationWindowMs: config.aggregationWindowMs ?? 60000 // 1 minute
+            aggregationWindowMs: config.aggregationWindowMs ?? DEFAULT_AGGREGATION_WINDOW_MS
         };
     }
 

@@ -98,7 +98,7 @@ describe('WorkloadCollector', () => {
     });
 
     it('should calculate statistics', () => {
-        const requests = [
+        const requests: OptimizationRequest[] = [
             { id: 'test-1', type: 'resource', data: {} },
             { id: 'test-2', type: 'resource', data: {} },
             { id: 'test-3', type: 'scheduling', data: {} }
