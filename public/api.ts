@@ -64,4 +64,4 @@ export class EngineOps {
 }
 
 // Re-export types for public consumption
-export { EngineConfig, OptimizationRequest, OptimizationResult };
+export type { EngineConfig, OptimizationRequest, OptimizationResult };
