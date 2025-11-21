@@ -38,7 +38,7 @@ async function ensureEngineInitialized() {
 router.get('/alerts', async (req, res) => {
     try {
         await ensureEngineInitialized();
-        const detector = (engine as any).engine.getAnomalyDetector();
+        const detector = engine.getAnomalyDetector();
         const alerts = detector.getAlerts();
         
         res.json({
@@ -57,7 +57,7 @@ router.get('/alerts', async (req, res) => {
 router.get('/alerts/recent', async (req, res) => {
     try {
         await ensureEngineInitialized();
-        const detector = (engine as any).engine.getAnomalyDetector();
+        const detector = engine.getAnomalyDetector();
         const hoursAgo = parseInt(req.query.hours as string) || 1;
         const since = Date.now() - (hoursAgo * 60 * 60 * 1000);
         const alerts = detector.getRecentAlerts(since);
@@ -79,7 +79,7 @@ router.get('/alerts/recent', async (req, res) => {
 router.get('/metrics', async (req, res) => {
     try {
         await ensureEngineInitialized();
-        const detector = (engine as any).engine.getAnomalyDetector();
+        const detector = engine.getAnomalyDetector();
         const metricNames = detector.getMetricNames();
         
         const metrics = metricNames.map((name: string) => {
@@ -106,7 +106,7 @@ router.get('/metrics', async (req, res) => {
 router.get('/metrics/:name', async (req, res) => {
     try {
         await ensureEngineInitialized();
-        const detector = (engine as any).engine.getAnomalyDetector();
+        const detector = engine.getAnomalyDetector();
         const { name } = req.params;
         
         const stats = detector.getMetricStats(name);
@@ -134,7 +134,7 @@ router.get('/metrics/:name', async (req, res) => {
 router.delete('/alerts', async (req, res) => {
     try {
         await ensureEngineInitialized();
-        const detector = (engine as any).engine.getAnomalyDetector();
+        const detector = engine.getAnomalyDetector();
         detector.clearAlerts();
         
         res.json({

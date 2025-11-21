@@ -61,6 +61,13 @@ export class EngineOps {
   public getCacheStats() {
     return this.engine.getCacheStats();
   }
+
+  /**
+   * Get anomaly detector for monitoring
+   */
+  public getAnomalyDetector() {
+    return this.engine.getAnomalyDetector();
+  }
 }
 
 // Re-export types for public consumption

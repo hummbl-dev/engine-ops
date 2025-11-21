@@ -85,6 +85,14 @@ export class NonRootContainerPolicy implements SecurityPolicy {
 export class ResourceLimitsPolicy implements SecurityPolicy {
     name = 'resource-limits';
     enabled = true;
+    private defaultLimits: { cpu: string; memory: string };
+
+    constructor(defaultLimits?: { cpu: string; memory: string }) {
+        this.defaultLimits = defaultLimits || {
+            cpu: process.env.DEFAULT_CPU_LIMIT || '500m',
+            memory: process.env.DEFAULT_MEMORY_LIMIT || '512Mi'
+        };
+    }
 
     async enforce(request: AdmissionRequest): Promise<PolicyResult> {
         if (request.kind.kind !== 'Pod') {
@@ -98,10 +106,7 @@ export class ResourceLimitsPolicy implements SecurityPolicy {
         if (pod.spec.containers) {
             pod.spec.containers.forEach((container: any, index: number) => {
                 if (!container.resources?.limits) {
-                    const defaultLimits = {
-                        cpu: '500m',
-                        memory: '512Mi'
-                    };
+                    const defaultLimits = this.defaultLimits;
 
                     if (!container.resources) {
                         patches.push({

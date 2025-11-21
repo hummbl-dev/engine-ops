@@ -107,7 +107,13 @@ export class AnomalyDetector {
         const stats = this.calculateStats(values);
 
         // Check if value is anomalous (outside threshold * stddev)
-        const deviation = Math.abs(value - stats.mean) / (stats.stddev || 1);
+        // When stddev is 0 (all values identical), any different value is highly anomalous
+        let deviation: number;
+        if (stats.stddev === 0) {
+            deviation = value === stats.mean ? 0 : Number.MAX_SAFE_INTEGER;
+        } else {
+            deviation = Math.abs(value - stats.mean) / stats.stddev;
+        }
 
         if (deviation > this.config.threshold) {
             const severity = this.determineSeverity(deviation);
@@ -118,7 +124,7 @@ export class AnomalyDetector {
                 expectedValue: stats.mean,
                 deviation,
                 severity,
-                message: `Anomaly detected in ${metricName}: value=${value.toFixed(2)}, expected=${stats.mean.toFixed(2)}, deviation=${deviation.toFixed(2)}σ`
+                message: `Anomaly detected in ${metricName}: value=${value.toFixed(2)}, expected=${stats.mean.toFixed(2)}, deviation=${deviation === Number.MAX_SAFE_INTEGER ? 'infinite' : deviation.toFixed(2)}σ`
             };
 
             this.alerts.push(alert);
