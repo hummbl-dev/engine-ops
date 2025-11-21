@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engine-Ops Analytics Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>🚀 Engine-Ops Analytics Dashboard</h1>
+            <div class="status">
+                <span id="connection-status" class="status-indicator">●</span>
+                <span id="connection-text">Connecting...</span>
+            </div>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Total Requests</h3>
+                <div class="metric-value" id="total-requests">0</div>
+            </div>
+            <div class="metric-card">
+                <h3>Cache Hit Rate</h3>
+                <div class="metric-value" id="cache-hit-rate">0%</div>
+            </div>
+            <div class="metric-card">
+                <h3>Avg Duration</h3>
+                <div class="metric-value" id="avg-duration">0ms</div>
+            </div>
+            <div class="metric-card">
+                <h3>P95 Duration</h3>
+                <div class="metric-value" id="p95-duration">0ms</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Request Duration Trend</h3>
+                <canvas id="duration-chart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Requests by Type</h3>
+                <canvas id="type-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <h3>Recent Requests</h3>
+            <table id="recent-requests">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Type</th>
+                        <th>Duration</th>
+                        <th>Cache Hit</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
