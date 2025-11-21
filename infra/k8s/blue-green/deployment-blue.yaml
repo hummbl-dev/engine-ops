@@ -1,18 +1,20 @@
+# Copyright (c) 2025, HUMMBL, LLC
+# Licensed under the Apache License, Version 2.0
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: engine-ops
+  name: engine-ops-blue
   labels:
     app: engine-ops
-    version: v0.3.0
-  annotations:
-    kubernetes.io/change-cause: "Zero-downtime deployment with enhanced rolling update"
+    version: blue
+    deployment-type: blue-green
 spec:
-  replicas: 3
-  revisionHistoryLimit: 10
+  replicas: 2
   selector:
     matchLabels:
       app: engine-ops
+      version: blue
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -22,15 +24,12 @@ spec:
     metadata:
       labels:
         app: engine-ops
-        version: v0.3.0
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "3000"
-        prometheus.io/path: "/metrics"
+        version: blue
+        deployment-type: blue-green
     spec:
       containers:
       - name: engine-ops
-        image: engine-ops:latest
+        image: engine-ops:blue
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -41,6 +40,8 @@ spec:
           value: "production"
         - name: PORT
           value: "3000"
+        - name: DEPLOYMENT_VERSION
+          value: "blue"
         - name: RATE_LIMIT_WINDOW_MS
           valueFrom:
             configMapKeyRef:
@@ -88,15 +89,3 @@ spec:
             exec:
               command: ["/bin/sh", "-c", "sleep 15"]
       terminationGracePeriodSeconds: 30
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - engine-ops
-              topologyKey: kubernetes.io/hostname

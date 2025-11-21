@@ -1,0 +1,85 @@
+# Copyright (c) 2025, HUMMBL, LLC
+# Licensed under the Apache License, Version 2.0
+
+# Active service - points to the current active deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine-ops-active
+  labels:
+    app: engine-ops
+    service-type: active
+spec:
+  type: LoadBalancer
+  selector:
+    app: engine-ops
+    version: blue  # Switch this to 'green' for blue-green deployment
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  sessionAffinity: None
+
+---
+# Preview service - for testing the inactive deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine-ops-preview
+  labels:
+    app: engine-ops
+    service-type: preview
+spec:
+  type: ClusterIP
+  selector:
+    app: engine-ops
+    version: green  # Switch this to 'blue' when blue is inactive
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  sessionAffinity: None
+
+---
+# Blue-specific service for direct access
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine-ops-blue
+  labels:
+    app: engine-ops
+    version: blue
+spec:
+  type: ClusterIP
+  selector:
+    app: engine-ops
+    version: blue
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  sessionAffinity: None
+
+---
+# Green-specific service for direct access
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine-ops-green
+  labels:
+    app: engine-ops
+    version: green
+spec:
+  type: ClusterIP
+  selector:
+    app: engine-ops
+    version: green
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  sessionAffinity: None
