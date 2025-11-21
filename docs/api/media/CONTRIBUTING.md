@@ -209,7 +209,7 @@ When making changes:
 
 - **Issues**: Open a GitHub issue for bugs or feature requests
 - **Discussions**: Use GitHub Discussions for questions
-- **Security**: Report security issues privately to security@hummbl.dev
+- **Security**: Report security issues privately to hummbldev@gmail.com
 
 ## Code of Conduct
 
@@ -239,7 +239,7 @@ Before submitting a PR, ensure:
 
 If you have questions about licensing or contributions:
 - Open a GitHub Discussion
-- Email: contribute@hummbl.dev
+- Email: hummbldev@gmail.com
 - Review the LICENSE file for full legal terms
 
 Thank you for contributing to Engine-Ops! 🚀

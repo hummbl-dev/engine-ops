@@ -164,14 +164,14 @@ npm test
 Security is a top priority. To report security vulnerabilities:
 
 - **Do not** open public issues for security concerns
-- **Email:** security@hummbl.dev
+- **Email:** hummbldev@gmail.com
 - **Include:** Detailed description and reproduction steps
 
 ## 📞 Support
 
 - **Issues:** [GitHub Issues](https://github.com/hummbl-dev/engine-ops/issues)
 - **Discussions:** [GitHub Discussions](https://github.com/hummbl-dev/engine-ops/discussions)
-- **Email:** support@hummbl.dev
+- **Email:** hummbldev@gmail.com
 
 ## 📄 License
 
