@@ -26,6 +26,16 @@ export interface EngineConfig {
      * Whether to enable verbose logging
      */
     verbose?: boolean;
+
+    /**
+     * Enable multi-cloud resource management
+     */
+    enableMultiCloud?: boolean;
+
+    /**
+     * Cloud providers to enable (when multi-cloud is enabled)
+     */
+    cloudProviders?: Array<'aws' | 'gcp' | 'azure' | 'edge'>;
 }
 
 export interface OptimizationRequest {
