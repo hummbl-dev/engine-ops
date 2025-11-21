@@ -16,7 +16,7 @@
 
 import { Router, Request, Response, NextFunction } from 'express';
 import { AgentSessionManager } from '../../core/agent-session-manager.js';
-import { AgentSessionRequestSchema } from '../../schemas/agent-session.js';
+import { AgentSessionRequestSchema, SessionState, SessionStateSchema } from '../../schemas/agent-session.js';
 
 export const agentSessionsRouter = Router();
 
@@ -58,12 +58,16 @@ agentSessionsRouter.post('/', async (req: Request, res: Response, next: NextFunc
 agentSessionsRouter.get('/', (req: Request, res: Response) => {
     const { sessionType, state } = req.query;
 
-    const filters: { sessionType?: string; state?: any } = {};
+    const filters: { sessionType?: string; state?: SessionState } = {};
     if (sessionType && typeof sessionType === 'string') {
         filters.sessionType = sessionType;
     }
     if (state && typeof state === 'string') {
-        filters.state = state as any;
+        // Validate state against schema
+        const stateValidation = SessionStateSchema.safeParse(state);
+        if (stateValidation.success) {
+            filters.state = stateValidation.data;
+        }
     }
 
     const sessions = sessionManager.listSessions(filters);
