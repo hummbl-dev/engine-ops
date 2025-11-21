@@ -1,6 +1,6 @@
 {
     "name": "hummbl-engine-ops",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "High-performance engine optimization operations platform for computing, data processing, and infrastructure management",
     "main": "dist/public/api.js",
     "types": "dist/public/api.d.ts",
@@ -19,6 +19,7 @@
     ],
     "scripts": {
         "build": "tsc",
+        "prepublishOnly": "npm run build",
         "test": "echo \"No tests specified yet\" && exit 0",
         "lint": "eslint . --ext .ts",
         "format": "prettier --write .",
@@ -28,7 +29,7 @@
         "type": "git",
         "url": "git+https://github.com/hummbl-dev/engine-ops.git"
     },
-    "author": "HUMMBL, LLC",
+    "author": "HUMMBL, LLC <hummbldev@gmail.com>",
     "license": "SEE LICENSE IN LICENSE",
     "bugs": {
         "url": "https://github.com/hummbl-dev/engine-ops/issues"
@@ -45,6 +46,6 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
-        "zod": "^4.1.12"
+        "zod": "^3.23.8"
     }
 }
