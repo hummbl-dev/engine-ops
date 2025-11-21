@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "engine-ops.fullname" . }}-config
+  labels:
+    {{- include "engine-ops.labels" . | nindent 4 }}
+data:
+  RATE_LIMIT_WINDOW_MS: {{ .Values.config.rateLimitWindowMs | quote }}
+  RATE_LIMIT_MAX_REQUESTS: {{ .Values.config.rateLimitMaxRequests | quote }}

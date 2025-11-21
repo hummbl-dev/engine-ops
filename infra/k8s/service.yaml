@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine-ops
+  labels:
+    app: engine-ops
+spec:
+  type: LoadBalancer
+  selector:
+    app: engine-ops
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  sessionAffinity: None

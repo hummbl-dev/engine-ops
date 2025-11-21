@@ -1,0 +1,14 @@
+apiVersion: v2
+name: engine-ops
+description: A Helm chart for Engine-Ops optimization platform
+type: application
+version: 0.2.0
+appVersion: "0.2.0"
+keywords:
+  - optimization
+  - engine
+  - scheduling
+  - resource-management
+maintainers:
+  - name: HUMMBL, LLC
+    email: hummbldev@gmail.com
