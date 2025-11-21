@@ -1,7 +1,7 @@
 {
     "name": "hummbl-engine-ops",
-    "version": "0.1.1",
-    "description": "High-performance engine optimization operations platform for computing, data processing, and infrastructure management",
+    "version": "0.2.0",
+    "description": "High-performance optimization engine with REST API, caching, metrics, and Kubernetes deployment, data processing, and infrastructure management",
     "main": "dist/public/api.js",
     "types": "dist/public/api.d.ts",
     "files": [
@@ -11,11 +11,15 @@
     ],
     "keywords": [
         "optimization",
-        "engine",
         "scheduling",
-        "resource-management",
+        "resource-allocation",
         "bin-packing",
-        "infrastructure"
+        "performance",
+        "rest-api",
+        "kubernetes",
+        "caching",
+        "metrics",
+        "typescript"
     ],
     "scripts": {
         "build": "tsc",
