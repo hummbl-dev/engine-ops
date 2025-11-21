@@ -119,7 +119,9 @@ format_header() {
 # Function to check if file has license header
 has_license_header() {
   local file="$1"
-  if head -n 20 "$file" | grep -q "Copyright"; then
+  # Check for both Copyright and License terms in first 20 lines
+  if head -n 20 "$file" | grep -qi "Copyright" && \
+     head -n 20 "$file" | grep -qi "License"; then
     return 0
   else
     return 1
@@ -143,7 +145,8 @@ apply_header() {
       formatted_header=$(format_header "$header_file" "$comment_style")
       
       # Create temporary file with header + original content
-      local tmp_file="${file}.tmp"
+      local tmp_file
+      tmp_file=$(mktemp "${file}.XXXXXX")
       echo "$formatted_header" > "$tmp_file"
       echo "" >> "$tmp_file"
       cat "$file" >> "$tmp_file"

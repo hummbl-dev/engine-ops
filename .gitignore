@@ -184,9 +184,11 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 # Package manager files
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Note: Keep lock files committed for reproducible builds
+# Uncomment to ignore if needed for specific use cases
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
 .yarn/
 .pnp.*
 
@@ -540,8 +542,11 @@ terraform.rc
 *.sqlite
 *.sqlite3
 
-# PostgreSQL
-*.sql
+# PostgreSQL (temporary query files and dumps)
+# Note: Keep schema and migration files committed
+*-dump.sql
+*-backup.sql
+query-*.sql
 
 # MongoDB
 *.bson
