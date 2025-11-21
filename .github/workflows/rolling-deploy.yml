@@ -1,0 +1,328 @@
+# Copyright (c) 2025, HUMMBL, LLC
+# Licensed under the Apache License, Version 2.0
+
+name: Rolling Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      version:
+        description: 'Version to deploy (e.g., v0.3.0)'
+        required: true
+        type: string
+  push:
+    branches:
+      - main
+    paths:
+      - 'core/**'
+      - 'public/**'
+      - 'schemas/**'
+      - 'infra/Dockerfile'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build application
+        run: npm run build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ inputs.version || 'latest' }}
+            type=sha,prefix=sha-
+            type=ref,event=branch
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./infra/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || inputs.environment == 'staging'
+    environment: staging
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_STAGING }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Run database migrations
+        run: |
+          # Port forward to one pod and run migrations
+          POD=$(kubectl get pod -l app=engine-ops -n staging -o jsonpath='{.items[0].metadata.name}')
+          kubectl exec -n staging $POD -- npm run migrate
+
+      - name: Deploy with rolling update
+        run: |
+          kubectl set image deployment/engine-ops \
+            engine-ops=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.version || 'latest' }} \
+            -n staging
+          
+          kubectl annotate deployment/engine-ops \
+            kubernetes.io/change-cause="Deploy ${{ inputs.version || github.sha }}" \
+            -n staging --overwrite
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/engine-ops \
+            -n staging \
+            --timeout=5m
+
+      - name: Verify deployment
+        run: |
+          kubectl wait --for=condition=ready pod \
+            -l app=engine-ops \
+            -n staging \
+            --timeout=2m
+          
+          kubectl get pods -l app=engine-ops -n staging
+
+      - name: Run smoke tests
+        run: |
+          kubectl port-forward service/engine-ops 8080:80 -n staging &
+          PF_PID=$!
+          sleep 5
+          
+          curl -sf http://localhost:8080/api/v1/health || exit 1
+          curl -sf http://localhost:8080/metrics || exit 1
+          
+          kill $PF_PID
+          echo "✓ Smoke tests passed"
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [build, deploy-staging]
+    runs-on: ubuntu-latest
+    if: inputs.environment == 'production'
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_PRODUCTION }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Create backup
+        run: |
+          # Record current deployment state
+          kubectl get deployment engine-ops -n production -o yaml > deployment-backup.yaml
+          
+          # Save current image
+          CURRENT_IMAGE=$(kubectl get deployment engine-ops -n production -o jsonpath='{.spec.template.spec.containers[0].image}')
+          echo "BACKUP_IMAGE=$CURRENT_IMAGE" >> $GITHUB_ENV
+
+      - name: Run database migrations
+        run: |
+          POD=$(kubectl get pod -l app=engine-ops -n production -o jsonpath='{.items[0].metadata.name}')
+          kubectl exec -n production $POD -- npm run migrate
+
+      - name: Deploy with rolling update
+        run: |
+          kubectl set image deployment/engine-ops \
+            engine-ops=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.version }} \
+            -n production \
+            --record
+          
+          kubectl annotate deployment/engine-ops \
+            kubernetes.io/change-cause="Deploy ${{ inputs.version }}" \
+            -n production --overwrite
+
+      - name: Monitor rollout
+        run: |
+          # Watch the rollout with timeout
+          kubectl rollout status deployment/engine-ops \
+            -n production \
+            --timeout=10m
+
+      - name: Verify deployment
+        run: |
+          # Wait for all pods to be ready
+          kubectl wait --for=condition=ready pod \
+            -l app=engine-ops \
+            -n production \
+            --timeout=3m
+          
+          # Check pod status
+          kubectl get pods -l app=engine-ops -n production
+          
+          # Verify no pods are in error state
+          ERROR_PODS=$(kubectl get pods -l app=engine-ops -n production -o json | jq -r '.items[] | select(.status.phase != "Running") | .metadata.name')
+          if [ -n "$ERROR_PODS" ]; then
+            echo "Error: Some pods are not running"
+            exit 1
+          fi
+
+      - name: Health check verification
+        run: |
+          # Port forward and verify health
+          kubectl port-forward service/engine-ops 8080:80 -n production &
+          PF_PID=$!
+          sleep 5
+          
+          # Multiple health checks to ensure stability
+          for i in {1..5}; do
+            if ! curl -sf http://localhost:8080/api/v1/health/ready > /dev/null; then
+              echo "Health check failed on attempt $i"
+              kill $PF_PID
+              exit 1
+            fi
+            echo "Health check $i passed"
+            sleep 2
+          done
+          
+          kill $PF_PID
+
+      - name: Monitor for issues
+        run: |
+          echo "Monitoring deployment for 2 minutes..."
+          for i in {1..24}; do
+            # Check pod status
+            READY=$(kubectl get pods -l app=engine-ops -n production -o json | jq -r '.items | length')
+            NOT_READY=$(kubectl get pods -l app=engine-ops -n production -o json | jq -r '[.items[] | select(.status.phase != "Running")] | length')
+            
+            echo "Monitoring check $i: $READY pods ready, $NOT_READY not ready"
+            
+            if [ "$NOT_READY" -gt 0 ]; then
+              echo "⚠️ Warning: Some pods are not ready"
+              kubectl get pods -l app=engine-ops -n production
+            fi
+            
+            sleep 5
+          done
+          
+          echo "✓ Deployment monitoring complete"
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Deployment failed, rolling back..."
+          kubectl rollout undo deployment/engine-ops -n production
+          kubectl rollout status deployment/engine-ops -n production --timeout=5m
+          echo "Rollback complete"
+
+  post-deploy:
+    name: Post-Deployment Tasks
+    needs: [deploy-production]
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Update deployment status
+        run: |
+          echo "✅ Deployment successful"
+          echo "Version: ${{ inputs.version }}"
+          echo "Environment: ${{ inputs.environment }}"
+
+      - name: Create GitHub release
+        if: inputs.environment == 'production'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.version }}
+          release_name: Release ${{ inputs.version }}
+          body: |
+            ## Release ${{ inputs.version }}
+            
+            Deployed to production on ${{ github.event.repository.updated_at }}
+            
+            ### Changes
+            - See commit history for detailed changes
+            
+            ### Deployment
+            - Strategy: Rolling Update
+            - Environment: Production
+            - Status: ✅ Success
+          draft: false
+          prerelease: false
+
+  notify:
+    name: Send Notifications
+    needs: [deploy-production]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Deployment status
+        run: |
+          if [ "${{ needs.deploy-production.result }}" = "success" ]; then
+            echo "✅ Production deployment successful"
+            echo "Version: ${{ inputs.version }}"
+          elif [ "${{ needs.deploy-production.result }}" = "failure" ]; then
+            echo "❌ Production deployment failed"
+            exit 1
+          else
+            echo "⏭️ Production deployment skipped"
+          fi

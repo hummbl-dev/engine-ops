@@ -39,35 +39,40 @@ describe('apiVersionMiddleware', () => {
     it('should extract version from URL path', () => {
         const req = mockRequest({ path: '/api/v2/optimize' }) as Request;
         const res = mockResponse() as Response;
+        const next = jest.fn() as any;
 
-        apiVersionMiddleware(req, res, mockNext);
+        apiVersionMiddleware(req, res, next);
 
         expect((req as any).apiVersion).toBe('v2');
-        expect(mockNext).toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
     });
 
     it('should extract version from header', () => {
         const req = mockRequest({
+            path: '/api/optimize',
             headers: { 'x-api-version': 'v2' }
         }) as Request;
         const res = mockResponse() as Response;
+        const next = jest.fn() as any;
 
-        apiVersionMiddleware(req, res, mockNext);
+        apiVersionMiddleware(req, res, next);
 
         expect((req as any).apiVersion).toBe('v2');
-        expect(mockNext).toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
     });
 
     it('should extract version from query parameter', () => {
         const req = mockRequest({
+            path: '/api/optimize',
             query: { api_version: 'v2' }
         }) as Request;
         const res = mockResponse() as Response;
+        const next = jest.fn() as any;
 
-        apiVersionMiddleware(req, res, mockNext);
+        apiVersionMiddleware(req, res, next);
 
         expect((req as any).apiVersion).toBe('v2');
-        expect(mockNext).toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
     });
 
     it('should default to v1 when no version specified', () => {
@@ -82,11 +87,13 @@ describe('apiVersionMiddleware', () => {
 
     it('should reject invalid API version', () => {
         const req = mockRequest({
+            path: '/api/optimize',
             headers: { 'x-api-version': 'v99' }
         }) as Request;
         const res = mockResponse() as Response;
+        const next = jest.fn() as any;
 
-        apiVersionMiddleware(req, res, mockNext);
+        apiVersionMiddleware(req, res, next);
 
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith(
@@ -94,6 +101,7 @@ describe('apiVersionMiddleware', () => {
                 error: 'Invalid API version'
             })
         );
+        expect(next).not.toHaveBeenCalled();
     });
 
     it('should set X-API-Version response header', () => {
@@ -117,15 +125,16 @@ describe('deprecationWarningMiddleware', () => {
         const req = mockRequest() as Request;
         (req as any).apiVersion = ApiVersion.V1;
         const res = mockResponse() as Response;
+        const next = jest.fn() as any;
 
-        middleware(req, res, mockNext);
+        middleware(req, res, next);
 
         expect(res.setHeader).toHaveBeenCalledWith(
             'Warning',
             expect.stringContaining('deprecated')
         );
         expect(res.setHeader).toHaveBeenCalledWith('Sunset', '2025-12-31');
-        expect(mockNext).toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
     });
 
     it('should not add headers for non-deprecated version', () => {
@@ -137,10 +146,11 @@ describe('deprecationWarningMiddleware', () => {
         const req = mockRequest() as Request;
         (req as any).apiVersion = ApiVersion.V2;
         const res = mockResponse() as Response;
+        const next = jest.fn() as any;
 
-        middleware(req, res, mockNext);
+        middleware(req, res, next);
 
-        expect(mockNext).toHaveBeenCalled();
+        expect(next).toHaveBeenCalled();
     });
 });
 
