@@ -1,0 +1,680 @@
+# Engine-Ops .gitignore
+# Universal production-grade ignore file for mixed-language repo
+# Covers: TypeScript/JavaScript, Python, Bash, DevOps tooling
+
+#############################################################################
+# Operating System Files
+#############################################################################
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+#############################################################################
+# IDEs and Editors
+#############################################################################
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+*.vsix
+
+# JetBrains IDEs (IntelliJ, WebStorm, PyCharm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+sftp-config.json
+sftp-config-alt*.json
+Package Control.last-run
+Package Control.ca-list
+Package Control.ca-bundle
+Package Control.system-ca-bundle
+Package Control.cache/
+Package Control.ca-certs/
+Package Control.merged-ca-bundle
+Package Control.user-ca-bundle
+oscrypto-ca-bundle.crt
+bh_unicode_properties.cache
+GitHub.sublime-settings
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+*~
+tags
+[._]*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+.org-id-locations
+*_archive
+*_flymake.*
+/eshell/history
+/eshell/lastdir
+/elpa/
+*.rel
+/auto/
+.cask/
+dist/
+flycheck_*.el
+/server/
+.projectile
+.dir-locals.el
+/network-security.data
+
+#############################################################################
+# Node.js / TypeScript / JavaScript
+#############################################################################
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+out/
+*.tsbuildinfo
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.vuepress/dist/
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+
+# Testing
+coverage/
+.nyc_output/
+lib-cov/
+*.lcov
+.grunt/
+.lock-wscript
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+.npm/
+.eslintcache
+.stylelintcache
+.node_repl_history
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Package manager files
+# Note: Keep lock files committed for reproducible builds
+# Uncomment to ignore if needed for specific use cases
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+.yarn/
+.pnp.*
+
+# Environment variables
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Yarn
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+#############################################################################
+# Python
+#############################################################################
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+doc/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+.pdm-python
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+#############################################################################
+# Bash / Shell Scripts
+#############################################################################
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Bash history
+.bash_history
+
+#############################################################################
+# Go
+#############################################################################
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+#############################################################################
+# Rust
+#############################################################################
+
+# Generated by Cargo
+target/
+Cargo.lock
+
+# Remove Cargo.lock from gitignore if creating a binary
+# Leave Cargo.lock uncommitted for libraries
+
+# Backup files generated by rustfmt
+**/*.rs.bk
+
+#############################################################################
+# Java
+#############################################################################
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+#############################################################################
+# Docker
+#############################################################################
+
+# Docker files to ignore (uncomment if needed)
+# docker-compose.override.yml
+# .dockerignore
+
+#############################################################################
+# Kubernetes
+#############################################################################
+
+# Helm
+*.tgz
+charts/*.lock
+
+#############################################################################
+# Terraform
+#############################################################################
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files
+*.tfvars
+*.tfvars.json
+
+# Ignore override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+#############################################################################
+# Ansible
+#############################################################################
+
+# Ansible retry files
+*.retry
+
+# Ansible vault password file
+.vault_pass
+.vault_password
+
+#############################################################################
+# CI/CD
+#############################################################################
+
+# GitHub Actions (keep workflows)
+# .github/workflows/*.yml should be committed
+
+# CircleCI (keep config)
+# .circleci/config.yml should be committed
+
+# GitLab CI (keep config)
+# .gitlab-ci.yml should be committed
+
+# Jenkins
+.jenkins/
+
+#############################################################################
+# Cloud Provider CLIs
+#############################################################################
+
+# AWS
+.aws/
+
+# Google Cloud
+.config/gcloud/
+
+# Azure
+.azure/
+
+#############################################################################
+# Databases
+#############################################################################
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL (temporary query files and dumps)
+# Note: Keep schema and migration files committed
+*-dump.sql
+*-backup.sql
+query-*.sql
+
+# MongoDB
+*.bson
+
+# Redis
+dump.rdb
+
+#############################################################################
+# Build Tools
+#############################################################################
+
+# Make
+*.o
+*.a
+*.out
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# Bazel
+bazel-*
+
+#############################################################################
+# Temporary and Cache Files
+#############################################################################
+
+# General temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Cache directories
+.cache/
+cache/
+
+#############################################################################
+# Security and Secrets
+#############################################################################
+
+# Environment files with secrets
+.env.local
+.env.*.local
+.env.secret
+.env.production
+
+# Private keys
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_dsa
+*.pub
+
+# Certificates
+*.crt
+*.cer
+*.der
+
+# Secrets
+secrets.yml
+secrets.yaml
+secrets.json
+*secret*
+*password*
+credentials.json
+
+# GPG
+secring.*
+
+#############################################################################
+# Misc
+#############################################################################
+
+# Backup files
+*-backup
+*.bk
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# System files
+.idea
+.vscode
+*.iml
+
+# Local configuration
+local.config
+local.settings.json
+
+#############################################################################
+# Project-Specific (Engine-Ops)
+#############################################################################
+
+# Temporary test outputs
+/tmp/
+/test-output/
+
+# Local development databases
+*.db-wal
+*.db-shm
+
+# Generated documentation
+/docs/generated/
+
+# Benchmark results
+/benchmarks/results/
+
+# Performance profiles
+*.prof
+*.pprof
+
+# Local scripts (personal automation)
+/scripts/local/
+
+# macOS metadata in archives
+**/.DS_Store
