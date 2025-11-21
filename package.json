@@ -20,7 +20,9 @@
     "scripts": {
         "build": "tsc",
         "prepublishOnly": "npm run build",
-        "test": "echo \"No tests specified yet\" && exit 0",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage",
         "lint": "eslint . --ext .ts",
         "format": "prettier --write .",
         "docs": "typedoc --out docs/api"
@@ -36,11 +38,15 @@
     },
     "homepage": "https://github.com/hummbl-dev/engine-ops#readme",
     "devDependencies": {
+        "@jest/globals": "^30.2.0",
+        "@types/jest": "^30.0.0",
         "@types/node": "^20.0.0",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "eslint": "^8.0.0",
+        "jest": "^30.2.0",
         "prettier": "^3.0.0",
+        "ts-jest": "^29.4.5",
         "ts-node": "^10.9.1",
         "typedoc": "^0.28.14",
         "typescript": "^5.0.0"
