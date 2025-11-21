@@ -18,12 +18,14 @@ import { LeastLoadedScheduler } from './algorithms/least-loaded.js';
 import { LRUCache } from './caching/lru-cache.js';
 import { Logger, LogLevel } from './monitoring/logger.js';
 import { metricsCollector } from './monitoring/metrics.js';
+import { AnomalyDetector } from './anomaly/detector.js';
 
 export class OptimizationEngine implements IEngine {
     private config: EngineConfig;
     private isInitialized: boolean = false;
     private cache: LRUCache<string, OptimizationResult>;
     private logger: Logger;
+    private anomalyDetector: AnomalyDetector;
 
     constructor(config: EngineConfig = {}) {
         this.config = {
@@ -45,6 +47,14 @@ export class OptimizationEngine implements IEngine {
             level: this.config.verbose ? LogLevel.DEBUG : LogLevel.INFO,
             enableConsole: true,
             enableTimestamps: true
+        });
+
+        // Initialize anomaly detector
+        this.anomalyDetector = new AnomalyDetector({
+            windowSize: 100,
+            threshold: 3,
+            minSamples: 10,
+            verbose: this.config.verbose
         });
     }
 
@@ -70,13 +80,16 @@ export class OptimizationEngine implements IEngine {
         const cachedResult = this.cache.get(cacheKey);
         if (cachedResult) {
             this.logger.debug(`Cache hit for request ${request.id}`);
+            const duration = Date.now() - startTime;
             metricsCollector.record({
                 requestId: request.id,
                 type: request.type,
-                durationMs: Date.now() - startTime,
+                durationMs: duration,
                 cacheHit: true,
                 timestamp: Date.now()
             });
+            // Record metric for anomaly detection
+            this.anomalyDetector.recordMetric('request_duration_ms', duration);
             return cachedResult;
         }
 
@@ -147,6 +160,9 @@ export class OptimizationEngine implements IEngine {
                 timestamp: Date.now()
             });
 
+            // Record for anomaly detection
+            this.anomalyDetector.recordMetric('request_duration_ms', durationMs);
+
             this.logger.info(`Request ${request.id} completed in ${durationMs}ms`);
 
             return optimizationResult;
@@ -179,5 +195,12 @@ export class OptimizationEngine implements IEngine {
      */
     public getCacheStats() {
         return this.cache.getStats();
+    }
+
+    /**
+     * Get anomaly detector instance
+     */
+    public getAnomalyDetector(): AnomalyDetector {
+        return this.anomalyDetector;
     }
 }
