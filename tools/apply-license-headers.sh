@@ -5,8 +5,6 @@
 # Script to check license headers in source files
 # Usage: ./tools/apply-license-headers.sh --check
 
-set -e
-
 CHECK_MODE=false
 
 if [ "$1" = "--check" ]; then
