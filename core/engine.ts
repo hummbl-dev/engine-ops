@@ -210,16 +210,16 @@ export class OptimizationEngine implements IEngine {
     }
 
     /**
-     * Get plugin registry
-     */
-    public getPluginRegistry() {
-        return pluginRegistry;
-    }
-
-    /**
      * Get workload collector
      */
     public getWorkloadCollector() {
         return workloadCollector;
+    }
+
+    /**
+     * Get plugin registry
+     */
+    public getPluginRegistry() {
+        return pluginRegistry;
     }
 }
