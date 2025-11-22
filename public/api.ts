@@ -61,6 +61,20 @@ export class EngineOps {
   public getCacheStats() {
     return this.engine.getCacheStats();
   }
+
+  /**
+   * Get plugin registry
+   */
+  public getPluginRegistry() {
+    return this.engine.getPluginRegistry();
+  }
+
+  /**
+   * Get workload collector
+   */
+  public getWorkloadCollector() {
+    return this.engine.getWorkloadCollector();
+  }
 }
 
 // Re-export types for public consumption
