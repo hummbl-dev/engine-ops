@@ -28,6 +28,14 @@ export interface EngineConfig {
     verbose?: boolean;
 
     /**
+     * Enable multi-cloud resource management
+     */
+    enableMultiCloud?: boolean;
+
+    /**
+     * Cloud providers to enable (when multi-cloud is enabled)
+     */
+    cloudProviders?: Array<'aws' | 'gcp' | 'azure' | 'edge'>;
      * Whether to enable plugin system
      */
     enablePlugins?: boolean;
