@@ -139,6 +139,55 @@ kubectl describe hpa engine-ops-hpa
 kubectl top pods -l app=engine-ops
 ```
 
+## Self-Healing Infrastructure
+
+The deployment includes automated health checks and remediation capabilities:
+
+### Health Monitoring
+
+Deploy the health monitor to actively track pod health and log remedial actions:
+
+```bash
+# Deploy health monitor
+kubectl apply -f infra/k8s/health-monitor.yaml
+
+# Verify health monitor
+kubectl get pods -l app=engine-ops-health-monitor
+kubectl logs -l app=engine-ops-health-monitor -f
+```
+
+### Health Check Endpoints
+
+- `/api/v1/health` - Comprehensive health check with diagnostics
+- `/api/v1/health/live` - Liveness probe
+- `/api/v1/health/ready` - Readiness probe
+- `/api/v1/health/history` - Historical health data
+- `/api/v1/health/remediation` - Remediation event log
+
+### Automatic Pod Replacement
+
+The deployment includes:
+- **Aggressive health checks**: Liveness and readiness probes detect failures quickly
+- **Startup probes**: Handle slow-starting containers gracefully
+- **Pod Disruption Budget**: Ensures at least 1 pod is always available
+- **Health monitor**: Actively monitors pods and logs remediation actions
+
+When a pod fails health checks:
+1. Kubernetes automatically restarts unhealthy pods
+2. Health monitor logs the remediation event
+3. Kubernetes events are created for auditability
+4. New pods are created if restart fails
+
+### View Remediation Logs
+
+```bash
+# From Kubernetes events
+kubectl get events --field-selector reason=PodUnhealthy
+
+# From Engine-Ops API
+curl http://<ENGINE-OPS-URL>/api/v1/health/remediation
+```
+
 ## Production Recommendations
 
 1. **Use specific image tags** instead of `latest`
@@ -146,4 +195,5 @@ kubectl top pods -l app=engine-ops
 3. **Set resource limits** based on actual usage
 4. **Configure persistent storage** if needed
 5. **Set up monitoring** (Prometheus, Grafana)
-6. **Enable pod disruption budgets** for high availability
+6. **Enable pod disruption budgets** for high availability (see `pdb.yaml`)
+7. **Deploy health monitor** for active health tracking and remediation logging

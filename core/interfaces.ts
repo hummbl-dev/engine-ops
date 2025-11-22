@@ -26,6 +26,16 @@ export interface EngineConfig {
      * Whether to enable verbose logging
      */
     verbose?: boolean;
+
+    /**
+     * Whether to enable plugin system
+     */
+    enablePlugins?: boolean;
+
+    /**
+     * Whether to collect workload data for ML training
+     */
+    enableWorkloadCollection?: boolean;
 }
 
 export interface OptimizationRequest {
@@ -37,7 +47,7 @@ export interface OptimizationRequest {
     /**
      * Type of optimization to perform
      */
-    type: 'resource' | 'scheduling' | 'performance';
+    type: 'resource' | 'scheduling' | 'performance' | 'ml-driven';
 
     /**
      * Input data for the optimization

@@ -10,14 +10,16 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": true,
-        "declarationMap": true
+        "declarationMap": true,
+        "isolatedModules": true
     },
     "include": [
         "core",
         "schemas",
         "public",
         "infra",
-        "tools"
+        "tools",
+        "k8s-operator"
     ],
     "typedocOptions": {
         "entryPoints": [
