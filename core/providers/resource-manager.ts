@@ -19,7 +19,6 @@ import {
     Workload,
     PlacementResult,
     ResourceCapacity,
-    GeoRegion,
 } from './interfaces.js';
 
 /**
@@ -93,7 +92,7 @@ export class MultiCloudResourceManager implements IResourceManager {
         const workloadGroups = this.groupWorkloadsByGeo(workloads);
 
         // Schedule each group
-        for (const [regionGroup, workloadList] of Object.entries(workloadGroups)) {
+        for (const workloadList of Object.values(workloadGroups)) {
             for (const workload of workloadList) {
                 const result = await this.scheduleWorkload(workload);
                 if (result) {

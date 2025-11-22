@@ -16,7 +16,7 @@
 
 import { EngineOps } from '../public/api.js';
 
-async function main() {
+async function main(): Promise<void> {
     console.log('Starting Algorithm Verification (Scheduling)...');
 
     const engine = new EngineOps({
@@ -44,7 +44,7 @@ async function main() {
 
     console.log('Optimization Result:', JSON.stringify(result, null, 2));
 
-    if (result.success && result.result && (result.result as any).nodeId === 'node-B') {
+    if (result.success && result.result && (result.result as { nodeId: string }).nodeId === 'node-B') {
         console.log('Verification PASSED: Correct node selected (node-B).');
     } else {
         console.error('Verification FAILED: Incorrect node selected or failure.');

@@ -7,6 +7,7 @@ import { describe, it, expect, jest } from '@jest/globals';
 import { Request, Response, NextFunction } from 'express';
 import {
     ApiVersion,
+    ApiVersionRequest,
     apiVersionMiddleware,
     deprecationWarningMiddleware,
     ApiVersionTransformer
@@ -20,30 +21,44 @@ const mockRequest = (overrides = {}): Partial<Request> => ({
     ...overrides
 });
 
-const mockResponse = (): Partial<Response> => {
-    const res: any = {
-        headers: {},
+// Mock Express Response interface for testing
+interface MockResponse extends Partial<Response> {
+    statusCode: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    json: jest.MockedFunction<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    status: jest.MockedFunction<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setHeader: jest.MockedFunction<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getHeader: jest.MockedFunction<any>;
+}
+
+const mockResponse = (): MockResponse => {
+    const headers: Record<string, string> = {};
+
+    return {
         statusCode: 200,
-        json: jest.fn(),
+        json: jest.fn().mockReturnThis(),
         status: jest.fn().mockReturnThis(),
         setHeader: jest.fn((key: string, value: string) => {
-            res.headers[key] = value;
-        })
+            headers[key] = value;
+        }),
+        getHeader: jest.fn((key: string) => headers[key])
     };
-    return res;
 };
 
-const mockNext: NextFunction = jest.fn() as any;
+const mockNext: NextFunction = jest.fn();
 
 describe('apiVersionMiddleware', () => {
     it('should extract version from URL path', () => {
         const req = mockRequest({ path: '/api/v2/optimize' }) as Request;
         const res = mockResponse() as Response;
-        const next = jest.fn() as any;
+        const next = jest.fn();
 
         apiVersionMiddleware(req, res, next);
 
-        expect((req as any).apiVersion).toBe('v2');
+        expect((req as ApiVersionRequest).apiVersion).toBe('v2');
         expect(next).toHaveBeenCalled();
     });
 
@@ -53,11 +68,11 @@ describe('apiVersionMiddleware', () => {
             headers: { 'x-api-version': 'v2' }
         }) as Request;
         const res = mockResponse() as Response;
-        const next = jest.fn() as any;
+        const next = jest.fn();
 
         apiVersionMiddleware(req, res, next);
 
-        expect((req as any).apiVersion).toBe('v2');
+        expect((req as ApiVersionRequest).apiVersion).toBe('v2');
         expect(next).toHaveBeenCalled();
     });
 
@@ -67,11 +82,11 @@ describe('apiVersionMiddleware', () => {
             query: { api_version: 'v2' }
         }) as Request;
         const res = mockResponse() as Response;
-        const next = jest.fn() as any;
+        const next = jest.fn();
 
         apiVersionMiddleware(req, res, next);
 
-        expect((req as any).apiVersion).toBe('v2');
+        expect((req as ApiVersionRequest).apiVersion).toBe('v2');
         expect(next).toHaveBeenCalled();
     });
 
@@ -81,7 +96,7 @@ describe('apiVersionMiddleware', () => {
 
         apiVersionMiddleware(req, res, mockNext);
 
-        expect((req as any).apiVersion).toBe('v1');
+        expect((req as ApiVersionRequest).apiVersion).toBe('v1');
         expect(mockNext).toHaveBeenCalled();
     });
 
@@ -91,6 +106,7 @@ describe('apiVersionMiddleware', () => {
             headers: { 'x-api-version': 'v99' }
         }) as Request;
         const res = mockResponse() as Response;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const next = jest.fn() as any;
 
         apiVersionMiddleware(req, res, next);
@@ -123,9 +139,9 @@ describe('deprecationWarningMiddleware', () => {
         );
 
         const req = mockRequest() as Request;
-        (req as any).apiVersion = ApiVersion.V1;
+        (req as ApiVersionRequest).apiVersion = ApiVersion.V1;
         const res = mockResponse() as Response;
-        const next = jest.fn() as any;
+        const next = jest.fn();
 
         middleware(req, res, next);
 
@@ -144,9 +160,9 @@ describe('deprecationWarningMiddleware', () => {
         );
 
         const req = mockRequest() as Request;
-        (req as any).apiVersion = ApiVersion.V2;
+        (req as ApiVersionRequest).apiVersion = ApiVersion.V2;
         const res = mockResponse() as Response;
-        const next = jest.fn() as any;
+        const next = jest.fn();
 
         middleware(req, res, next);
 
@@ -203,7 +219,7 @@ describe('ApiVersionTransformer', () => {
             const req = mockRequest({
                 body: { type: 'scheduling' }
             }) as Request;
-            (req as any).apiVersion = ApiVersion.V1;
+            (req as ApiVersionRequest).apiVersion = ApiVersion.V1;
 
             const transformed = ApiVersionTransformer.transformRequest(req);
 
@@ -215,7 +231,7 @@ describe('ApiVersionTransformer', () => {
             const req = mockRequest({
                 body: { type: 'scheduling' }
             }) as Request;
-            (req as any).apiVersion = ApiVersion.V2;
+            (req as ApiVersionRequest).apiVersion = ApiVersion.V2;
 
             const transformed = ApiVersionTransformer.transformRequest(req);
 

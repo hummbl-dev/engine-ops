@@ -4,7 +4,7 @@
  * Generates cost-saving and performance-optimizing recommendations.
  */
 
-import { CostCalculator, ResourceUsage, CostEstimate } from './cost-calculator.js';
+import { CostCalculator, ResourceUsage } from './cost-calculator.js';
 
 export interface Recommendation {
     id: string;

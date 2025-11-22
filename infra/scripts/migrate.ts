@@ -34,7 +34,7 @@ import { migration002 } from '../../schemas/migrations/002-add-metrics-retention
 
 const MIGRATIONS_PATH = path.join(process.cwd(), 'schemas', 'migrations');
 
-async function main() {
+async function main(): Promise<void> {
     const command = process.argv[2] || 'up';
     const arg = process.argv[3];
 
@@ -116,7 +116,7 @@ async function main() {
     }
 }
 
-function printHelp() {
+function printHelp(): void {
     console.log('Usage: npm run migrate [command] [args]\n');
     console.log('Commands:');
     console.log('  up, migrate       Apply all pending migrations (default)');

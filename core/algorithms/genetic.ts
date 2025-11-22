@@ -56,6 +56,14 @@ export class GeneticAlgorithm<T> {
             fitness: 0
         }));
 
+        // Handle edge case of empty population
+        if (this.population.length === 0) {
+            return {
+                genes: initializeIndividual(),
+                fitness: fitnessFunction(initializeIndividual())
+            };
+        }
+
         // Evaluate initial population
         this.evaluatePopulation(fitnessFunction);
 
@@ -96,6 +104,13 @@ export class GeneticAlgorithm<T> {
         }
 
         // Return best individual
+        if (this.population.length === 0) {
+            // Handle edge case of empty population
+            return {
+                genes: initializeIndividual(),
+                fitness: fitnessFunction(initializeIndividual())
+            };
+        }
         return this.population.reduce((best, ind) =>
             ind.fitness > best.fitness ? ind : best
         );

@@ -26,7 +26,7 @@ const API_BASE = 'http://localhost:3000/api/v1';
 /**
  * Helper function to make API requests
  */
-async function apiRequest(endpoint: string, method: string = 'GET', body?: any) {
+async function apiRequest(endpoint: string, method: string = 'GET', body?: unknown): Promise<unknown> {
     const options: RequestInit = {
         method,
         headers: {
@@ -56,7 +56,7 @@ async function apiRequest(endpoint: string, method: string = 'GET', body?: any) 
 /**
  * Example 1: Create and run a metrics session
  */
-async function metricsSessionExample() {
+async function metricsSessionExample(): Promise<void> {
     console.log('\n=== Metrics Session Example ===\n');
 
     // Create session
@@ -105,7 +105,7 @@ async function metricsSessionExample() {
 /**
  * Example 2: Create and run a simulation session
  */
-async function simulationSessionExample() {
+async function simulationSessionExample(): Promise<void> {
     console.log('\n=== Simulation Session Example ===\n');
 
     const session = await apiRequest('/agent-sessions', 'POST', {
@@ -157,7 +157,7 @@ async function simulationSessionExample() {
 /**
  * Example 3: Policy enforcement session
  */
-async function policySessionExample() {
+async function policySessionExample(): Promise<void> {
     console.log('\n=== Policy Enforcement Example ===\n');
 
     const session = await apiRequest('/agent-sessions', 'POST', {
@@ -202,7 +202,7 @@ async function policySessionExample() {
 /**
  * Example 4: List and filter sessions
  */
-async function listSessionsExample(sessionIds: string[]) {
+async function listSessionsExample(_sessionIds: string[]): Promise<void> {
     console.log('\n=== List Sessions Example ===\n');
 
     // List all sessions
@@ -225,7 +225,7 @@ async function listSessionsExample(sessionIds: string[]) {
 /**
  * Example 5: Handle errors
  */
-async function errorHandlingExample() {
+async function errorHandlingExample(): Promise<void> {
     console.log('\n=== Error Handling Example ===\n');
 
     try {
@@ -249,7 +249,7 @@ async function errorHandlingExample() {
 /**
  * Example 6: Cleanup sessions
  */
-async function cleanupExample(sessionIds: string[]) {
+async function cleanupExample(sessionIds: string[]): Promise<void> {
     console.log('\n=== Cleanup Example ===\n');
 
     for (const sessionId of sessionIds) {
@@ -265,7 +265,7 @@ async function cleanupExample(sessionIds: string[]) {
 /**
  * Run all examples
  */
-async function runExamples() {
+async function runExamples(): Promise<void> {
     console.log('Starting Agent Session Examples...');
     console.log('Make sure the Engine-Ops server is running on http://localhost:3000\n');
 

@@ -1,12 +1,12 @@
 // controller.ts – main reconciliation loop for Engine-Ops operator
-import { KubeConfig, CustomObjectsApi } from '@kubernetes/client-node';
-import { reconcile } from './reconciler.js';
+// import { KubeConfig, CustomObjectsApi } from '@kubernetes/client-node';
 
-const kc = new KubeConfig();
-kc.loadFromDefault();
-const k8sApi = kc.makeApiClient(CustomObjectsApi);
+// Placeholder: K8s API client will be initialized when watch implementation is added
+// const kc = new KubeConfig();
+// kc.loadFromDefault();
+// const k8sApi = kc.makeApiClient(CustomObjectsApi);
 
-async function startOperator() {
+async function startOperator(): Promise<void> {
     console.log('Engine-Ops Operator starting...');
     // Watch for custom resources and invoke reconciler
     // Placeholder: actual watch implementation in watcher.ts

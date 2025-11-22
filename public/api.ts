@@ -15,6 +15,10 @@
  */
 
 import { OptimizationEngine, EngineConfig, OptimizationRequest, OptimizationResult } from '../core/index.js';
+import { AnomalyDetector } from '../core/anomaly/detector.js';
+import { CacheStats } from '../core/caching/lru-cache.js';
+import { PluginRegistry } from '../core/plugins/registry.js';
+import { WorkloadCollector } from '../core/plugins/workload-collector.js';
 
 /**
  * EngineOps: The public facade for the Engine Optimization Platform.
@@ -58,27 +62,27 @@ export class EngineOps {
   /**
    * Get cache statistics
    */
-  public getCacheStats() {
+  public getCacheStats(): CacheStats {
     return this.engine.getCacheStats();
   }
 
   /**
    * Get anomaly detector for monitoring
    */
-  public getAnomalyDetector() {
+  public getAnomalyDetector(): AnomalyDetector {
     return this.engine.getAnomalyDetector();
   }
   /**
    * Get plugin registry
    */
-  public getPluginRegistry(): any {
+  public getPluginRegistry(): PluginRegistry {
     return this.engine.getPluginRegistry();
   }
 
   /**
    * Get workload collector
    */
-  public getWorkloadCollector() {
+  public getWorkloadCollector(): WorkloadCollector {
     return this.engine.getWorkloadCollector();
   }
 }

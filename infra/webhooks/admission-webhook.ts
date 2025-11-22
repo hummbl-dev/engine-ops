@@ -30,8 +30,8 @@ export interface AdmissionRequest {
         resource: string;
     };
     operation: 'CREATE' | 'UPDATE' | 'DELETE' | 'CONNECT';
-    object?: any;
-    oldObject?: any;
+    object?: unknown;
+    oldObject?: unknown;
     userInfo?: {
         username: string;
         uid: string;
@@ -69,7 +69,7 @@ export interface SecurityPolicy {
 export interface PolicyResult {
     allowed: boolean;
     message?: string;
-    patch?: any[];
+    patch?: PatchOperation[];
     warnings?: string[];
 }
 
@@ -79,6 +79,6 @@ export interface PolicyResult {
 export interface PatchOperation {
     op: 'add' | 'remove' | 'replace' | 'copy' | 'move' | 'test';
     path: string;
-    value?: any;
+    value?: unknown;
     from?: string;
 }

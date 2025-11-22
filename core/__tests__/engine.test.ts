@@ -103,7 +103,7 @@ describe('OptimizationEngine', () => {
             const result = await engine.optimize(request);
 
             expect(result.success).toBe(true);
-            expect((result.result as any).nodeId).toBe('node-B');
+            expect((result.result as { nodeId: string }).nodeId).toBe('node-B');
         });
     });
 
@@ -115,11 +115,12 @@ describe('OptimizationEngine', () => {
         it('should reject invalid request type', async () => {
             const request = {
                 id: 'invalid-1',
-                type: 'invalid-type',
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                type: 'invalid-type' as any,
                 data: {}
-            } as any;
+            };
 
-            const result = await engine.optimize(request);
+            const result = await engine.optimize(request as OptimizationRequest);
 
             expect(result.success).toBe(false);
             expect(result.error).toContain('Validation failed');
@@ -127,11 +128,11 @@ describe('OptimizationEngine', () => {
 
         it('should reject missing request id', async () => {
             const request = {
-                type: 'resource',
+                type: 'resource' as const,
                 data: {}
-            } as any;
+            };
 
-            const result = await engine.optimize(request);
+            const result = await engine.optimize(request as OptimizationRequest);
 
             expect(result.success).toBe(false);
             expect(result.error).toContain('Validation failed');

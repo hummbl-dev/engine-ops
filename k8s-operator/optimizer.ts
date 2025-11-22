@@ -1,7 +1,7 @@
 // optimizer.ts – real integration with EngineOps API
 import { EngineOps } from '../public/api.js';
 
-export async function optimizeResources(spec: any): Promise<any> {
+export async function optimizeResources(spec: Record<string, unknown>): Promise<unknown> {
     // Create an EngineOps client (no special config needed for now)
     const client = new EngineOps();
     // Build a generic optimization request – the spec shape is assumed to match EngineOps expectations

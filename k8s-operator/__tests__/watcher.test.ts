@@ -36,9 +36,9 @@ describe('Watcher', () => {
     });
 
     it('should call reconcile on ADDED event', async () => {
-        let callback: any;
-        mockWatch.mockImplementation((path, opts, cb, errCb) => {
-            callback = cb;
+        let callback: ((type: string, obj: unknown) => Promise<void>) | undefined;
+        mockWatch.mockImplementation((path, opts, cb, _errCb) => {
+            callback = cb as (type: string, obj: unknown) => Promise<void>;
             return Promise.resolve({ abort: jest.fn() });
         });
 
@@ -48,7 +48,9 @@ describe('Watcher', () => {
         });
 
         const obj = { metadata: { name: 'test' } };
-        await callback('ADDED', obj);
+        if (callback) {
+            await callback('ADDED', obj);
+        }
 
         expect(mockReconcile).toHaveBeenCalledWith(obj, expect.anything());
     });

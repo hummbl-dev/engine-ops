@@ -35,7 +35,7 @@ costRouter.post('/estimate', (req, res) => {
         const usage = req.body;
         const estimate = calculator.calculateCost(usage);
         res.json(estimate);
-    } catch (error) {
+    } catch {
         res.status(400).json({ error: 'Invalid request' });
     }
 });
@@ -68,7 +68,7 @@ costRouter.post('/recommendations', (req, res) => {
         const { resourceId, usage, utilization } = req.body;
         const recommendations = recommendationEngine.analyze(resourceId, usage, utilization);
         res.json(recommendations);
-    } catch (error) {
+    } catch {
         res.status(400).json({ error: 'Invalid request' });
     }
 });

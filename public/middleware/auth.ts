@@ -50,7 +50,7 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
             req.user = decoded;
             next();
             return;
-        } catch (error) {
+        } catch {
             res.status(401).json({ error: 'Invalid token' });
             return;
         }

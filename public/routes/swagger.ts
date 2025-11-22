@@ -29,9 +29,9 @@ if (!fs.existsSync(openApiPath)) {
     openApiPath = path.join(process.cwd(), 'docs/openapi.yaml');
 }
 
-let openApiSpec: any = null;
+let openApiSpec: unknown = null;
 if (fs.existsSync(openApiPath)) {
-    openApiSpec = yaml.load(fs.readFileSync(openApiPath, 'utf8')) as any;
+    openApiSpec = yaml.load(fs.readFileSync(openApiPath, 'utf8')) as unknown;
 } else {
     console.warn('OpenAPI spec not found, Swagger UI will not be available');
 }

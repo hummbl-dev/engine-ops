@@ -80,8 +80,8 @@ describe('OptimizationEngine - Multi-Cloud Integration', () => {
             const result = await engine.scheduleMultiCloudWorkloads(workloads);
 
             expect(result.success).toBe(true);
-            expect((result.result as any).totalScheduled).toBe(1);
-            expect((result.result as any).totalRequested).toBe(1);
+            expect((result.result as { totalScheduled: number; totalRequested: number }).totalScheduled).toBe(1);
+            expect((result.result as { totalScheduled: number; totalRequested: number }).totalRequested).toBe(1);
         });
 
         it('should schedule multiple workloads with geo-sharding', async () => {
@@ -106,8 +106,8 @@ describe('OptimizationEngine - Multi-Cloud Integration', () => {
             const result = await engine.scheduleMultiCloudWorkloads(workloads, true);
 
             expect(result.success).toBe(true);
-            expect((result.result as any).totalScheduled).toBe(3);
-            expect((result.result as any).placements.length).toBe(3);
+            expect((result.result as { totalScheduled: number; placements: unknown[] }).totalScheduled).toBe(3);
+            expect((result.result as { totalScheduled: number; placements: unknown[] }).placements.length).toBe(3);
         });
 
         it('should schedule workloads without geo-sharding', async () => {
@@ -125,7 +125,7 @@ describe('OptimizationEngine - Multi-Cloud Integration', () => {
             const result = await engine.scheduleMultiCloudWorkloads(workloads, false);
 
             expect(result.success).toBe(true);
-            expect((result.result as any).totalScheduled).toBe(2);
+            expect((result.result as { totalScheduled: number }).totalScheduled).toBe(2);
         });
 
         it('should respect provider preferences', async () => {
@@ -142,7 +142,7 @@ describe('OptimizationEngine - Multi-Cloud Integration', () => {
             const result = await engine.scheduleMultiCloudWorkloads(workloads);
 
             expect(result.success).toBe(true);
-            const placement = (result.result as any).placements[0];
+            const placement = (result.result as { placements: Array<{ node: { provider: string } }> }).placements[0];
             expect(placement.node.provider).toBe('aws');
         });
 
@@ -160,7 +160,7 @@ describe('OptimizationEngine - Multi-Cloud Integration', () => {
             const result = await engine.scheduleMultiCloudWorkloads(workloads);
 
             expect(result.success).toBe(true);
-            const placement = (result.result as any).placements[0];
+            const placement = (result.result as { placements: Array<{ node: { provider: string } }> }).placements[0];
             expect(placement.node.provider).toBe('edge');
         });
 
@@ -197,7 +197,9 @@ describe('OptimizationEngine - Multi-Cloud Integration', () => {
             const result = await engine.scheduleMultiCloudWorkloads(workloads);
 
             expect(result.success).toBe(true);
-            expect((result.result as any).totalScheduled).toBeLessThan((result.result as any).totalRequested);
+            expect((result.result as { totalScheduled: number; totalRequested: number }).totalScheduled).toBeLessThan(
+                (result.result as { totalScheduled: number; totalRequested: number }).totalRequested
+            );
         });
     });
 

@@ -15,6 +15,39 @@
  */
 
 import { SecurityPolicy, AdmissionRequest, PolicyResult, PatchOperation } from './admission-webhook.js';
+import { KubernetesObject } from './kubernetes-types.js';
+
+/**
+ * Minimal Pod types for security policy enforcement
+ */
+interface PodSecurityContext {
+    runAsNonRoot?: boolean;
+}
+
+interface ContainerSecurityContext {
+    runAsNonRoot?: boolean;
+    privileged?: boolean;
+}
+
+interface ResourceRequirements {
+    limits?: Record<string, string>;
+    requests?: Record<string, string>;
+}
+
+interface Container {
+    name: string;
+    securityContext?: ContainerSecurityContext;
+    resources?: ResourceRequirements;
+}
+
+interface PodSpec {
+    containers: Container[];
+    securityContext?: PodSecurityContext;
+}
+
+interface Pod {
+    spec: PodSpec;
+}
 
 /**
  * Policy: Enforce non-root containers
@@ -28,7 +61,7 @@ export class NonRootContainerPolicy implements SecurityPolicy {
             return { allowed: true };
         }
 
-        const pod = request.object;
+        const pod = request.object as Pod;
         const patches: PatchOperation[] = [];
         const warnings: string[] = [];
 
@@ -51,7 +84,7 @@ export class NonRootContainerPolicy implements SecurityPolicy {
 
         // Check containers
         if (pod.spec.containers) {
-            pod.spec.containers.forEach((container: any, index: number) => {
+            pod.spec.containers.forEach((container: Container, index: number) => {
                 if (!container.securityContext?.runAsNonRoot) {
                     if (!container.securityContext) {
                         patches.push({
@@ -99,12 +132,12 @@ export class ResourceLimitsPolicy implements SecurityPolicy {
             return { allowed: true };
         }
 
-        const pod = request.object;
+        const pod = request.object as Pod;
         const patches: PatchOperation[] = [];
         const warnings: string[] = [];
 
         if (pod.spec.containers) {
-            pod.spec.containers.forEach((container: any, index: number) => {
+            pod.spec.containers.forEach((container: Container, index: number) => {
                 if (!container.resources?.limits) {
                     const defaultLimits = this.defaultLimits;
 
@@ -146,7 +179,7 @@ export class NoPrivilegedContainersPolicy implements SecurityPolicy {
             return { allowed: true };
         }
 
-        const pod = request.object;
+        const pod = request.object as Pod;
 
         if (pod.spec.containers) {
             for (const container of pod.spec.containers) {
@@ -173,7 +206,7 @@ export class SecurityLabelsPolicy implements SecurityPolicy {
     private requiredLabels = ['app', 'version', 'environment'];
 
     async enforce(request: AdmissionRequest): Promise<PolicyResult> {
-        const obj = request.object;
+        const obj = request.object as KubernetesObject;
         const patches: PatchOperation[] = [];
         const warnings: string[] = [];
 
@@ -214,7 +247,7 @@ export class SecurityPolicyRegistry {
         this.registerDefaultPolicies();
     }
 
-    private registerDefaultPolicies() {
+    private registerDefaultPolicies(): void {
         this.register(new NonRootContainerPolicy());
         this.register(new ResourceLimitsPolicy());
         this.register(new NoPrivilegedContainersPolicy());

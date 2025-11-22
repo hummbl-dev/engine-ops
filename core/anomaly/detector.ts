@@ -162,7 +162,7 @@ export class AnomalyDetector {
     /**
      * Hook for anomaly detection events
      */
-    protected onAnomalyDetected(alert: AnomalyAlert): void {
+    protected onAnomalyDetected(_alert: AnomalyAlert): void {
         // Override this method to handle anomaly alerts
         // Default: no-op
     }

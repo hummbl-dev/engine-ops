@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { describe, it, expect, beforeAll } from '@jest/globals';
 import request from 'supertest';
 import { createApp } from '../app.js';
 import { Express } from 'express';

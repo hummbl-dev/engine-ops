@@ -86,7 +86,7 @@ export function deprecationWarningMiddleware(
     deprecatedVersion: ApiVersion,
     message: string,
     sunsetDate?: string
-) {
+): (req: Request, res: Response, next: NextFunction) => void {
     return (req: Request, res: Response, next: NextFunction): void => {
         const version = (req as ApiVersionRequest).apiVersion;
 
@@ -112,7 +112,7 @@ export class ApiVersionTransformer {
     /**
      * Transform request from older version to current internal format
      */
-    static transformRequestV1ToV2(body: Record<string, any>): Record<string, any> {
+    static transformRequestV1ToV2(body: Record<string, unknown>): Record<string, unknown> {
         // Example transformation: add default values for new fields
         return {
             ...body,
@@ -124,8 +124,9 @@ export class ApiVersionTransformer {
     /**
      * Transform response from internal format to older version
      */
-    static transformResponseV2ToV1(data: Record<string, any>): Record<string, any> {
+    static transformResponseV2ToV1(data: Record<string, unknown>): Record<string, unknown> {
         // Example transformation: remove new fields not present in v1
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { version, metadata, ...v1Data } = data;
         return v1Data;
     }
@@ -133,7 +134,7 @@ export class ApiVersionTransformer {
     /**
      * Apply transformation based on API version
      */
-    static transformRequest(req: Request): Record<string, any> {
+    static transformRequest(req: Request): Record<string, unknown> {
         const version = (req as ApiVersionRequest).apiVersion;
 
         if (version === ApiVersion.V1 && req.body) {
@@ -146,7 +147,7 @@ export class ApiVersionTransformer {
     /**
      * Transform response based on requested API version
      */
-    static transformResponse(data: Record<string, any>, version: string): Record<string, any> {
+    static transformResponse(data: Record<string, unknown>, version: string): Record<string, unknown> {
         if (version === ApiVersion.V1) {
             return this.transformResponseV2ToV1(data);
         }
@@ -168,7 +169,7 @@ export function autoTransformMiddleware(req: Request, res: Response, next: NextF
 
     // Wrap res.json to transform responses
     const originalJson = res.json.bind(res);
-    res.json = function(data: Record<string, any>) {
+    res.json = function(data: Record<string, unknown>): Response {
         const transformed = ApiVersionTransformer.transformResponse(data, version);
         return originalJson(transformed);
     };

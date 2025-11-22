@@ -2,9 +2,21 @@
 import { CustomObjectsApi } from '@kubernetes/client-node';
 import { optimizeResources } from './optimizer.js';
 
-export async function reconcile(customObject: any, k8sApi: CustomObjectsApi) {
+/**
+ * Minimal Kubernetes object interface for custom resources
+ */
+interface KubernetesObject {
+    metadata?: {
+        name?: string;
+        namespace?: string;
+    };
+    spec?: Record<string, unknown>;
+}
+
+export async function reconcile(customObject: unknown, _k8sApi: CustomObjectsApi): Promise<void> {
     // Extract spec from the custom resource
-    const spec = customObject?.spec;
+    const obj = customObject as KubernetesObject;
+    const spec = obj?.spec;
     if (!spec) {
         console.warn('No spec found on custom object, skipping');
         return;
@@ -14,6 +26,6 @@ export async function reconcile(customObject: any, k8sApi: CustomObjectsApi) {
     const recommendations = await optimizeResources(spec);
 
     // Apply recommendations back to the cluster (this is a stub – real implementation would patch resources)
-    console.log('Recommendations for', customObject.metadata.name, ':', recommendations);
+    console.log('Recommendations for', obj.metadata?.name, ':', recommendations);
     // Example: k8sApi.patchNamespacedDeployment(...)
 }

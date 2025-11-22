@@ -15,7 +15,7 @@ import { IEngine, EngineConfig, OptimizationRequest, OptimizationResult } from '
 import { OptimizationRequestSchema } from '../schemas/validation.js';
 import { BinPackingOptimizer } from './algorithms/bin-packing.js';
 import { LeastLoadedScheduler } from './algorithms/least-loaded.js';
-import { LRUCache } from './caching/lru-cache.js';
+import { LRUCache, CacheStats } from './caching/lru-cache.js';
 import { Logger, LogLevel } from './monitoring/logger.js';
 import { metricsCollector } from './monitoring/metrics.js';
 import { AnomalyDetector } from './anomaly/detector.js';
@@ -25,8 +25,32 @@ import { GCPProvider } from './providers/gcp-provider.js';
 import { AzureProvider } from './providers/azure-provider.js';
 import { EdgeProvider } from './providers/edge-provider.js';
 import type { Workload } from './providers/interfaces.js';
-import { pluginRegistry } from './plugins/registry.js';
-import { workloadCollector } from './plugins/workload-collector.js';
+import { pluginRegistry, PluginRegistry } from './plugins/registry.js';
+import { workloadCollector, WorkloadCollector } from './plugins/workload-collector.js';
+
+// Local interfaces for type safety
+interface ResourceItem {
+    id: string;
+    cpu: number;
+    memory: number;
+}
+
+interface NodeCapacity {
+    cpu: number;
+    memory: number;
+}
+
+interface NodeStatus {
+    id: string;
+    cpuLoad: number;
+    memoryLoad: number;
+}
+
+interface Task {
+    id: string;
+    cpuRequired: number;
+    memoryRequired: number;
+}
 
 export class OptimizationEngine implements IEngine {
     private config: EngineConfig;
@@ -169,19 +193,18 @@ export class OptimizationEngine implements IEngine {
             let resultData: Record<string, unknown> = {};
 
             if (request.type === 'resource') {
-                const items = request.data.items as any[];
-                const nodeCapacity = request.data.nodeCapacity as any;
+                const items = request.data.items as ResourceItem[];
+                const nodeCapacity = request.data.nodeCapacity as NodeCapacity;
 
                 if (!items || !nodeCapacity) {
                     throw new Error('Missing items or nodeCapacity for resource optimization');
                 }
 
                 const optimizer = new BinPackingOptimizer();
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 resultData = optimizer.optimize(items, nodeCapacity) as unknown as Record<string, unknown>;
             } else if (request.type === 'scheduling') {
-                const task = request.data.task as any;
-                const nodes = request.data.nodes as any[];
+                const task = request.data.task as Task;
+                const nodes = request.data.nodes as NodeStatus[];
 
                 if (!task || !nodes) {
                     throw new Error('Missing task or nodes for scheduling optimization');
@@ -262,7 +285,7 @@ export class OptimizationEngine implements IEngine {
     /**
      * Get cache statistics
      */
-    public getCacheStats() {
+    public getCacheStats(): CacheStats {
         return this.cache.getStats();
     }
 
@@ -345,14 +368,14 @@ export class OptimizationEngine implements IEngine {
     /**
      * Get plugin registry
      */
-    public getPluginRegistry(): any {
+    public getPluginRegistry(): PluginRegistry {
         return pluginRegistry;
     }
 
     /**
      * Get workload collector
      */
-    public getWorkloadCollector() {
+    public getWorkloadCollector(): WorkloadCollector {
         return workloadCollector;
     }
 }

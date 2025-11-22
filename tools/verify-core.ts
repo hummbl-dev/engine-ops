@@ -16,7 +16,7 @@
 
 import { OptimizationEngine } from '../core/index.js';
 
-async function main() {
+async function main(): Promise<void> {
     console.log('Starting Core Engine Verification...');
 
     const engine = new OptimizationEngine({

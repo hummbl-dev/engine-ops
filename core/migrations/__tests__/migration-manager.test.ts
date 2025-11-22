@@ -29,10 +29,10 @@ describe('MigrationManager', () => {
         testMigration1 = {
             version: '001',
             name: 'test-migration-1',
-            up: async () => {
+            up: async (): Promise<void> => {
                 // Simulate migration
             },
-            down: async () => {
+            down: async (): Promise<void> => {
                 // Simulate rollback
             }
         };
@@ -40,10 +40,10 @@ describe('MigrationManager', () => {
         testMigration2 = {
             version: '002',
             name: 'test-migration-2',
-            up: async () => {
+            up: async (): Promise<void> => {
                 // Simulate migration
             },
-            down: async () => {
+            down: async (): Promise<void> => {
                 // Simulate rollback
             }
         };

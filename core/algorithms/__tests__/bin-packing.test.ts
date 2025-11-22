@@ -14,6 +14,12 @@
 import { describe, it, expect } from '@jest/globals';
 import { BinPackingOptimizer } from '../bin-packing';
 
+interface ResourceItem {
+    id: string;
+    cpu: number;
+    memory: number;
+}
+
 describe('BinPackingOptimizer', () => {
     let optimizer: BinPackingOptimizer;
 
@@ -53,7 +59,7 @@ describe('BinPackingOptimizer', () => {
 
     describe('Edge Cases', () => {
         it('should handle empty items array', () => {
-            const items: any[] = [];
+            const items: ResourceItem[] = [];
             const nodeCapacity = { cpu: 100, memory: 1000 };
 
             const result = optimizer.optimize(items, nodeCapacity);

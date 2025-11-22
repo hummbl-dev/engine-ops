@@ -25,7 +25,7 @@ const engine = new EngineOps({ verbose: false });
 let engineInitialized = false;
 
 // Ensure engine is initialized
-async function ensureEngineInitialized() {
+async function ensureEngineInitialized(): Promise<void> {
     if (!engineInitialized) {
         await engine.init();
         engineInitialized = true;

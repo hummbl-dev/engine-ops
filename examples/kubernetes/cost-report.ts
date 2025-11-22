@@ -23,7 +23,7 @@
 
 import { EngineOps } from '../../public/api.js';
 
-async function analyzeCosts() {
+async function analyzeCosts(): Promise<void> {
     // Initialize client
     const client = new EngineOps({
         maxConcurrentTasks: 5,

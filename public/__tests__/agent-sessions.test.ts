@@ -113,13 +113,13 @@ describe('Agent Sessions API', () => {
         it('should filter sessions by type', async () => {
             const response = await request(app).get('/api/v1/agent-sessions?sessionType=metrics').expect(200);
 
-            expect(response.body.sessions.every((s: any) => s.sessionType === 'metrics')).toBe(true);
+            expect(response.body.sessions.every((s: { sessionType: string }) => s.sessionType === 'metrics')).toBe(true);
         });
 
         it('should filter sessions by state', async () => {
             const response = await request(app).get('/api/v1/agent-sessions?state=init').expect(200);
 
-            expect(response.body.sessions.every((s: any) => s.state === 'init')).toBe(true);
+            expect(response.body.sessions.every((s: { state: string }) => s.state === 'init')).toBe(true);
         });
     });
 

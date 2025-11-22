@@ -16,7 +16,26 @@
 
 import { EngineOps } from '../public/api.js';
 
-async function main() {
+// Local interfaces for type safety
+interface ResourceItem {
+    id: string;
+    cpu: number;
+    memory: number;
+}
+
+interface Node {
+    id: string;
+    cpuAvailable: number;
+    memoryAvailable: number;
+    items: ResourceItem[];
+}
+
+interface BinPackingResult {
+    nodes: Node[];
+    unplacedItems: ResourceItem[];
+}
+
+async function main(): Promise<void> {
     console.log('Starting Algorithm Verification (Bin Packing)...');
 
     const engine = new EngineOps({
@@ -46,12 +65,12 @@ async function main() {
 
     console.log('Optimization Result:', JSON.stringify(result, null, 2));
 
-    if (result.success && result.result && (result.result as any).nodes) {
-        const nodes = (result.result as any).nodes;
+    if (result.success && result.result && (result.result as unknown as BinPackingResult).nodes) {
+        const nodes = (result.result as unknown as BinPackingResult).nodes;
         console.log(`Packed into ${nodes.length} nodes.`);
 
         // Simple validation: Total items placed should be 5
-        const placedCount = nodes.reduce((acc: number, node: any) => acc + node.items.length, 0);
+        const placedCount = nodes.reduce((acc: number, node: Node) => acc + node.items.length, 0);
         if (placedCount === 5) {
             console.log('Verification PASSED: All items placed.');
         } else {

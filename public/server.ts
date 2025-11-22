@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3000;
 // Initialize engine
 const engine = new EngineOps({ verbose: true });
 
-async function startServer() {
+async function startServer(): Promise<void> {
     try {
         // Initialize engine
         await engine.init();

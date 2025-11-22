@@ -99,7 +99,7 @@ export class EdgeProvider implements ICloudProvider {
         return true;
     }
 
-    async removeWorkload(nodeId: string, workloadId: string): Promise<boolean> {
+    async removeWorkload(nodeId: string, _workloadId: string): Promise<boolean> {
         const node = this.nodes.get(nodeId);
         if (!node) {
             return false;

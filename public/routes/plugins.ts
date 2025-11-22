@@ -16,6 +16,7 @@
 
 import { Router, Request, Response, NextFunction } from 'express';
 import { EngineOps } from '../api.js';
+import { IOptimizationPlugin } from '../../core/plugins/interfaces.js';
 
 export const pluginsRouter = Router();
 
@@ -24,7 +25,7 @@ const engine = new EngineOps({ verbose: false, enablePlugins: true, enableWorklo
 let engineInitialized = false;
 
 // Ensure engine is initialized
-async function ensureEngineInitialized() {
+async function ensureEngineInitialized(): Promise<void> {
     if (!engineInitialized) {
         await engine.init();
         engineInitialized = true;
@@ -41,7 +42,7 @@ pluginsRouter.get('/', async (req: Request, res: Response, next: NextFunction) =
         const registry = engine.getPluginRegistry();
         const plugins = registry.getAllPlugins();
 
-        const pluginList = plugins.map((plugin: any) => ({
+        const pluginList = plugins.map((plugin: IOptimizationPlugin) => ({
             name: plugin.metadata.name,
             version: plugin.metadata.version,
             description: plugin.metadata.description,

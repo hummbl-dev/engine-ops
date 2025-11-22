@@ -24,7 +24,7 @@ const engine = new EngineOps({ verbose: false });
 let engineInitialized = false;
 
 // Ensure engine is initialized
-async function ensureEngineInitialized() {
+async function ensureEngineInitialized(): Promise<void> {
     if (!engineInitialized) {
         await engine.init();
         engineInitialized = true;
@@ -45,7 +45,7 @@ router.get('/alerts', async (req, res) => {
             count: alerts.length,
             alerts
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: 'Failed to get anomaly alerts' });
     }
 });
@@ -67,7 +67,7 @@ router.get('/alerts/recent', async (req, res) => {
             since: new Date(since).toISOString(),
             alerts
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: 'Failed to get recent anomaly alerts' });
     }
 });
@@ -94,7 +94,7 @@ router.get('/metrics', async (req, res) => {
             count: metrics.length,
             metrics
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: 'Failed to get metrics' });
     }
 });
@@ -122,7 +122,7 @@ router.get('/metrics/:name', async (req, res) => {
             historySize: history.length,
             recentValues: history.slice(-10)
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: 'Failed to get metric details' });
     }
 });
@@ -140,7 +140,7 @@ router.delete('/alerts', async (req, res) => {
         res.json({
             message: 'Alerts cleared successfully'
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: 'Failed to clear alerts' });
     }
 });

@@ -23,10 +23,10 @@ import type { ICloudProvider, Workload } from '../interfaces';
 
 describe('Cloud Providers', () => {
     describe.each([
-        ['AWS', () => new AWSProvider(), 'aws'],
-        ['GCP', () => new GCPProvider(), 'gcp'],
-        ['Azure', () => new AzureProvider(), 'azure'],
-        ['Edge', () => new EdgeProvider(), 'edge'],
+        ['AWS', (): AWSProvider => new AWSProvider(), 'aws'],
+        ['GCP', (): GCPProvider => new GCPProvider(), 'gcp'],
+        ['Azure', (): AzureProvider => new AzureProvider(), 'azure'],
+        ['Edge', (): EdgeProvider => new EdgeProvider(), 'edge'],
     ] as const)('%s Provider', (name, createProvider, expectedType) => {
         let provider: ICloudProvider;
 

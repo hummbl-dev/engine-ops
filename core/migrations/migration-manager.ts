@@ -71,7 +71,7 @@ export class MigrationManager {
             if (fs.existsSync(this.stateFile)) {
                 const data = fs.readFileSync(this.stateFile, 'utf-8');
                 const state = JSON.parse(data);
-                this.appliedMigrations = state.migrations.map((m: any) => ({
+                this.appliedMigrations = state.migrations.map((m: MigrationRecord) => ({
                     ...m,
                     appliedAt: new Date(m.appliedAt)
                 }));

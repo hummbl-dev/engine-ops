@@ -14,6 +14,18 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import { LeastLoadedScheduler } from '../least-loaded';
 
+interface NodeStatus {
+    id: string;
+    cpuLoad: number;
+    memoryLoad: number;
+}
+
+interface Task {
+    id: string;
+    cpuRequired: number;
+    memoryRequired: number;
+}
+
 describe('LeastLoadedScheduler', () => {
     let scheduler: LeastLoadedScheduler;
 
@@ -52,8 +64,8 @@ describe('LeastLoadedScheduler', () => {
 
     describe('Edge Cases', () => {
         it('should return null when no nodes available', () => {
-            const task = { id: 'task-1', cpuRequired: 10, memoryRequired: 10 };
-            const nodes: any[] = [];
+            const task: Task = { id: 'task-1', cpuRequired: 10, memoryRequired: 10 };
+            const nodes: NodeStatus[] = [];
 
             const result = scheduler.schedule(task, nodes);
 
