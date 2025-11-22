@@ -1,13 +1,15 @@
 import { AnomalyDetector } from '../detector';
 import { LLMAnalysisProvider } from '../llm-provider';
 import { AnalysisResult } from '../analysis';
+import { GeminiClient } from '../../ai/clients/gemini';
 
 describe('AI-Enhanced Anomaly Detection', () => {
     let detector: AnomalyDetector;
     let analysisProvider: LLMAnalysisProvider;
 
     beforeEach(() => {
-        analysisProvider = new LLMAnalysisProvider();
+        const client = new GeminiClient({ apiKey: 'mock-key', model: 'gemini-pro' });
+        analysisProvider = new LLMAnalysisProvider(client);
         detector = new AnomalyDetector({
             windowSize: 10,
             threshold: 2, // Low threshold to trigger easily

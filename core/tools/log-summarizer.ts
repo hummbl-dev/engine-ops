@@ -1,3 +1,4 @@
+import { LLMClient } from '../ai/client';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -11,8 +12,10 @@ export interface LogSummary {
 
 export class LogSummarizer {
     private promptTemplate: string;
+    private client: LLMClient;
 
-    constructor() {
+    constructor(client: LLMClient) {
+        this.client = client;
         const promptPath = path.join(__dirname, '../prompts/summarize-logs/v1.md');
         this.promptTemplate = fs.readFileSync(promptPath, 'utf-8');
     }
@@ -22,13 +25,19 @@ export class LogSummarizer {
         const sanitizedLogs = this.sanitizeLogs(logContent);
 
         // 2. Construct Prompt
-        const _prompt = this.promptTemplate.replace('{{LOGS}}', sanitizedLogs);
+        const prompt = this.promptTemplate.replace('{{LOGS}}', sanitizedLogs);
 
-        // 3. Call LLM (Mock for now)
-        await new Promise(resolve => setTimeout(resolve, 500));
+        try {
+            // 3. Call LLM
+            const response = await this.client.complete(prompt);
 
-        // Mock response parsing
-        return this.mockAnalysis(sanitizedLogs);
+            // 4. Parse Response
+            // In a real system, use Zod or similar for validation
+            return JSON.parse(response.content);
+        } catch (error) {
+            console.error(`[Log Summarizer] Error with provider ${this.client.getProviderName()}:`, error);
+            throw error;
+        }
     }
 
     private sanitizeLogs(logs: string): string {
@@ -36,18 +45,5 @@ export class LogSummarizer {
         return logs
             .replace(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g, '[IP_REDACTED]')
             .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL_REDACTED]');
-    }
-
-    private mockAnalysis(logs: string): LogSummary {
-        const errorCount = (logs.match(/error/gi) || []).length;
-        const uniqueErrors = [...new Set(logs.match(/Error: .*/g) || [])];
-
-        return {
-            summary: `Analyzed ${logs.length} chars of logs. Found ${errorCount} errors.`,
-            errorCount,
-            uniqueErrors,
-            keyEvents: ['Service started', 'Connection established'],
-            actionItems: errorCount > 0 ? ['Check database connection', 'Review firewall rules'] : ['No action needed']
-        };
     }
 }

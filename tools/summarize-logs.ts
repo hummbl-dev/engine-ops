@@ -1,4 +1,5 @@
 import { LogSummarizer } from '../core/tools/log-summarizer';
+import { GrokClient } from '../core/ai/clients/grok';
 import * as fs from 'fs';
 
 async function main() {
@@ -10,9 +11,11 @@ async function main() {
 
     try {
         const content = fs.readFileSync(logFile, 'utf-8');
-        const summarizer = new LogSummarizer();
+        // Use Grok for log summarization
+        const client = new GrokClient({ apiKey: 'mock-key', model: 'grok-1' });
+        const summarizer = new LogSummarizer(client);
 
-        console.log('Analyzing logs...');
+        console.log('Analyzing logs with Grok...');
         const summary = await summarizer.summarize(content);
 
         console.log(JSON.stringify(summary, null, 2));
