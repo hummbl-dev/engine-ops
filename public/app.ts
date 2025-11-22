@@ -20,8 +20,8 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { optimizeRouter } from './routes/optimize.js';
 import { healthRouter } from './routes/health.js';
-import { metricsRouter } from './routes/metrics.js';
-import { cacheRouter } from './routes/cache.js';
+import { metricsRouter } from './routes/performance-metrics.js'; // Performance metrics
+import { cacheRouter } from './routes/cache-routes.js';
 import { prometheusRouter } from './routes/prometheus.js';
 import { swaggerRouter } from './routes/swagger.js';
 import { costRouter } from './routes/cost.js';
