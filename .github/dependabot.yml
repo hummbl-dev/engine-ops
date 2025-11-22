@@ -1,0 +1,16 @@
+# See docs for all config options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+version: 2
+updates:
+  # Example for npm (JavaScript/Node.js). Change "npm" to your ecosystem (e.g., "pip", "github-actions", etc.)
+  - package-ecosystem: "npm"         
+    directory: "/"                   # Location of package manifest file (e.g., package.json)
+    schedule:
+      interval: "weekly"             # (daily, weekly, monthly)
+  # Example for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"                   # Location of workflow files
+    schedule:
+      interval: "weekly"
+
+# Add additional `- package-ecosystem:` entries if your repo uses multiple languages or tools.
