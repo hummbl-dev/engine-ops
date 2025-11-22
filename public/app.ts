@@ -24,6 +24,7 @@ import { metricsRouter } from './routes/performance-metrics.js'; // Performance 
 import { cacheRouter } from './routes/cache-routes.js';
 import { prometheusRouter } from './routes/prometheus.js';
 import { swaggerRouter } from './routes/swagger.js';
+import { anomalyRouter } from './routes/anomaly.js';
 import { costRouter } from './routes/cost.js';
 import { pluginsRouter } from './routes/plugins.js';
 import { agentSessionsRouter } from './routes/agent-sessions.js';
@@ -60,6 +61,7 @@ export function createApp(): Express {
     app.use('/api/v1/health', healthRouter);
     app.use('/api/v1/metrics', metricsRouter);
     app.use('/api/v1/cache', cacheRouter);
+    app.use('/api/v1/anomaly', anomalyRouter);
     app.use('/api/v1/plugins', pluginsRouter);
     app.use('/api/v1/agent-sessions', agentSessionsRouter);
     app.use('/metrics', prometheusRouter);
@@ -76,6 +78,7 @@ export function createApp(): Express {
                 health: 'GET /api/v1/health',
                 metrics: 'GET /api/v1/metrics',
                 cache: 'GET /api/v1/cache/stats',
+                anomaly: 'GET /api/v1/anomaly/alerts',
                 plugins: 'GET /api/v1/plugins',
                 workloadData: 'GET /api/v1/plugins/workload-data/stats',
                 agentSessions: 'POST /api/v1/agent-sessions',
