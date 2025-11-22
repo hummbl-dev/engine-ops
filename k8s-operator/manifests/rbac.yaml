@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: engine-ops-operator-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: engine-ops-operator-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["engineops.hummbl.dev"]
+    resources: ["optimizations", "optimizations/status"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: engine-ops-operator-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: engine-ops-operator-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: engine-ops-operator-role
+  apiGroup: rbac.authorization.k8s.io

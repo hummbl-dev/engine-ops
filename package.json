@@ -67,6 +67,7 @@
         "typescript": "^5.0.0"
     },
     "dependencies": {
+        "@kubernetes/client-node": "^1.4.0",
         "@types/js-yaml": "^4.0.9",
         "@types/socket.io": "^3.0.1",
         "cors": "^2.8.5",
