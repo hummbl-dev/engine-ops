@@ -58,13 +58,14 @@ async function main() {
                 break;
 
             case 'down':
-            case 'rollback':
+            case 'rollback': {
                 const count = arg ? parseInt(arg, 10) : 1;
                 console.log(`⬇️  Rolling back ${count} migration(s)...\n`);
                 await manager.rollback(count);
                 break;
+            }
 
-            case 'status':
+            case 'status': {
                 console.log('📊 Migration Status\n');
                 const status = manager.getStatus();
                 
@@ -88,8 +89,9 @@ async function main() {
                     console.log();
                 }
                 break;
+            }
 
-            case 'verify':
+            case 'verify': {
                 console.log('🔍 Verifying migration integrity...\n');
                 const isValid = manager.verifyIntegrity();
                 if (isValid) {
@@ -99,6 +101,7 @@ async function main() {
                     process.exit(1);
                 }
                 break;
+            }
 
             case 'help':
             default:

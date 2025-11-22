@@ -28,5 +28,38 @@ export const OptimizationRequestSchema = z.object({
     constraints: z.record(z.string(), z.unknown()).optional(),
 });
 
+// Multi-cloud provider schemas
+export const CloudProviderSchema = z.enum(['aws', 'gcp', 'azure', 'edge']);
+
+export const ResourceCapacitySchema = z.object({
+    cpu: z.number().positive(),
+    memory: z.number().positive(),
+    storage: z.number().positive().optional(),
+    gpu: z.number().int().nonnegative().optional(),
+});
+
+export const WorkloadConstraintsSchema = z.object({
+    maxLatencyMs: z.number().positive().optional(),
+    dataResidency: z.array(z.string()).optional(),
+    providerPreferences: z.array(CloudProviderSchema).optional(),
+});
+
+export const WorkloadSchema = z.object({
+    id: z.string().min(1),
+    resources: ResourceCapacitySchema,
+    preferredRegions: z.array(z.string()).optional(),
+    requiredLabels: z.record(z.string(), z.string()).optional(),
+    constraints: WorkloadConstraintsSchema.optional(),
+});
+
+export const MultiCloudSchedulingRequestSchema = z.object({
+    workloads: z.array(WorkloadSchema).min(1),
+    enableGeoSharding: z.boolean().optional().default(true),
+});
+
 export type EngineConfig = z.infer<typeof EngineConfigSchema>;
 export type OptimizationRequest = z.infer<typeof OptimizationRequestSchema>;
+export type CloudProvider = z.infer<typeof CloudProviderSchema>;
+export type ResourceCapacity = z.infer<typeof ResourceCapacitySchema>;
+export type Workload = z.infer<typeof WorkloadSchema>;
+export type MultiCloudSchedulingRequest = z.infer<typeof MultiCloudSchedulingRequestSchema>;

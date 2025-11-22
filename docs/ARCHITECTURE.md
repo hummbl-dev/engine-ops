@@ -213,10 +213,52 @@ Engine-Ops is a high-performance optimization platform designed for resource all
 - **Memory**: ~128MB baseline, ~512MB under load
 - **CPU**: ~100m baseline, ~500m under load
 
+## Multi-Cloud Architecture
+
+### Provider Abstraction Layer
+
+The engine now includes comprehensive multi-cloud support:
+
+```
+┌────────────────────────────────────────────┐
+│      Multi-Cloud Resource Manager         │
+│  ┌─────────────────────────────────────┐  │
+│  │  Federated Scheduler                │  │
+│  │  - Intelligent placement scoring    │  │
+│  │  - Geo-sharding support            │  │
+│  │  - Provider preferences            │  │
+│  └─────────────────────────────────────┘  │
+└───┬────────┬──────────┬─────────┬─────────┘
+    │        │          │         │
+┌───▼───┐┌──▼────┐┌────▼───┐┌───▼────┐
+│  AWS  ││  GCP  ││ Azure  ││  Edge  │
+│       ││       ││        ││Clusters│
+└───────┘└───────┘└────────┘└────────┘
+```
+
+### Supported Providers
+
+- **AWS**: us-east-1, us-west-2, eu-west-1, ap-southeast-1
+- **GCP**: us-central1, europe-west1, asia-east1
+- **Azure**: eastus, westeurope, southeastasia
+- **Edge**: Distributed edge computing locations
+
+### Key Features
+
+- **Federated Scheduling**: Intelligent workload placement across providers
+- **Geo-Sharding**: Automatic geographical distribution
+- **Provider Preferences**: Configurable provider and region preferences
+- **Resource Optimization**: Balanced resource utilization
+- **Latency Optimization**: Edge placement for low-latency workloads
+
+See [MULTI-CLOUD.md](./MULTI-CLOUD.md) for detailed documentation.
+
 ## Future Enhancements
 
 - Distributed caching (Redis)
 - Message queue integration (RabbitMQ/Kafka)
-- Multi-region deployment
+- ~~Multi-region deployment~~ ✅ **Completed**
 - Advanced ML algorithms
 - GraphQL API
+- Cost optimization across providers
+- Custom provider implementations

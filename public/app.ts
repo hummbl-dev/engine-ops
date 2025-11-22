@@ -27,6 +27,7 @@ import { swaggerRouter } from './routes/swagger.js';
 import { anomalyRouter } from './routes/anomaly.js';
 import { costRouter } from './routes/cost.js';
 import { pluginsRouter } from './routes/plugins.js';
+import { agentSessionsRouter } from './routes/agent-sessions.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { requestLogger } from './middleware/request-logger.js';
 
@@ -62,6 +63,7 @@ export function createApp(): Express {
     app.use('/api/v1/cache', cacheRouter);
     app.use('/api/v1/anomaly', anomalyRouter);
     app.use('/api/v1/plugins', pluginsRouter);
+    app.use('/api/v1/agent-sessions', agentSessionsRouter);
     app.use('/metrics', prometheusRouter);
     app.use('/api-docs', swaggerRouter);
     app.use('/cost', costRouter);
@@ -79,6 +81,7 @@ export function createApp(): Express {
                 anomaly: 'GET /api/v1/anomaly/alerts',
                 plugins: 'GET /api/v1/plugins',
                 workloadData: 'GET /api/v1/plugins/workload-data/stats',
+                agentSessions: 'POST /api/v1/agent-sessions',
                 prometheus: 'GET /metrics',
                 docs: 'GET /api-docs'
             }

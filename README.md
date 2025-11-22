@@ -103,7 +103,9 @@ The script automatically applies:
 
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and licensing rules
 - **[LICENSE](LICENSE)** - Business Source License 1.1 full text
-- **`docs/`** - Detailed technical documentation (coming soon)
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System architecture overview
+- **[docs/MULTI-CLOUD.md](docs/MULTI-CLOUD.md)** - Multi-cloud and edge compute guide
+- **[docs/KUBERNETES.md](docs/KUBERNETES.md)** - Kubernetes deployment guide
 
 ## 🤝 Contributing
 
@@ -136,16 +138,22 @@ npm test
 ## 📋 Features (Roadmap)
 
 ### Core Engine (BSL)
-- [ ] High-performance optimization algorithms
-- [ ] Resource allocation and scheduling
-- [ ] Performance monitoring and analytics
-- [ ] Advanced caching strategies
+- [x] High-performance optimization algorithms
+- [x] Resource allocation and scheduling
+- [x] Performance monitoring and analytics
+- [x] Advanced caching strategies
+- [x] **Multi-cloud and edge compute support**
+  - [x] AWS, GCP, Azure provider adapters
+  - [x] Edge cluster support
+  - [x] Federated scheduling across providers
+  - [x] Geo-sharding for distributed workloads
 
 ### Schemas (BSL)
-- [ ] Data validation framework
+- [x] Data validation framework
 - [ ] Schema versioning and migration
-- [ ] Type-safe data structures
-- [ ] API schema definitions
+- [x] Type-safe data structures
+- [x] API schema definitions
+- [x] Multi-cloud workload schemas
 
 ### Public APIs (Apache 2.0)
 - [ ] RESTful API interfaces
