@@ -146,8 +146,9 @@ describe('AgentSessionManager', () => {
             };
 
             await manager.createSession(request);
+            // Add small delay to ensure timestamp difference
+            await new Promise(resolve => setTimeout(resolve, 10));
             const updatedSession = await manager.updateSessionState('custom-001', 'running');
-
             expect(updatedSession.state).toBe('running');
             expect(new Date(updatedSession.updatedAt).getTime()).toBeGreaterThanOrEqual(new Date(updatedSession.createdAt).getTime());
         });
