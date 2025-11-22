@@ -1,5 +1,7 @@
 # Engine-Ops
 
+[![CI Status](https://github.com/hummbl-dev/engine-ops/workflows/CI/badge.svg)](https://github.com/hummbl-dev/engine-ops/actions/workflows/ci.yml)
+
 **Engine-Ops** is a comprehensive engine optimization operations platform designed for high-performance computing, data processing, and infrastructure management. Built with a hybrid licensing model to balance commercial sustainability with open-source principles.
 
 ## 🏗️ Repository Structure

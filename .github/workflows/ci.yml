@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
 jobs:
   build:
     name: Build & Test (Node ${{ matrix.node-version }})
@@ -18,7 +23,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
 
     - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v6
@@ -34,6 +39,10 @@ jobs:
 
     - name: Run linter
       run: npm run lint
+
+    - name: Security audit
+      run: npm audit --audit-level=moderate
+      continue-on-error: true
 
     - name: Run tests with coverage
       run: npm test -- --coverage --coverageReporters=text --coverageReporters=lcov
@@ -62,7 +71,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
 
-    - name: Verify license headers
+    - name: Verify license header script exists
+      run: |
+        if [ ! -f "./tools/apply-license-headers.sh" ]; then
+          echo "Error: License header script not found"
+          exit 1
+        fi
+
+    - name: Make script executable
+      run: chmod +x ./tools/apply-license-headers.sh
+
+    - name: Check license headers
       run: ./tools/apply-license-headers.sh --check
