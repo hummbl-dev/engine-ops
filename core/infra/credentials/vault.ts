@@ -3,6 +3,7 @@ import { CredentialsManager } from './manager';
 const vault = require('node-vault');
 
 export class VaultCredentialsManager implements CredentialsManager {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private client: any;
 
     constructor(endpoint: string, token: string) {

@@ -24,7 +24,7 @@ export class GeminiClient implements LLMClient {
         // Ensure we have a key (simulating secure retrieval)
         try {
             await this.ensureApiKey();
-        } catch (e) {
+        } catch {
             console.warn('[Gemini] Could not retrieve API key from credentials manager, using config/mock.');
         }
 

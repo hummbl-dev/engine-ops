@@ -31,7 +31,7 @@ export const anomalyDetectionsTotal = new client.Counter({
 });
 
 // Middleware to track requests
-export const metricsMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const metricsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     const start = Date.now();
 
     res.on('finish', () => {

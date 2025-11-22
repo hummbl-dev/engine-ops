@@ -24,7 +24,7 @@ export class GrokClient implements LLMClient {
         // Ensure we have a key
         try {
             await this.ensureApiKey();
-        } catch (e) {
+        } catch {
             console.warn('[Grok] Could not retrieve API key from credentials manager, using config/mock.');
         }
 

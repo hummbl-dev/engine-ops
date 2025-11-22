@@ -1,6 +1,5 @@
 import { AnomalyDetector } from '../detector';
 import { LLMAnalysisProvider } from '../llm-provider';
-import { AnalysisResult } from '../analysis';
 import { GeminiClient } from '../../ai/clients/gemini';
 
 describe('AI-Enhanced Anomaly Detection', () => {

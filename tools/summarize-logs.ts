@@ -2,7 +2,7 @@ import { LogSummarizer } from '../core/tools/log-summarizer';
 import { GrokClient } from '../core/ai/clients/grok';
 import * as fs from 'fs';
 
-async function main() {
+async function main(): Promise<void> {
     const logFile = process.argv[2];
     if (!logFile) {
         console.error('Usage: ts-node tools/summarize-logs.ts <logfile>');
