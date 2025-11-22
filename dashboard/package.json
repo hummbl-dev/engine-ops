@@ -1,0 +1,11 @@
+{
+    "name": "engine-ops-dashboard",
+    "version": "1.0.0",
+    "description": "Admin dashboard for Engine Ops monitoring",
+    "scripts": {
+        "start": "npx http-server public -p 3001 -c-1 --cors"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT"
+}

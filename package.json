@@ -80,6 +80,7 @@
         "helmet": "^8.1.0",
         "js-yaml": "^4.1.1",
         "node-vault": "^0.10.9",
+        "prom-client": "^15.1.3",
         "socket.io": "^4.8.1",
         "swagger-ui-express": "^5.0.1",
         "zod": "^4.1.12"

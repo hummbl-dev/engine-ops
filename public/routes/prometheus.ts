@@ -15,12 +15,9 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { register, collectDefaultMetrics } from 'prom-client';
+import { register } from '../../core/observability/metrics.js';
 
 export const prometheusRouter = Router();
-
-// Collect default metrics (CPU, memory, etc.)
-collectDefaultMetrics({ prefix: 'engine_ops_' });
 
 /**
  * GET /metrics

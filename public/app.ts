@@ -30,6 +30,7 @@ import { pluginsRouter } from './routes/plugins.js';
 import { agentSessionsRouter } from './routes/agent-sessions.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { requestLogger } from './middleware/request-logger.js';
+import { metricsMiddleware } from '../core/observability/metrics.js';
 
 /**
  * Create and configure Express application
@@ -55,6 +56,9 @@ export function createApp(): Express {
 
     // Request logging
     app.use(requestLogger);
+
+    // Prometheus metrics
+    app.use(metricsMiddleware);
 
     // API routes
     app.use('/api/v1/optimize', optimizeRouter);
