@@ -59,7 +59,7 @@ export const PerformanceOptimizationDataSchema = z.object({
     targetMetric: z.enum(['latency', 'throughput', 'cost']),
     currentValue: z.number(),
     targetValue: z.number(),
-    constraints: z.record(z.unknown()).optional()
+    constraints: z.record(z.string(), z.unknown()).optional()
 });
 
 /**

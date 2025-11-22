@@ -18,6 +18,13 @@ import { LeastLoadedScheduler } from './algorithms/least-loaded.js';
 import { LRUCache } from './caching/lru-cache.js';
 import { Logger, LogLevel } from './monitoring/logger.js';
 import { metricsCollector } from './monitoring/metrics.js';
+import { AnomalyDetector } from './anomaly/detector.js';
+import { MultiCloudResourceManager } from './providers/resource-manager.js';
+import { AWSProvider } from './providers/aws-provider.js';
+import { GCPProvider } from './providers/gcp-provider.js';
+import { AzureProvider } from './providers/azure-provider.js';
+import { EdgeProvider } from './providers/edge-provider.js';
+import type { Workload } from './providers/interfaces.js';
 import { pluginRegistry } from './plugins/registry.js';
 import { workloadCollector } from './plugins/workload-collector.js';
 
@@ -26,12 +33,15 @@ export class OptimizationEngine implements IEngine {
     private isInitialized: boolean = false;
     private cache: LRUCache<string, OptimizationResult>;
     private logger: Logger;
+    private anomalyDetector: AnomalyDetector;
+    private multiCloudManager?: MultiCloudResourceManager;
 
     constructor(config: EngineConfig = {}) {
         this.config = {
             maxConcurrentTasks: 5,
             timeoutMs: 30000,
             verbose: false,
+            enableMultiCloud: false,
             enablePlugins: false,
             enableWorkloadCollection: false,
             ...config
@@ -50,6 +60,14 @@ export class OptimizationEngine implements IEngine {
             enableConsole: true,
             enableTimestamps: true
         });
+
+        // Initialize anomaly detector
+        this.anomalyDetector = new AnomalyDetector({
+            windowSize: 100,
+            threshold: 3,
+            minSamples: 10,
+            verbose: this.config.verbose
+        });
     }
 
     public async init(config?: EngineConfig): Promise<void> {
@@ -58,8 +76,41 @@ export class OptimizationEngine implements IEngine {
             this.logger.setLevel(this.config.verbose ? LogLevel.DEBUG : LogLevel.INFO);
         }
 
+        // Initialize multi-cloud resource manager if enabled
+        if (this.config.enableMultiCloud) {
+            await this.initializeMultiCloud();
+        }
+
         this.isInitialized = true;
         this.logger.info('Optimization Engine initialized', this.config as unknown as Record<string, unknown>);
+    }
+
+    private async initializeMultiCloud(): Promise<void> {
+        this.multiCloudManager = new MultiCloudResourceManager();
+
+        const providers = this.config.cloudProviders || ['aws', 'gcp', 'azure', 'edge'];
+
+        for (const providerType of providers) {
+            let provider;
+            switch (providerType) {
+                case 'aws':
+                    provider = new AWSProvider();
+                    break;
+                case 'gcp':
+                    provider = new GCPProvider();
+                    break;
+                case 'azure':
+                    provider = new AzureProvider();
+                    break;
+                case 'edge':
+                    provider = new EdgeProvider();
+                    break;
+            }
+
+            await provider.initialize({});
+            this.multiCloudManager.registerProvider(provider);
+            this.logger.info(`Registered ${providerType} provider`);
+        }
     }
 
     public async optimize(request: OptimizationRequest): Promise<OptimizationResult> {
@@ -74,13 +125,16 @@ export class OptimizationEngine implements IEngine {
         const cachedResult = this.cache.get(cacheKey);
         if (cachedResult) {
             this.logger.debug(`Cache hit for request ${request.id}`);
+            const duration = Date.now() - startTime;
             metricsCollector.record({
                 requestId: request.id,
                 type: request.type,
-                durationMs: Date.now() - startTime,
+                durationMs: duration,
                 cacheHit: true,
                 timestamp: Date.now()
             });
+            // Record metric for anomaly detection
+            this.anomalyDetector.recordMetric('request_duration_ms', duration);
             return cachedResult;
         }
 
@@ -98,16 +152,16 @@ export class OptimizationEngine implements IEngine {
                 const plugin = pluginRegistry.findPlugin(request);
                 if (plugin) {
                     this.logger.debug(`Using plugin ${plugin.metadata.name} for request ${request.id}`);
-                    const historicalData = this.config.enableWorkloadCollection 
+                    const historicalData = this.config.enableWorkloadCollection
                         ? workloadCollector.getDataByType(request.type)
                         : undefined;
                     const result = await plugin.optimize(request, historicalData);
-                    
+
                     // Record workload data
                     if (this.config.enableWorkloadCollection) {
                         workloadCollector.record(request, result);
                     }
-                    
+
                     return result;
                 }
             }
@@ -175,6 +229,9 @@ export class OptimizationEngine implements IEngine {
                 timestamp: Date.now()
             });
 
+            // Record for anomaly detection
+            this.anomalyDetector.recordMetric('request_duration_ms', durationMs);
+
             this.logger.info(`Request ${request.id} completed in ${durationMs}ms`);
 
             return optimizationResult;
@@ -214,6 +271,86 @@ export class OptimizationEngine implements IEngine {
      */
     public getWorkloadCollector() {
         return workloadCollector;
+     * Get anomaly detector instance
+     */
+    public getAnomalyDetector(): AnomalyDetector {
+        return this.anomalyDetector;
+    }
+
+    /**
+     * Get the multi-cloud resource manager instance
+     */
+    public getMultiCloudManager(): MultiCloudResourceManager | undefined {
+        return this.multiCloudManager;
+    }
+
+    /**
+     * Schedule workloads across multiple cloud providers
+     */
+    public async scheduleMultiCloudWorkloads(workloads: Workload[], enableGeoSharding: boolean = true): Promise<OptimizationResult> {
+        if (!this.isInitialized) {
+            throw new Error('Engine not initialized. Call init() first.');
+        }
+
+        if (!this.multiCloudManager) {
+            throw new Error('Multi-cloud is not enabled. Set enableMultiCloud to true in config.');
+        }
+
+        const startTime = Date.now();
+
+        try {
+            let results;
+            if (enableGeoSharding) {
+                results = await this.multiCloudManager.scheduleWorkloadsWithGeoSharding(workloads);
+            } else {
+                // Schedule workloads individually without geo-sharding
+                results = [];
+                for (const workload of workloads) {
+                    const result = await this.multiCloudManager.scheduleWorkload(workload);
+                    if (result) {
+                        results.push(result);
+                    }
+                }
+            }
+
+            const durationMs = Date.now() - startTime;
+
+            return {
+                requestId: `multi-cloud-${Date.now()}`,
+                success: true,
+                result: {
+                    placements: results,
+                    totalScheduled: results.length,
+                    totalRequested: workloads.length,
+                },
+                metrics: {
+                    durationMs,
+                    score: results.length / workloads.length,
+                },
+            };
+        } catch (error) {
+            const durationMs = Date.now() - startTime;
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+            this.logger.error('Multi-cloud scheduling failed', { durationMs }, error instanceof Error ? error : undefined);
+
+            return {
+                requestId: `multi-cloud-${Date.now()}`,
+                success: false,
+                error: errorMessage,
+                metrics: {
+                    durationMs,
+                    score: 0,
+                },
+            };
+        }
+    }
+
+    /**
+     * Get plugin registry
+     */
+    public getPluginRegistry(): any {
+        return pluginRegistry;
     }
 
     /**
