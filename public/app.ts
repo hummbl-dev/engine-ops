@@ -20,11 +20,13 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { optimizeRouter } from './routes/optimize.js';
 import { healthRouter } from './routes/health.js';
-import { metricsRouter } from './routes/metrics.js';
-import { cacheRouter } from './routes/cache.js';
+import { metricsRouter } from './routes/performance-metrics.js'; // Performance metrics
+import { cacheRouter } from './routes/cache-routes.js';
 import { prometheusRouter } from './routes/prometheus.js';
 import { swaggerRouter } from './routes/swagger.js';
 import { anomalyRouter } from './routes/anomaly.js';
+import { costRouter } from './routes/cost.js';
+import { pluginsRouter } from './routes/plugins.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { requestLogger } from './middleware/request-logger.js';
 
@@ -59,8 +61,10 @@ export function createApp(): Express {
     app.use('/api/v1/metrics', metricsRouter);
     app.use('/api/v1/cache', cacheRouter);
     app.use('/api/v1/anomaly', anomalyRouter);
+    app.use('/api/v1/plugins', pluginsRouter);
     app.use('/metrics', prometheusRouter);
     app.use('/api-docs', swaggerRouter);
+    app.use('/cost', costRouter);
 
     // Root endpoint
     app.get('/', (_req, res) => {
@@ -73,6 +77,8 @@ export function createApp(): Express {
                 metrics: 'GET /api/v1/metrics',
                 cache: 'GET /api/v1/cache/stats',
                 anomaly: 'GET /api/v1/anomaly/alerts',
+                plugins: 'GET /api/v1/plugins',
+                workloadData: 'GET /api/v1/plugins/workload-data/stats',
                 prometheus: 'GET /metrics',
                 docs: 'GET /api-docs'
             }

@@ -67,8 +67,19 @@ export class EngineOps {
    */
   public getAnomalyDetector() {
     return this.engine.getAnomalyDetector();
+   * Get plugin registry
+   */
+  public getPluginRegistry() {
+    return this.engine.getPluginRegistry();
+  }
+
+  /**
+   * Get workload collector
+   */
+  public getWorkloadCollector() {
+    return this.engine.getWorkloadCollector();
   }
 }
 
 // Re-export types for public consumption
-export { EngineConfig, OptimizationRequest, OptimizationResult };
+export type { EngineConfig, OptimizationRequest, OptimizationResult };

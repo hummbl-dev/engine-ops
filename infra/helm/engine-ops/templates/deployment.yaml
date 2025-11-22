@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "engine-ops.fullname" . }}
+  labels:
+    {{- include "engine-ops.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit | default 10 }}
+  selector:
+    matchLabels:
+      {{- include "engine-ops.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge | default 1 }}
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable | default 0 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "engine-ops.selectorLabels" . | nindent 8 }}
+        {{- if .Values.blueGreen.enabled }}
+        version: {{ .Values.blueGreen.activeVersion }}
+        deployment-type: {{ .Values.blueGreen.deploymentType | default "blue-green" }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "engine-ops.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.config.port }}
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          value: {{ .Values.config.nodeEnv }}
+        - name: PORT
+          value: {{ .Values.config.port | quote }}
+        {{- if .Values.blueGreen.enabled }}
+        - name: DEPLOYMENT_VERSION
+          value: {{ .Values.blueGreen.activeVersion }}
+        {{- end }}
+        - name: RATE_LIMIT_WINDOW_MS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "engine-ops.fullname" . }}-config
+              key: RATE_LIMIT_WINDOW_MS
+        - name: RATE_LIMIT_MAX_REQUESTS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "engine-ops.fullname" . }}-config
+              key: RATE_LIMIT_MAX_REQUESTS
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: http
+          initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds | default 30 }}
+          periodSeconds: {{ .Values.probes.liveness.periodSeconds | default 10 }}
+          timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds | default 5 }}
+          failureThreshold: {{ .Values.probes.liveness.failureThreshold | default 3 }}
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http
+          initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds | default 10 }}
+          periodSeconds: {{ .Values.probes.readiness.periodSeconds | default 5 }}
+          timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds | default 3 }}
+          failureThreshold: {{ .Values.probes.readiness.failureThreshold | default 3 }}
+          successThreshold: {{ .Values.probes.readiness.successThreshold | default 2 }}
+        {{- if .Values.probes.startup.enabled }}
+        startupProbe:
+          httpGet:
+            path: /health/live
+            port: http
+          initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds | default 5 }}
+          periodSeconds: {{ .Values.probes.startup.periodSeconds | default 5 }}
+          timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds | default 3 }}
+          failureThreshold: {{ .Values.probes.startup.failureThreshold | default 12 }}
+        {{- end }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep {{ .Values.lifecycle.preStopSleepSeconds | default 15 }}"]
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 30 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

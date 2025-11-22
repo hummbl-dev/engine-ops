@@ -19,6 +19,8 @@ import { LRUCache } from './caching/lru-cache.js';
 import { Logger, LogLevel } from './monitoring/logger.js';
 import { metricsCollector } from './monitoring/metrics.js';
 import { AnomalyDetector } from './anomaly/detector.js';
+import { pluginRegistry } from './plugins/registry.js';
+import { workloadCollector } from './plugins/workload-collector.js';
 
 export class OptimizationEngine implements IEngine {
     private config: EngineConfig;
@@ -32,6 +34,8 @@ export class OptimizationEngine implements IEngine {
             maxConcurrentTasks: 5,
             timeoutMs: 30000,
             verbose: false,
+            enablePlugins: false,
+            enableWorkloadCollection: false,
             ...config
         };
 
@@ -102,6 +106,25 @@ export class OptimizationEngine implements IEngine {
 
             this.logger.info(`Processing request ${request.id} of type ${request.type}`);
 
+            // Try plugin system first if enabled
+            if (this.config.enablePlugins) {
+                const plugin = pluginRegistry.findPlugin(request);
+                if (plugin) {
+                    this.logger.debug(`Using plugin ${plugin.metadata.name} for request ${request.id}`);
+                    const historicalData = this.config.enableWorkloadCollection 
+                        ? workloadCollector.getDataByType(request.type)
+                        : undefined;
+                    const result = await plugin.optimize(request, historicalData);
+                    
+                    // Record workload data
+                    if (this.config.enableWorkloadCollection) {
+                        workloadCollector.record(request, result);
+                    }
+                    
+                    return result;
+                }
+            }
+
             let resultData: Record<string, unknown> = {};
 
             if (request.type === 'resource') {
@@ -150,6 +173,11 @@ export class OptimizationEngine implements IEngine {
 
             // Cache the result
             this.cache.set(cacheKey, optimizationResult);
+
+            // Record workload data
+            if (this.config.enableWorkloadCollection) {
+                workloadCollector.record(request, optimizationResult);
+            }
 
             // Record metrics
             metricsCollector.record({
@@ -202,5 +230,16 @@ export class OptimizationEngine implements IEngine {
      */
     public getAnomalyDetector(): AnomalyDetector {
         return this.anomalyDetector;
+     * Get plugin registry
+     */
+    public getPluginRegistry() {
+        return pluginRegistry;
+    }
+
+    /**
+     * Get workload collector
+     */
+    public getWorkloadCollector() {
+        return workloadCollector;
     }
 }
