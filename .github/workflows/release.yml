@@ -34,7 +34,7 @@ jobs:
           tar -czf engine-ops-dist.tar.gz dist package.json README.md LICENSE
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: engine-ops-dist.tar.gz
