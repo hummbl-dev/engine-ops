@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: engine-ops-operator
+  labels:
+    app: engine-ops-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: engine-ops-operator
+  template:
+    metadata:
+      labels:
+        app: engine-ops-operator
+    spec:
+      serviceAccountName: engine-ops-operator-sa
+      containers:
+        - name: operator
+          image: hummbl/engine-ops-operator:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_ENV
+              value: "production"
+          ports:
+            - containerPort: 3000
+          command: ["node", "dist/k8s-operator/controller.js"]

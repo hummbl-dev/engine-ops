@@ -3,7 +3,7 @@ Engine-Ops Python SDK
 High-performance optimization engine client library
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from .client import EngineOpsClient
 from .models import (
@@ -12,9 +12,26 @@ from .models import (
     EngineConfig
 )
 
+# ML Plugin System
+from .ml import (
+    BaseMLModel,
+    PredictionResult,
+    MLPluginInterface,
+    PluginMetadata,
+    WorkloadDataPoint,
+    WorkloadDataset
+)
+
 __all__ = [
     "EngineOpsClient",
     "OptimizationRequest",
     "OptimizationResult",
-    "EngineConfig"
+    "EngineConfig",
+    # ML exports
+    "BaseMLModel",
+    "PredictionResult",
+    "MLPluginInterface",
+    "PluginMetadata",
+    "WorkloadDataPoint",
+    "WorkloadDataset",
 ]

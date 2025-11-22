@@ -17,11 +17,13 @@ export const EngineConfigSchema = z.object({
     maxConcurrentTasks: z.number().int().positive().optional().default(5),
     timeoutMs: z.number().int().positive().optional().default(30000),
     verbose: z.boolean().optional().default(false),
+    enablePlugins: z.boolean().optional().default(false),
+    enableWorkloadCollection: z.boolean().optional().default(false),
 });
 
 export const OptimizationRequestSchema = z.object({
     id: z.string().min(1),
-    type: z.enum(['resource', 'scheduling', 'performance'] as const),
+    type: z.enum(['resource', 'scheduling', 'performance', 'ml-driven'] as const),
     data: z.record(z.string(), z.unknown()),
     constraints: z.record(z.string(), z.unknown()).optional(),
 });
