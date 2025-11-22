@@ -23,6 +23,7 @@ describe('Controller', () => {
         // But for this test, let's just check if we can import it without erroring.
 
         jest.isolateModules(() => {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             require('../controller');
         });
 

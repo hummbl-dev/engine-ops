@@ -23,6 +23,7 @@ jest.mock('@kubernetes/client-node', () => {
 describe('Watcher', () => {
     it('should start watching the correct path', async () => {
         jest.isolateModules(() => {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             require('../watcher');
         });
 
@@ -42,6 +43,7 @@ describe('Watcher', () => {
         });
 
         jest.isolateModules(() => {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             require('../watcher');
         });
 

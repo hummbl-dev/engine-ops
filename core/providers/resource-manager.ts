@@ -55,7 +55,7 @@ export class MultiCloudResourceManager implements IResourceManager {
         const allNodes = await this.listAllNodes();
 
         // Filter nodes based on workload constraints
-        let candidateNodes = this.filterNodesByConstraints(allNodes, workload);
+        const candidateNodes = this.filterNodesByConstraints(allNodes, workload);
 
         if (candidateNodes.length === 0) {
             return null;
