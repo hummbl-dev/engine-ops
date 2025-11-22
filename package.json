@@ -31,7 +31,10 @@
         "dev": "nodemon --watch public --watch core --watch schemas --ext ts --exec \"npm run build && npm start\"",
         "lint": "eslint . --ext .ts",
         "format": "prettier --write .",
-        "docs": "typedoc --out docs/api"
+        "docs": "typedoc --out docs/api",
+        "migrate": "npm run build && node dist/infra/scripts/migrate.js",
+        "migrate:status": "npm run build && node dist/infra/scripts/migrate.js status",
+        "migrate:rollback": "npm run build && node dist/infra/scripts/migrate.js down"
     },
     "repository": {
         "type": "git",

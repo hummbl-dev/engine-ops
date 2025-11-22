@@ -1,0 +1,317 @@
+# Copyright (c) 2025, HUMMBL, LLC
+# Licensed under the Apache License, Version 2.0
+
+name: Blue-Green Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      version:
+        description: 'Version to deploy (e.g., v0.3.0)'
+        required: true
+        type: string
+      auto_switch:
+        description: 'Automatically switch traffic after tests'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ inputs.version }}
+            type=sha,prefix=sha-
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./infra/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to Inactive Environment
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Determine active/inactive environments
+        id: environments
+        run: |
+          NAMESPACE="${{ inputs.environment }}"
+          ACTIVE=$(kubectl get service engine-ops-active -n "$NAMESPACE" -o jsonpath='{.spec.selector.version}' 2>/dev/null || echo "blue")
+          if [ "$ACTIVE" = "blue" ]; then
+            INACTIVE="green"
+          else
+            INACTIVE="blue"
+          fi
+          echo "active=$ACTIVE" >> $GITHUB_OUTPUT
+          echo "inactive=$INACTIVE" >> $GITHUB_OUTPUT
+          echo "namespace=$NAMESPACE" >> $GITHUB_OUTPUT
+
+      - name: Deploy to inactive environment
+        run: |
+          kubectl set image deployment/engine-ops-${{ steps.environments.outputs.inactive }} \
+            engine-ops=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.version }} \
+            -n ${{ steps.environments.outputs.namespace }}
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/engine-ops-${{ steps.environments.outputs.inactive }} \
+            -n ${{ steps.environments.outputs.namespace }} \
+            --timeout=5m
+
+      - name: Wait for pods to be ready
+        run: |
+          kubectl wait --for=condition=ready pod \
+            -l app=engine-ops,version=${{ steps.environments.outputs.inactive }} \
+            -n ${{ steps.environments.outputs.namespace }} \
+            --timeout=2m
+
+  test:
+    name: Run Tests on Preview Environment
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Determine inactive environment
+        id: env
+        run: |
+          NAMESPACE="${{ inputs.environment }}"
+          ACTIVE=$(kubectl get service engine-ops-active -n "$NAMESPACE" -o jsonpath='{.spec.selector.version}' 2>/dev/null || echo "blue")
+          INACTIVE=$([ "$ACTIVE" = "blue" ] && echo "green" || echo "blue")
+          echo "inactive=$INACTIVE" >> $GITHUB_OUTPUT
+          echo "namespace=$NAMESPACE" >> $GITHUB_OUTPUT
+
+      - name: Health check on preview service
+        run: |
+          # Port forward to preview service
+          kubectl port-forward service/engine-ops-${{ steps.env.outputs.inactive }} 8080:80 \
+            -n ${{ steps.env.outputs.namespace }} &
+          PF_PID=$!
+          sleep 5
+          
+          # Health checks
+          for i in {1..10}; do
+            if curl -sf http://localhost:8080/api/v1/health/ready > /dev/null; then
+              echo "✓ Health check passed"
+              kill $PF_PID
+              exit 0
+            fi
+            echo "Health check attempt $i failed, retrying..."
+            sleep 5
+          done
+          
+          kill $PF_PID
+          echo "✗ Health checks failed"
+          exit 1
+
+      - name: Run smoke tests
+        run: |
+          kubectl port-forward service/engine-ops-${{ steps.env.outputs.inactive }} 8080:80 \
+            -n ${{ steps.env.outputs.namespace }} &
+          PF_PID=$!
+          sleep 3
+          
+          # Test critical endpoints
+          curl -sf http://localhost:8080/api/v1/health || exit 1
+          curl -sf http://localhost:8080/metrics || exit 1
+          
+          kill $PF_PID
+          echo "✓ Smoke tests passed"
+
+      - name: Run integration tests
+        run: |
+          kubectl port-forward service/engine-ops-${{ steps.env.outputs.inactive }} 8080:80 \
+            -n ${{ steps.env.outputs.namespace }} &
+          PF_PID=$!
+          sleep 3
+          
+          # Set API endpoint
+          export API_URL=http://localhost:8080
+          
+          # Run tests
+          npm ci
+          npm run test:integration || TEST_RESULT=$?
+          
+          kill $PF_PID
+          
+          if [ "${TEST_RESULT:-0}" -ne 0 ]; then
+            echo "✗ Integration tests failed"
+            exit 1
+          fi
+          
+          echo "✓ Integration tests passed"
+
+  switch-traffic:
+    name: Switch Traffic to New Version
+    needs: [test]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
+      issues: write
+    if: ${{ inputs.auto_switch || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Get environment info
+        id: env
+        run: |
+          NAMESPACE="${{ inputs.environment }}"
+          ACTIVE=$(kubectl get service engine-ops-active -n "$NAMESPACE" -o jsonpath='{.spec.selector.version}' 2>/dev/null || echo "blue")
+          INACTIVE=$([ "$ACTIVE" = "blue" ] && echo "green" || echo "blue")
+          echo "active=$ACTIVE" >> $GITHUB_OUTPUT
+          echo "inactive=$INACTIVE" >> $GITHUB_OUTPUT
+          echo "namespace=$NAMESPACE" >> $GITHUB_OUTPUT
+
+      - name: Manual approval
+        if: ${{ !inputs.auto_switch }}
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: ${{ github.repository_owner }}
+          minimum-approvals: 1
+          issue-title: "Approve traffic switch to ${{ steps.env.outputs.inactive }}"
+          issue-body: |
+            Deployment to **${{ inputs.environment }}** is ready.
+            
+            **Version**: ${{ inputs.version }}
+            **Current Active**: ${{ steps.env.outputs.active }}
+            **New Version**: ${{ steps.env.outputs.inactive }}
+            
+            All tests have passed. Please approve to switch traffic.
+
+      - name: Switch traffic
+        run: |
+          echo "Switching traffic from ${{ steps.env.outputs.active }} to ${{ steps.env.outputs.inactive }}"
+          
+          # Update active service
+          kubectl patch service engine-ops-active \
+            -n ${{ steps.env.outputs.namespace }} \
+            -p "{\"spec\":{\"selector\":{\"version\":\"${{ steps.env.outputs.inactive }}\"}}}"
+          
+          # Update preview service
+          kubectl patch service engine-ops-preview \
+            -n ${{ steps.env.outputs.namespace }} \
+            -p "{\"spec\":{\"selector\":{\"version\":\"${{ steps.env.outputs.active }}\"}}}"
+
+      - name: Verify traffic switch
+        run: |
+          sleep 5
+          kubectl wait --for=condition=ready pod \
+            -l app=engine-ops,version=${{ steps.env.outputs.inactive }} \
+            -n ${{ steps.env.outputs.namespace }} \
+            --timeout=30s
+
+      - name: Post-deployment monitoring
+        run: |
+          echo "Monitoring new active environment for 30 seconds..."
+          for i in {1..6}; do
+            kubectl get pods -l app=engine-ops,version=${{ steps.env.outputs.inactive }} \
+              -n ${{ steps.env.outputs.namespace }}
+            sleep 5
+          done
+
+  notify:
+    name: Send Notification
+    needs: [switch-traffic]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: always()
+    
+    steps:
+      - name: Deployment notification
+        run: |
+          if [ "${{ needs.switch-traffic.result }}" = "success" ]; then
+            echo "✅ Deployment successful: ${{ inputs.version }} to ${{ inputs.environment }}"
+          else
+            echo "❌ Deployment failed"
+            exit 1
+          fi
