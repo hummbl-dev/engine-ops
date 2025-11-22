@@ -67,9 +67,11 @@ export class EngineOps {
    */
   public getAnomalyDetector() {
     return this.engine.getAnomalyDetector();
+  }
+  /**
    * Get plugin registry
    */
-  public getPluginRegistry() {
+  public getPluginRegistry(): any {
     return this.engine.getPluginRegistry();
   }
 

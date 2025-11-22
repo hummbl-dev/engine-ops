@@ -38,7 +38,7 @@ export class AgentSessionManager {
         // Validate request
         const validation = AgentSessionRequestSchema.safeParse(request);
         if (!validation.success) {
-            const errorMsg = `Session validation failed: ${JSON.stringify(validation.error.errors)}`;
+            const errorMsg = `Session validation failed: ${JSON.stringify(validation.error.issues)}`;
             this.logger.error(errorMsg);
             throw new Error(errorMsg);
         }

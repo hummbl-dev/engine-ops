@@ -45,7 +45,7 @@ optimizeRouter.post('/', async (req: Request, res: Response, next: NextFunction)
         if (!validation.success) {
             res.status(400).json({
                 error: 'Invalid request',
-                details: validation.error.errors
+                details: validation.error.issues
             });
             return;
         }

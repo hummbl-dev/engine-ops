@@ -340,11 +340,12 @@ export class OptimizationEngine implements IEngine {
                 },
             };
         }
+    }
 
     /**
      * Get plugin registry
      */
-    public getPluginRegistry() {
+    public getPluginRegistry(): any {
         return pluginRegistry;
     }
 

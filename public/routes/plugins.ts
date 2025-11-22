@@ -41,7 +41,7 @@ pluginsRouter.get('/', async (req: Request, res: Response, next: NextFunction) =
         const registry = engine.getPluginRegistry();
         const plugins = registry.getAllPlugins();
 
-        const pluginList = plugins.map((plugin) => ({
+        const pluginList = plugins.map((plugin: any) => ({
             name: plugin.metadata.name,
             version: plugin.metadata.version,
             description: plugin.metadata.description,
@@ -94,7 +94,7 @@ pluginsRouter.post('/:name/enable', async (req: Request, res: Response, next: Ne
     try {
         await ensureEngineInitialized();
         const registry = engine.getPluginRegistry();
-        
+
         registry.enablePlugin(req.params.name);
 
         res.status(200).json({
@@ -114,7 +114,7 @@ pluginsRouter.post('/:name/disable', async (req: Request, res: Response, next: N
     try {
         await ensureEngineInitialized();
         const registry = engine.getPluginRegistry();
-        
+
         registry.disablePlugin(req.params.name);
 
         res.status(200).json({
@@ -150,9 +150,9 @@ pluginsRouter.get('/workload-data/export', async (req: Request, res: Response, n
     try {
         await ensureEngineInitialized();
         const collector = engine.getWorkloadCollector();
-        
+
         const requestType = req.query.type as string;
-        const data = requestType 
+        const data = requestType
             ? collector.getDataByType(requestType)
             : collector.getAllData();
 
