@@ -14,6 +14,8 @@
 /**
  * Anomaly detection for engine operations
  */
+import { AnalysisProvider } from './analysis';
+
 export interface AnomalyDetectorConfig {
     /**
      * Window size for statistical calculations (in data points)
@@ -56,8 +58,9 @@ export class AnomalyDetector {
     private config: Required<AnomalyDetectorConfig>;
     private metrics: Map<string, MetricValue[]>;
     private alerts: AnomalyAlert[];
+    private analysisProvider?: AnalysisProvider;
 
-    constructor(config: AnomalyDetectorConfig = {}) {
+    constructor(config: AnomalyDetectorConfig = {}, analysisProvider?: AnalysisProvider) {
         this.config = {
             windowSize: config.windowSize || 100,
             threshold: config.threshold || 3,
@@ -66,6 +69,7 @@ export class AnomalyDetector {
         };
         this.metrics = new Map();
         this.alerts = [];
+        this.analysisProvider = analysisProvider;
     }
 
     /**
@@ -135,6 +139,19 @@ export class AnomalyDetector {
 
             // Emit event (could be extended to use event emitter)
             this.onAnomalyDetected(alert);
+
+            // Trigger AI analysis if provider is available
+            if (this.analysisProvider) {
+                // Mock logs for now - in real system would fetch from logger
+                const mockLogs = ['[INFO] Processing request', '[WARN] High load detected'];
+                this.analysisProvider.analyze(alert, mockLogs).then(analysis => {
+                    if (this.config.verbose) {
+                        console.log(`[AI ANALYSIS] ${analysis.rootCauseHypothesis}`);
+                    }
+                    // Attach analysis to alert or emit new event
+                    // (For now just logging it)
+                });
+            }
         }
     }
 

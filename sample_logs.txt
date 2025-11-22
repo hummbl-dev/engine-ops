@@ -1,0 +1,6 @@
+2025-11-22 10:00:01 [INFO] Service started on 192.168.1.50
+2025-11-22 10:00:02 [INFO] Connected to database at db.example.com
+2025-11-22 10:05:00 [ERROR] Error: Connection timeout to user@example.com
+2025-11-22 10:05:01 [WARN] Retrying connection...
+2025-11-22 10:05:05 [ERROR] Error: Connection timeout to user@example.com
+2025-11-22 10:10:00 [INFO] Shutting down service
