@@ -10,8 +10,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install ALL dependencies (including devDependencies for build)
+RUN npm ci
 
 # Copy source code
 COPY core/ ./core/
@@ -27,6 +27,12 @@ RUN npm run build
 FROM node:20-alpine
 
 WORKDIR /app
+
+# Copy package files for production install
+COPY package*.json ./
+
+# Install only production dependencies
+RUN npm ci --only=production
 
 # Copy built artifacts from builder
 COPY --from=builder /app/dist ./dist
