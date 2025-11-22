@@ -1,4 +1,5 @@
 import { LLMClient, LLMClientConfig, LLMResponse } from '../client';
+import { CredentialsFactory } from '../../infra/credentials/factory';
 
 export class GrokClient implements LLMClient {
     private config: LLMClientConfig;
@@ -7,11 +8,26 @@ export class GrokClient implements LLMClient {
         this.config = config;
     }
 
+    private async ensureApiKey(): Promise<string> {
+        if (this.config.apiKey && this.config.apiKey !== 'mock-key') {
+            return this.config.apiKey;
+        }
+        const credentials = await CredentialsFactory.getInstance();
+        return credentials.getCredential('GROK_API_KEY');
+    }
+
     getProviderName(): string {
         return 'Grok';
     }
 
     async complete(prompt: string): Promise<LLMResponse> {
+        // Ensure we have a key
+        try {
+            await this.ensureApiKey();
+        } catch (e) {
+            console.warn('[Grok] Could not retrieve API key from credentials manager, using config/mock.');
+        }
+
         // Grok uses OpenAI-compatible API
         // const response = await fetch('https://api.x.ai/v1/chat/completions', { ... });
 

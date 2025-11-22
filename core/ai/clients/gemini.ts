@@ -1,4 +1,5 @@
 import { LLMClient, LLMClientConfig, LLMResponse } from '../client';
+import { CredentialsFactory } from '../../infra/credentials/factory';
 
 export class GeminiClient implements LLMClient {
     private config: LLMClientConfig;
@@ -7,11 +8,26 @@ export class GeminiClient implements LLMClient {
         this.config = config;
     }
 
+    private async ensureApiKey(): Promise<string> {
+        if (this.config.apiKey && this.config.apiKey !== 'mock-key') {
+            return this.config.apiKey;
+        }
+        const credentials = await CredentialsFactory.getInstance();
+        return credentials.getCredential('GEMINI_API_KEY');
+    }
+
     getProviderName(): string {
         return 'Gemini';
     }
 
     async complete(prompt: string): Promise<LLMResponse> {
+        // Ensure we have a key (simulating secure retrieval)
+        try {
+            await this.ensureApiKey();
+        } catch (e) {
+            console.warn('[Gemini] Could not retrieve API key from credentials manager, using config/mock.');
+        }
+
         // In a real implementation, we would use @google/generative-ai
         // const genAI = new GoogleGenerativeAI(this.config.apiKey);
         // const model = genAI.getGenerativeModel({ model: this.config.model });
