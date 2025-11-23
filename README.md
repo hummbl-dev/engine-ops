@@ -10,6 +10,44 @@
 
 ---
 
+## 🔍 The Architecture: Feudalism vs. Sovereignty
+
+```mermaid
+graph TD
+    subgraph FEUDAL ["❌ THE FEUDAL LOOP (Status Quo)"]
+        U1[User] -->|Prompts & Data| API[Centralized Black Box]
+        API -->|Opaque Logic| U1
+        API -.->|Harvesting| TRAINING[Vendor Training Data]
+        style FEUDAL fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+    end
+
+    subgraph SOVEREIGN ["✅ THE SOVEREIGN STACK (Hummbl)"]
+        U2[User] -->|Intent| KERNEL[Sovereign Kernel]
+        
+        subgraph CORTEX [The Cortex]
+            CONST[Constitution.yaml]
+            MEM[Local Memory]
+        end
+        
+        KERNEL -->|Audit| CONST
+        KERNEL -->|Retrieval| MEM
+        
+        KERNEL -->|Safe Request| ROUTER{Router}
+        ROUTER -->|Reasoning| CLAUDE[Claude-3]
+        ROUTER -->|Privacy| LOCAL[Local Llama-3]
+        
+        CLAUDE -->|Raw Token| KERNEL
+        LOCAL -->|Raw Token| KERNEL
+        
+        KERNEL -->|Verified Output| U2
+        style SOVEREIGN fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    end
+```
+
+**The Difference:** In the Feudal model, you feed the machine. In the Sovereign model, the machine feeds you—but only after your Constitution approves it.
+
+---
+
 ## 📂 The Repository Structure
 
 This repository is organized into the three pillars of Sovereignty:
