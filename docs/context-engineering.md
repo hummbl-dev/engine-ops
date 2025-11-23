@@ -1,53 +1,52 @@
 # Context Engineering Report: Engine-Ops
+
 **Generated:** 2025-11-22
-**Status:** Stable / Green CI
+**Status:** Stable / v1.0-sovereign Released
 
 ## 1. Project Identity
-**Name:** `hummbl-engine-ops`
-**Purpose:** Enterprise-grade optimization engine for Kubernetes resources, providing intelligent scheduling, bin-packing, and multi-cloud workload management.
+
+**Name:** `hummbl-engine-ops` (Sovereign Intelligence Monorepo)
+**Purpose:** A Sovereign Intelligence Platform that decouples "The Brain" (Python Engine) from "The Tool" (VS Code Extension) using the Model Context Protocol (MCP).
+**Core Philosophy:** [The Sovereign Intelligence Manifesto](../MANIFESTO.md)
+
 **Core Stack:**
-- **Runtime:** Node.js (v18.x, v20.x)
-- **Language:** TypeScript
-- **Framework:** Express.js
-- **Infrastructure:** Kubernetes (Operator pattern)
-- **Validation:** Zod
-- **Testing:** Jest
+
+- **Brain (Engine):** Python 3.10+, FastAPI, Uvicorn, Docker
+- **Tool (Extension):** TypeScript, VS Code Extension API, MCP SDK
+- **Protocol:** Model Context Protocol (MCP)
+- **Infrastructure:** Google Cloud Run (Engine), VS Code Marketplace (Extension)
 
 ## 2. Repository Structure
+
 | Directory | Purpose |
 |-----------|---------|
-| `core/` | Core logic (Optimization Engine, Algorithms, Monitoring) |
-| `public/` | API Server and Routes |
-| `k8s-operator/` | Kubernetes Operator (Controller, Watcher, Reconciler) |
-| `infra/` | Infrastructure-as-Code (Helm, K8s manifests) |
-| `docs/playbooks/` | Operational procedures (CI Failure, Deployment) |
-| `.github/workflows/` | CI/CD definitions (`ci.yml`, `dependabot.yml`) |
+| `engine/` | **The Brain.** Python FastAPI service. Hosts the "Council" of personas and core logic. |
+| `extension/` | **The Tool.** VS Code Extension. Acts as the MCP Client and Chat Interface (`@hummbl`). |
+| `docs/` | Documentation, Playbooks, and Manifestos. |
+| `.github/workflows/` | CI/CD pipelines for Engine deployment and Extension release. |
 
 ## 3. CI/CD State
-**Status:** ✅ **Fully Green** (as of commit `88471ea`)
-**Workflow:** `.github/workflows/ci.yml`
-- **Triggers:** Push to `main`, Pull Request to `main`
-- **Jobs:**
-  - `Build & Test`: Runs on Node 18.x and 20.x. Includes `npm ci`, `npm run build`, `npm run lint`, `npm test` (with coverage).
-  - `License Check`: Verifies BSL headers.
-- **Recent Improvements:**
-  - **Lint Fixes:** Resolved 4 outstanding lint errors (require imports in tests, const usage).
-  - **Test Stability:** Suppressed `console.error` in Jest setup and fixed `setupFiles` configuration error. Resolved flaky timestamp test in `agent-session-manager`.
-  - **Artifacts:** Configured upload of coverage reports and npm debug logs.
-  - **Dependabot:** Grouped updates for `typescript-eslint` and `github-actions`.
+
+**Status:** ✅ **Fully Operational**
+**Workflows:**
+
+- `deploy-engine.yml`: Deploys `engine/` to Cloud Run on push to `main`.
+- `release-extension.yml`: Builds and releases `extension/` on tag `v*`.
 
 ## 4. Operational Playbooks
-New standardized procedures created in `docs/playbooks/`:
-- **[CI Failure Response](docs/playbooks/ci-failure-response.md):** Triage steps for build, lint, and test failures. Includes escalation paths and common scenarios (e.g., peer dependency conflicts).
-- **[Deployment Procedures](docs/playbooks/deployment-procedures.md):** Detailed guides for Blue-Green and Rolling deployments, including rollback steps and verification commands.
+
+- **[Deployment Procedures](playbooks/deployment-procedures.md):** Blue-Green and Rolling deployment strategies for the Engine.
+- **[Safety Praxis](prompt-engineering/SAFETY_PRAXIS.md):** Safety and alignment guidelines for the Council.
 
 ## 5. Recent Achievements
-1.  **Stabilized CI Pipeline:** Fixed persistent peer dependency conflicts with `@typescript-eslint`.
-2.  **Resolved Lint Debt:** Fixed `require()` usage in Jest tests and variable declarations.
-3.  **Enhanced Observability:** Added test coverage reporting and artifact retention to CI.
-4.  **Operational Maturity:** Established formal playbooks for incident response and deployment.
+
+1. **Monorepo Refactor:** Successfully restructured into `engine/` and `extension/`.
+2. **Sovereign v1.0 Release:** Tagged and shipped `v1.0-sovereign`.
+3. **MCP Integration:** Implemented standard `tools/call` protocol for seamless Engine-Extension communication.
+4. **Council Consultation:** Verified end-to-end flow where `@hummbl` consults the Python Engine for strategic advice.
 
 ## 6. Outstanding Items
-- **PR #22 (Refactor):** Needs rebase and merge conflict resolution.
-- **Deployment Strategy Implementation:** While documented, the actual Terraform/Helm implementation for advanced strategies (Blue-Green) needs to be finalized.
-- **Dependabot PRs:** PRs #12-15 need to be merged now that CI is green.
+
+- **Expand Council:** Add more personas (Machiavelli, Marcus Aurelius) with distinct prompts.
+- **Database Integration:** Connect Engine to a persistent vector store for long-term memory.
+- **Auditor Implementation:** Flesh out `engine/src/auditor.py` with real constitutional checks.
