@@ -1,16 +1,63 @@
 # Sovereign Intelligence Engine & Ops
 
-> "We hold these truths to be self-evident: That Intelligence must be a Tool of Agency, not a Replacement for it."
+# Sovereign Intelligence Stack
 
-🚀 **Status:** Active | 🏛️ **Philosophy:** Sovereign
-
----
-
-**engine-ops** is the reference implementation of the **Sovereign Intelligence Stack**. It provides the infrastructure, governance patterns, and operational playbooks necessary for teams to reject "Digital Feudalism" and own their cognitive infrastructure.
+**Escape Digital Feudalism. Own Your AI.**
 
 ---
 
-## 🔍 The Architecture: Feudalism vs. Sovereignty
+## ⚡ The Kill Sheet: Why This Exists
+
+```mermaid
+graph TB
+    subgraph FEUDAL["⛓️ THE FEUDAL LOOP (Status Quo)"]
+        F_User["👤 Developer"] -->|"Prompt"| F_Black["🔒 BLACK BOX<br/>(Closed Model)"]
+        F_Black -->|"No visibility"| F_Decision["❓ Decision Logic<br/>(Hidden)"]
+        F_Decision -->|"No control"| F_Vendor["🏢 Vendor Lock-In<br/>(OpenAI/Anthropic)"]
+        F_Vendor -->|"Code"| F_User
+        
+        F_Rot["💀 Context Rot"] -.->|"Fragments over time"| F_Black
+        F_Trust["⚠️ Trust Erosion"] -.->|"No audit trail"| F_Decision
+    end
+
+    subgraph SOVEREIGN["⚡ THE SOVEREIGN STACK (Our System)"]
+        S_User["👤 Sovereign Operator"] -->|"Prompt"| S_Const["📜 Constitution<br/>(Your Rules)"]
+        S_Const -->|"Audit"| S_DT["🧠 D-T Framework<br/>(Transparent Reasoning)"]
+        S_DT -->|"Glass Box"| S_Persona["🎭 Persona Layer<br/>(Expert Modes)"]
+        S_Persona -->|"Governed Output"| S_User
+        
+        S_History["📝 Full History"] -.->|"Audit trail"| S_Const
+        S_Agency["✅ Human Agency"] -.->|"You own the rules"| S_DT
+    end
+
+    style FEUDAL fill:#2d0d0d,stroke:#ff4444,stroke-width:3px,color:#fff
+    style SOVEREIGN fill:#0d2d0d,stroke:#44ff44,stroke-width:3px,color:#fff
+    
+    style F_Black fill:#330000,stroke:#ff0000,color:#fff
+    style F_Decision fill:#330000,stroke:#ff0000,color:#fff
+    style F_Vendor fill:#330000,stroke:#ff0000,color:#fff
+    
+    style S_Const fill:#003300,stroke:#00ff00,color:#fff
+    style S_DT fill:#003300,stroke:#00ff00,color:#fff
+    style S_Persona fill:#003300,stroke:#00ff00,color:#fff
+    
+    style F_Rot fill:#660000,stroke:#ff0000,stroke-dasharray: 5 5
+    style F_Trust fill:#660000,stroke:#ff0000,stroke-dasharray: 5 5
+    style S_History fill:#006600,stroke:#00ff00,stroke-dasharray: 5 5
+    style S_Agency fill:#006600,stroke:#00ff00,stroke-dasharray: 5 5
+```
+
+| Attribute | ⛓️ Feudal AI | ⚡ Sovereign AI |
+|-----------|--------------|-----------------|
+| **Visibility** | 🔒 Black Box | 🔍 Glass Box |
+| **Control** | 🏢 Vendor-Owned | 👤 User-Owned |
+| **Rules** | ❓ Opaque | 📜 YAML Constitution |
+| **Agency** | 🤖 AI Decides | 🧠 Human Governs |
+| **Context** | 💀 Entropy (Rots) | 📝 Preserved (Logged) |
+
+---
+
+## Repository Overview Architecture: Feudalism vs. Sovereignty
 
 ```mermaid
 graph TD
