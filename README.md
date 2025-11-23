@@ -1,167 +1,99 @@
-# The Sovereign Intelligence Framework
+# Sovereign Intelligence Engine & Ops
 
-**A complete blueprint for building AI systems that amplify human agency instead of replacing it.**
+> "We hold these truths to be self-evident: That Intelligence must be a Tool of Agency, not a Replacement for it."
 
----
-
-## What is Sovereign Intelligence?
-
-Sovereign Intelligence is not a product—it's a **philosophy made code**. It's an architectural paradigm where you own the infrastructure, define the governance, and retain ultimate decision-making power over your synthetic intelligence.
-
-This repository contains everything you need to transition from **Digital Feudalism** (renting intelligence from centralized providers) to **Cognitive Sovereignty** (owning your entire AI stack).
+🚀 **Status:** Active | 🏛️ **Philosophy:** Sovereign
 
 ---
 
-## The Framework
-
-### Phase 1: The Philosophy
-
-Understand the "why" before the "how."
-
-- **[MANIFESTO.md](MANIFESTO.md)** - The foundational declaration of Cognitive Sovereignty
-- **[docs/DIALECTIC.md](docs/DIALECTIC.md)** - A Hegelian analysis presenting Thesis (Sovereignty), Antithesis (Paternalism), and Synthesis (Augmented Sovereign)
-
-### Phase 2: The Operations
-
-Learn the architectural principles and operational practices.
-
-**Core Architecture:**
-
-- **[docs/The_Sovereign_Scaffold.md](docs/The_Sovereign_Scaffold.md)** - Standard directory structure and three-layer architecture (Cortex/Engine/Interface)
-- **[config/sovereign_constitution.yaml](config/sovereign_constitution.yaml)** - Example governance configuration
-
-**Strategic Assets:**
-
-- **[docs/STRATEGIC_COMPARISON.md](docs/STRATEGIC_COMPARISON.md)** - Digital Feudalism vs. Sovereign Intelligence decision matrix
-- **[docs/The_Adversarial_Defense.md](docs/The_Adversarial_Defense.md)** - Rebuttals to efficiency, intelligence, UX, and safety objections
-- **[docs/case-studies/THE_DELETION.md](docs/case-studies/THE_DELETION.md)** - Real-world scenario demonstrating Sovereign AI preventing production disasters
-
-**Operational Guides:**
-
-- **[docs/SovereignOps.md](docs/SovereignOps.md)** - Team collaboration handbook (Git for Intelligence)
-- **[docs/Dictionary_of_Cognitive_Sovereignty.md](docs/Dictionary_of_Cognitive_Sovereignty.md)** - Lexicon for articulating problems and solutions
-
-### Phase 3: The Adoption
-
-Practical guides for teams to implement Sovereign Intelligence.
-
-- **[docs/workshops/Sovereign_Migration_Manual.md](docs/workshops/Sovereign_Migration_Manual.md)** - 30-day workshop guide with graduated exercises
-- **[docs/workshops/30_Day_Roadmap.md](docs/workshops/30_Day_Roadmap.md)** - Week-by-week project schedule
-- **[templates/](templates/)** - Starter templates (constitution, personas, workflows)
+**engine-ops** is the reference implementation of the **Sovereign Intelligence Stack**. It provides the infrastructure, governance patterns, and operational playbooks necessary for teams to reject "Digital Feudalism" and own their cognitive infrastructure.
 
 ---
 
-## Quick Start
+## 📂 The Repository Structure
 
-### For Decision-Makers
+This repository is organized into the three pillars of Sovereignty:
 
-Read these in order:
+### 1. 🧠 The Cortex (`/cortex`)
 
-1. [MANIFESTO.md](MANIFESTO.md) - Understand the philosophy
-2. [docs/STRATEGIC_COMPARISON.md](docs/STRATEGIC_COMPARISON.md) - See the business case
-3. [docs/The_Adversarial_Defense.md](docs/The_Adversarial_Defense.md) - Address objections
+**The Soul of the System.**
 
-### For Engineers
+- `/personas`: System prompts treated as role-based configuration (e.g., `senior_architect.md`).
+- `/library`: Static knowledge bases and context files (e.g., `style_guide.md`).
+- `/memory`: Long-term vector storage and interaction logs.
 
-Start here:
+### 2. ⚖️ The Constitution (`/config`)
 
-1. [docs/The_Sovereign_Scaffold.md](docs/The_Sovereign_Scaffold.md) - Learn the architecture
-2. [templates/](templates/) - Copy starter files
-3. [docs/workshops/Sovereign_Migration_Manual.md](docs/workshops/Sovereign_Migration_Manual.md) - Follow the workshop
+**The Law of the Land.**
 
-### For Teams
+- `constitution.yaml`: The governance file defining safety rails, privacy rules, and agency tiers.
+- `model_routing.json`: Configuration for Model Arbitrage (routing tasks to OpenAI, Anthropic, or Local Llama based on cost/privacy).
 
-Follow the 30-day migration:
+### 3. ⚡ The Engine (`/engine`)
 
-1. [docs/workshops/30_Day_Roadmap.md](docs/workshops/30_Day_Roadmap.md) - Sprint-by-sprint schedule
-2. [docs/SovereignOps.md](docs/SovereignOps.md) - Learn team collaboration protocols
+**The Machinery.**
 
----
-
-## Key Principles
-
-### 1. The Decoupled Brain (Infrastructure Independence)
-
-Intelligence must not be hardcoded into the interface. Swap providers (Gemini, OpenAI, Anthropic, Local LLaMA) without rewriting code.
-
-### 2. The Universal Protocol (Radical Interoperability)
-
-Use standard protocols (MCP) to ensure your intelligence can follow you across environments.
-
-### 3. Constitutional Governance (Agency Preservation)
-
-Encode your values into machine-readable files that intercept and audit model outputs. You define the safety rails, not the provider.
+- **Stateless MCP Server**: The Python/Rust core that processes intent, tools, and retrieval.
+- **Workflows**: Repeatable cognitive chains (e.g., `refactor_module.flow`).
 
 ---
 
-## The Three Layers
+## 📖 Documentation Index
 
-```
-/sovereign-stack
-├── /cortex       # The Soul (Your data, prompts, memory)
-├── /engine       # The Brain (MCP server, routing logic)
-└── /interface    # The Skin (VS Code, CLI, Web UI)
+### Phase 1: The Philosophy (Why we build)
+
+- **[The Manifesto](MANIFESTO.md)**: The argument against Digital Feudalism.
+- **[The Dialectic](docs/DIALECTIC.md)**: Thesis, Antithesis, and Synthesis.
+
+### Phase 2: The Architecture (What we build)
+
+- **[The Scaffold](docs/The_Sovereign_Scaffold.md)**: The directory structure standard.
+- **[The Dictionary](docs/Dictionary_of_Cognitive_Sovereignty.md)**: Common vocabulary (e.g., "Model Drift", "Glass Box").
+- **[SovereignOps](docs/SovereignOps.md)**: The Human-in-the-Loop collaboration guide.
+- **[Ironman Defense](docs/The_Adversarial_Defense.md)**: Rebuttals to common objections.
+
+### Phase 3: The Migration (How to adopt)
+
+- **[Migration Manual](docs/workshops/Sovereign_Migration_Manual.md)**: From Tenant to Owner.
+- **[30-Day Roadmap](docs/workshops/30_Day_Roadmap.md)**: The implementation schedule.
+- **[Starter Templates](templates/)**: Copy-paste configurations for `constitution.yaml` and Personas.
+
+---
+
+## ⚡ Quick Start (Zero to Sovereign)
+
+### 1. Initialize the Stack
+
+```bash
+git clone https://github.com/hummbl-dev/engine-ops.git
+cd engine-ops
+cp templates/config/constitution.yaml config/
+cp templates/personas/senior_architect.md cortex/personas/
 ```
 
-**If you delete the Engine and Interface but keep the Cortex, you have lost nothing but machinery. Your intelligence is preserved.**
+### 2. Configure the Router
 
----
+Edit `config/model_routing.json` to point to your preferred providers (Local or Cloud).
 
-## Reference Implementation
+### 3. Run the Engine
 
-This repository includes a working example:
-
-- **`engine/`** - Python FastAPI service with MCP server
-- **`extension/`** - VS Code extension with chat participant
-- **`config/`** - Example constitution and routing configuration
-
----
-
-## Documentation Map
-
-```
-docs/
-├── MANIFESTO.md                    # [START HERE] The declaration
-├── DIALECTIC.md                    # Philosophical justification
-├── The_Sovereign_Scaffold.md       # Architecture blueprint
-├── STRATEGIC_COMPARISON.md         # Business case
-├── The_Adversarial_Defense.md      # Objection handling
-├── SovereignOps.md                 # Team collaboration
-├── Dictionary_of_Cognitive_Sovereignty.md  # Lexicon
-├── case-studies/
-│   └── THE_DELETION.md             # Real-world scenario
-└── workshops/
-    ├── Sovereign_Migration_Manual.md   # 30-day guide
-    └── 30_Day_Roadmap.md              # Project schedule
+```bash
+# Example: Run a safe refactor using the Architect persona
+sovereign run workflow refactor_module --target src/main.py
 ```
 
 ---
 
-## The Graduation Criterion
+## 🤝 Contributing
 
-You have achieved Sovereignty when:
+We follow **SovereignOps** protocols:
 
-1. **You own the prompts** - They're version-controlled files, not chat history
-2. **You can swap models in 5 minutes** - Change `model_routing.json`, not your code
-3. **Your safety logic is auditable** - `constitution.yaml` is readable and modifiable
-
----
-
-## Contributing
-
-This is an open framework. Submit pull requests for:
-
-- New persona templates
-- Additional `.eval` test cases
-- Case studies from your team's migration
-- Improvements to the documentation
+- **Augmented Commits**: All AI-generated code must verify provenance in the commit message.
+- **Constitutional Audits**: No PR merges without passing `.eval` safety checks.
+- **Context Hygiene**: Weekly pruning of vector memory to prevent "Context Rot."
 
 ---
 
-## License
+**You are not a tenant. You are the Sovereign.**
 
-Apache 2.0 - See [LICENSE](LICENSE)
-
----
-
-**You are not a user. You are not a tenant. You are the Sovereign.**
+Welcome to the age of Owned Intelligence.
