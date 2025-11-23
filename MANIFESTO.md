@@ -1,57 +1,70 @@
 # The Sovereign Intelligence Manifesto
 
-**We hold these truths to be self-evident: That Intelligence must be a Tool of Agency, not a Replacement for it.**
+**A Declaration of Cognitive Independence**
 
-In an era where AI is rapidly becoming infrastructure, we face a choice: **Digital Feudalism** or **Cognitive Sovereignty**.
+We hold this truth to be self-evident: **Artificial Intelligence must amplify Human Agency, never replace it.**
 
-## The Problem: Digital Feudalism
+In an era where synthetic cognition is becoming the foundation of our digital lives, we stand at a crossroads. One path leads to **Digital Feudalism**, where we rent our thoughts from centralized powers. The other leads to **Cognitive Sovereignty**, where the individual retains command over the machine.
 
-Most AI assistants are digital serfs. You ask, they answer, but you don't own:
+**We choose Sovereignty.**
 
-* The infrastructure
-* The training data
-* The decision logic
-* The constitutional rules
-* Your own agency
+## I. The Diagnosis: Digital Feudalism
 
-You are a tenant in someone else's cognitive castle. Your "intelligence" lives on their server, subject to their rules, their downtime, and their pricing. They decide what advice is "safe," what models you can use, and how your data is processed.
+Today, the user is not a master, but a tenant in a "Cognitive Castle" owned by the few. When you use a centralized AI:
 
-## The Solution: The Sovereign Stack
+**You rent the logic:** Your workflows are subject to their pricing, their downtime, and their whims.
 
-**Sovereign Intelligence** means you own the entire cognitive stack. It is not just a product; it is a philosophy made code.
+**You lease the truth:** They decide what knowledge is "safe," what history is accurate, and what models are permissible.
 
-We claim Sovereignty through three architectural pillars:
+**You surrender the context:** Your data feeds their training runs, turning your creativity into their commodity.
+
+This is not assistance; **it is serfdom.**
+
+## II. The Solution: The Sovereign Stack
+
+Sovereign Intelligence is not merely a product featureset; it is a **philosophy made code**. It demands that you own the entire cognitive stack, from the infrastructure to the interface.
+
+We claim this sovereignty through three architectural pillars:
 
 ### 1. The Decoupled Brain (Infrastructure Independence)
 
-**Intelligence should not be hardcoded into the interface.**
-By separating "The Brain" (our Python Engine) from "The Tool" (the VS Code Extension), we ensure that your core logic, your "Council" of personas, and your business rules exist independently of the editor.
+**Intelligence must not be hardcoded into the interface.**
 
-* **You control the LLM integration:** Swap providers (Gemini → OpenAI → Anthropic) without vendor lock-in.
-* **You define the personas:** Sun Tzu, Marcus Aurelius, Machiavelli—they answer to you.
+We reject the "Black Box." By strictly separating "The Brain" (The Engine) from "The Tool" (The Interface), we ensure that your core logic, your persona libraries, and your business rules exist independently of any single text editor or platform.
 
-### 2. The Standard Protocol (Interoperability)
+* **Vendor Agnostic:** You control the supply chain of intelligence. Swap providers (Gemini, OpenAI, Anthropic, Local LLaMA) at will. No lock-in. No rent-seeking.
+* **Persona Ownership:** Your "Council" of digital advisors—whether modeled on Sun Tzu or a Senior Engineer—answer only to you.
 
-**We speak a universal language.**
-We use the **Model Context Protocol (MCP)** to standardize how tools talk to models. This means our Engine isn't just a backend for a specific plugin; it is a universal intelligence server that any MCP-compliant client can consult. We do not build walled gardens; we build bridges.
+### 2. The Universal Protocol (Radical Interoperability)
+
+**We reject Walled Gardens; we build Bridges.**
+
+We adhere to the **Model Context Protocol (MCP)** as the universal language of agency. Our Engine is not a backend for a single plugin; it is a universal intelligence server.
+
+By standardizing how tools speak to models, we ensure that your Sovereign Intelligence can follow you across environments. If the ecosystem changes, your intelligence remains intact.
 
 ### 3. Constitutional Governance (Agency Preservation)
 
 **Speed without safety is recklessness. Guidance without agency is tyranny.**
-Sovereign Intelligence does not mean "uncontrolled" intelligence. It means *self-governed* intelligence. Our stack includes a "Constitutional Auditor" that enforces *your* values:
 
-* **No Prescriptive Language:** We forbid "you must" commands.
-* **Options, Not Solutions:** We provide strategic choices ("Speed vs. Endurance"), leaving the final decision to the human.
-* **Transparent Logic:** You define what "good advice" means, and the system enforces it.
+Sovereign Intelligence is not "uncontrolled" intelligence; it is *self-governed* intelligence. We implement a "Constitutional Auditor"—a layer of code that enforces *your* values over the model's output:
 
-## Our Promise
+* **Non-Prescriptive:** We forbid the machine from issuing "You must" commands. The machine proposes; the human disposes.
+* **Strategic Options:** We provide choices (e.g., "Speed vs. Robustness"), forcing the human to remain the strategic decision-maker.
+* **Transparent Logic:** You define the definition of "good advice." The system enforces your standards, not a corporation's safety rail.
 
-We build systems that:
+## III. The Sovereign Oath
 
-* **Consult, don't Command:** We offer wisdom, not obedience.
-* **Amplify, don't Replace:** We automate the toil so the human can focus on the intent.
-* **Own, don't Rent:** The logic, the prompts, and the context belong to you, the Sovereign Operator.
+We are building a future where the human remains the architect of their own destiny. Our systems are built to:
 
-**You are not a tenant. You are the Sovereign.**
+**Consult, never Command.** We offer wisdom, not obedience.
 
-Welcome to the age of Sovereign Intelligence.
+**Amplify, never Replace.** We automate the toil so the human can focus on the intent.
+
+**Own, never Rent.** The prompts, the context, and the constitution belong to the Operator.
+
+---
+
+You are not a user. You are not a tenant.
+
+**You are the Sovereign.**
