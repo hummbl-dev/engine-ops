@@ -1,199 +1,167 @@
-# Engine-Ops
+# The Sovereign Intelligence Framework
 
-[![CI Status](https://github.com/hummbl-dev/engine-ops/workflows/CI/badge.svg)](https://github.com/hummbl-dev/engine-ops/actions/workflows/ci.yml)
-
-**Engine-Ops** is a comprehensive engine optimization operations platform designed for high-performance computing, data processing, and infrastructure management. Built with a hybrid licensing model to balance commercial sustainability with open-source principles.
-
-## 🏗️ Repository Structure
-
-```
-engine-ops/
-├── core/              # Core engine optimization logic (BSL 1.1)
-├── schemas/           # Data schemas and validation (BSL 1.1)
-├── docs/              # Documentation and guides (BSL 1.1)
-├── public/            # Public APIs and interfaces (Apache 2.0)
-├── infra/             # Infrastructure configurations (Apache 2.0)
-├── tools/             # Development and maintenance tools
-│   ├── license-headers/
-│   │   ├── BSL_HEADER.txt
-│   │   └── APACHE_HEADER.txt
-│   └── apply-license-headers.sh
-├── LICENSE            # Business Source License 1.1
-├── CONTRIBUTING.md    # Contribution guidelines
-└── README.md          # This file
-```
-
-## 📜 Hybrid Licensing Model
-
-Engine-Ops uses a strategic dual-licensing approach:
-
-### Business Source License (BSL) 1.1
-**Directories:** `core/`, `schemas/`, `docs/`
-
-- **Non-production use:** Freely permitted
-- **Change Date:** 2029-01-01
-- **Change License:** Apache License 2.0
-- **Production limitations:** See LICENSE for Additional Use Grant details
-
-After the Change Date, these components automatically convert to Apache 2.0, ensuring eventual open-source availability.
-
-### Apache License 2.0
-**Directories:** `public/`, `infra/`
-
-- **All use cases:** Freely permitted including commercial production
-- **Permissive:** Minimal restrictions on usage and distribution
-
-### Why Hybrid Licensing?
-
-- **Sustainable Development:** BSL allows commercial sustainability for core IP
-- **Community Friendly:** Public APIs and infrastructure freely available
-- **Future Open Source:** Automatic conversion to Apache 2.0 after Change Date
-- **Clear Boundaries:** Directory-based licensing is unambiguous
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js 18+ (for TypeScript/JavaScript components)
-- Python 3.9+ (for Python components)
-- Bash 4.0+ (for shell scripts)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/hummbl-dev/engine-ops.git
-cd engine-ops
-
-# Install dependencies (when available)
-npm install
-
-# Verify license headers
-./tools/apply-license-headers.sh --check
-```
-
-## 🛠️ Development
-
-### License Header Management
-
-All source files must include appropriate license headers. Use the provided tool:
-
-```bash
-# Apply license headers to all files
-./tools/apply-license-headers.sh
-
-# Check without modifying
-./tools/apply-license-headers.sh --check
-
-# Verbose output
-./tools/apply-license-headers.sh --verbose
-```
-
-The script automatically applies:
-- **BSL headers** → `core/`, `schemas/`, `docs/`
-- **Apache 2.0 headers** → `public/`, `infra/`
-
-### Project Guidelines
-
-1. **Follow directory licensing** - Place code in the appropriate directory based on licensing needs
-2. **Add license headers** - All source files must have headers
-3. **Write tests** - Maintain high test coverage
-4. **Document changes** - Update relevant documentation
-5. **Code quality** - Follow language-specific style guides
-
-## 📖 Documentation
-
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and licensing rules
-- **[LICENSE](LICENSE)** - Business Source License 1.1 full text
-- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System architecture overview
-- **[docs/MULTI-CLOUD.md](docs/MULTI-CLOUD.md)** - Multi-cloud and edge compute guide
-- **[docs/KUBERNETES.md](docs/KUBERNETES.md)** - Kubernetes deployment guide
-
-## 🤝 Contributing
-
-We welcome contributions! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for:
-
-- Hybrid licensing guidelines
-- Code style standards
-- Testing requirements
-- Pull request process
-- License compliance checklist
-
-### Contribution Quick Guide
-
-```bash
-# 1. Fork and clone
-git clone https://github.com/your-username/engine-ops.git
-
-# 2. Create a feature branch
-git checkout -b feature/your-feature
-
-# 3. Make changes and add license headers
-./tools/apply-license-headers.sh
-
-# 4. Test your changes
-npm test
-
-# 5. Submit a pull request
-```
-
-## 📋 Features (Roadmap)
-
-### Core Engine (BSL)
-- [x] High-performance optimization algorithms
-- [x] Resource allocation and scheduling
-- [x] Performance monitoring and analytics
-- [x] Advanced caching strategies
-- [x] **Multi-cloud and edge compute support**
-  - [x] AWS, GCP, Azure provider adapters
-  - [x] Edge cluster support
-  - [x] Federated scheduling across providers
-  - [x] Geo-sharding for distributed workloads
-
-### Schemas (BSL)
-- [x] Data validation framework
-- [ ] Schema versioning and migration
-- [x] Type-safe data structures
-- [x] API schema definitions
-- [x] Multi-cloud workload schemas
-
-### Public APIs (Apache 2.0)
-- [ ] RESTful API interfaces
-- [ ] WebSocket real-time communication
-- [ ] Client SDKs and libraries
-- [ ] API documentation
-
-### Infrastructure (Apache 2.0)
-- [ ] Docker containerization
-- [ ] Kubernetes deployment configs
-- [ ] CI/CD pipelines
-- [ ] Infrastructure-as-code templates
-
-## 🔒 Security
-
-Security is a top priority. To report security vulnerabilities:
-
-- **Do not** open public issues for security concerns
-- **Email:** hummbldev@gmail.com
-- **Include:** Detailed description and reproduction steps
-
-## 📞 Support
-
-- **Issues:** [GitHub Issues](https://github.com/hummbl-dev/engine-ops/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/hummbl-dev/engine-ops/discussions)
-- **Email:** hummbldev@gmail.com
-
-## 📄 License
-
-This project uses a hybrid licensing model:
-
-- **BSL 1.1** (`core/`, `schemas/`, `docs/`) - See [LICENSE](LICENSE)
-- **Apache 2.0** (`public/`, `infra/`) - See license headers in files
-
-See [LICENSE](LICENSE) for the Business Source License terms.
+**A complete blueprint for building AI systems that amplify human agency instead of replacing it.**
 
 ---
 
-**Copyright (c) 2025, HUMMBL, LLC**
+## What is Sovereign Intelligence?
 
+Sovereign Intelligence is not a product—it's a **philosophy made code**. It's an architectural paradigm where you own the infrastructure, define the governance, and retain ultimate decision-making power over your synthetic intelligence.
 
+This repository contains everything you need to transition from **Digital Feudalism** (renting intelligence from centralized providers) to **Cognitive Sovereignty** (owning your entire AI stack).
+
+---
+
+## The Framework
+
+### Phase 1: The Philosophy
+
+Understand the "why" before the "how."
+
+- **[MANIFESTO.md](MANIFESTO.md)** - The foundational declaration of Cognitive Sovereignty
+- **[docs/DIALECTIC.md](docs/DIALECTIC.md)** - A Hegelian analysis presenting Thesis (Sovereignty), Antithesis (Paternalism), and Synthesis (Augmented Sovereign)
+
+### Phase 2: The Operations
+
+Learn the architectural principles and operational practices.
+
+**Core Architecture:**
+
+- **[docs/The_Sovereign_Scaffold.md](docs/The_Sovereign_Scaffold.md)** - Standard directory structure and three-layer architecture (Cortex/Engine/Interface)
+- **[config/sovereign_constitution.yaml](config/sovereign_constitution.yaml)** - Example governance configuration
+
+**Strategic Assets:**
+
+- **[docs/STRATEGIC_COMPARISON.md](docs/STRATEGIC_COMPARISON.md)** - Digital Feudalism vs. Sovereign Intelligence decision matrix
+- **[docs/The_Adversarial_Defense.md](docs/The_Adversarial_Defense.md)** - Rebuttals to efficiency, intelligence, UX, and safety objections
+- **[docs/case-studies/THE_DELETION.md](docs/case-studies/THE_DELETION.md)** - Real-world scenario demonstrating Sovereign AI preventing production disasters
+
+**Operational Guides:**
+
+- **[docs/SovereignOps.md](docs/SovereignOps.md)** - Team collaboration handbook (Git for Intelligence)
+- **[docs/Dictionary_of_Cognitive_Sovereignty.md](docs/Dictionary_of_Cognitive_Sovereignty.md)** - Lexicon for articulating problems and solutions
+
+### Phase 3: The Adoption
+
+Practical guides for teams to implement Sovereign Intelligence.
+
+- **[docs/workshops/Sovereign_Migration_Manual.md](docs/workshops/Sovereign_Migration_Manual.md)** - 30-day workshop guide with graduated exercises
+- **[docs/workshops/30_Day_Roadmap.md](docs/workshops/30_Day_Roadmap.md)** - Week-by-week project schedule
+- **[templates/](templates/)** - Starter templates (constitution, personas, workflows)
+
+---
+
+## Quick Start
+
+### For Decision-Makers
+
+Read these in order:
+
+1. [MANIFESTO.md](MANIFESTO.md) - Understand the philosophy
+2. [docs/STRATEGIC_COMPARISON.md](docs/STRATEGIC_COMPARISON.md) - See the business case
+3. [docs/The_Adversarial_Defense.md](docs/The_Adversarial_Defense.md) - Address objections
+
+### For Engineers
+
+Start here:
+
+1. [docs/The_Sovereign_Scaffold.md](docs/The_Sovereign_Scaffold.md) - Learn the architecture
+2. [templates/](templates/) - Copy starter files
+3. [docs/workshops/Sovereign_Migration_Manual.md](docs/workshops/Sovereign_Migration_Manual.md) - Follow the workshop
+
+### For Teams
+
+Follow the 30-day migration:
+
+1. [docs/workshops/30_Day_Roadmap.md](docs/workshops/30_Day_Roadmap.md) - Sprint-by-sprint schedule
+2. [docs/SovereignOps.md](docs/SovereignOps.md) - Learn team collaboration protocols
+
+---
+
+## Key Principles
+
+### 1. The Decoupled Brain (Infrastructure Independence)
+
+Intelligence must not be hardcoded into the interface. Swap providers (Gemini, OpenAI, Anthropic, Local LLaMA) without rewriting code.
+
+### 2. The Universal Protocol (Radical Interoperability)
+
+Use standard protocols (MCP) to ensure your intelligence can follow you across environments.
+
+### 3. Constitutional Governance (Agency Preservation)
+
+Encode your values into machine-readable files that intercept and audit model outputs. You define the safety rails, not the provider.
+
+---
+
+## The Three Layers
+
+```
+/sovereign-stack
+├── /cortex       # The Soul (Your data, prompts, memory)
+├── /engine       # The Brain (MCP server, routing logic)
+└── /interface    # The Skin (VS Code, CLI, Web UI)
+```
+
+**If you delete the Engine and Interface but keep the Cortex, you have lost nothing but machinery. Your intelligence is preserved.**
+
+---
+
+## Reference Implementation
+
+This repository includes a working example:
+
+- **`engine/`** - Python FastAPI service with MCP server
+- **`extension/`** - VS Code extension with chat participant
+- **`config/`** - Example constitution and routing configuration
+
+---
+
+## Documentation Map
+
+```
+docs/
+├── MANIFESTO.md                    # [START HERE] The declaration
+├── DIALECTIC.md                    # Philosophical justification
+├── The_Sovereign_Scaffold.md       # Architecture blueprint
+├── STRATEGIC_COMPARISON.md         # Business case
+├── The_Adversarial_Defense.md      # Objection handling
+├── SovereignOps.md                 # Team collaboration
+├── Dictionary_of_Cognitive_Sovereignty.md  # Lexicon
+├── case-studies/
+│   └── THE_DELETION.md             # Real-world scenario
+└── workshops/
+    ├── Sovereign_Migration_Manual.md   # 30-day guide
+    └── 30_Day_Roadmap.md              # Project schedule
+```
+
+---
+
+## The Graduation Criterion
+
+You have achieved Sovereignty when:
+
+1. **You own the prompts** - They're version-controlled files, not chat history
+2. **You can swap models in 5 minutes** - Change `model_routing.json`, not your code
+3. **Your safety logic is auditable** - `constitution.yaml` is readable and modifiable
+
+---
+
+## Contributing
+
+This is an open framework. Submit pull requests for:
+
+- New persona templates
+- Additional `.eval` test cases
+- Case studies from your team's migration
+- Improvements to the documentation
+
+---
+
+## License
+
+Apache 2.0 - See [LICENSE](LICENSE)
+
+---
+
+**You are not a user. You are not a tenant. You are the Sovereign.**
