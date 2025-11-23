@@ -35,6 +35,8 @@ jobs:
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    # Temporarily disabled - requires K8s cluster access (KUBECONFIG secrets)
+    if: false
     permissions:
       contents: read
       packages: write
