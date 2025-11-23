@@ -87,7 +87,6 @@ describe('GeneticAlgorithm', () => {
         });
 
         it('should improve fitness over generations', () => {
-            let generationCount = 0;
             const fitnessHistory: number[] = [];
 
             // Mock fitness function that tracks improvement

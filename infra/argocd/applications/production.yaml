@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: engine-ops-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/hummbl-dev/engine-ops.git
+    targetRevision: main
+    path: infra/helm/engine-ops
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-prod.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: engine-ops
+  syncPolicy:
+    # Manual sync for production
+    automated: null
+    syncOptions:
+      - CreateNamespace=true

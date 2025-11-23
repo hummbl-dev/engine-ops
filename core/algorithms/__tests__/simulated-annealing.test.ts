@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { SimulatedAnnealing, SimulatedAnnealingConfig, Solution } from '../simulated-annealing';
+import { SimulatedAnnealing, SimulatedAnnealingConfig } from '../simulated-annealing';
 
 // Mock Math.random for deterministic testing
 const mockMath = Object.create(global.Math);

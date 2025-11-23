@@ -17,14 +17,15 @@ on:
         description: 'Version to deploy (e.g., v0.3.0)'
         required: true
         type: string
-  push:
-    branches:
-      - main
-    paths:
-      - 'core/**'
-      - 'public/**'
-      - 'schemas/**'
-      - 'infra/Dockerfile'
+  # Disabled auto-deploy on push - use workflow_dispatch for manual deployments
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'core/**'
+  #     - 'public/**'
+  #     - 'schemas/**'
+  #     - 'infra/Dockerfile'
 
 env:
   REGISTRY: ghcr.io
@@ -34,6 +35,8 @@ jobs:
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    # Temporarily disabled - requires K8s cluster access (KUBECONFIG secrets)
+    if: false
     permissions:
       contents: read
       packages: write

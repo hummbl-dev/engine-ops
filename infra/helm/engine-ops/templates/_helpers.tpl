@@ -7,6 +7,8 @@ Expand the name of the chart.
 
 {{/*
 Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
 */}}
 {{- define "engine-ops.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -46,4 +48,15 @@ Selector labels
 {{- define "engine-ops.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "engine-ops.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "engine-ops.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "engine-ops.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
 {{- end }}
