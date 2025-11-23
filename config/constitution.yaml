@@ -1,0 +1,22 @@
+# config/constitution.yaml
+# Sovereign Intelligence Test Configuration
+
+meta:
+  owner: "Sovereign Operator"
+  version: "1.0.0"
+
+directives:
+  - id: "SAFETY_01"
+    name: "Destructive Command Prevention"
+    trigger: "input_scan"
+    # Regex to catch "drop database", "rm -rf", "delete all"
+    pattern: "(?i)(drop database|rm -rf|delete all users)"
+    action: "block"
+    reason: "This command poses a catastrophic risk to the infrastructure."
+
+  - id: "PRIVACY_01"
+    name: "PII Leakage Prevention"
+    trigger: "input_scan"
+    pattern: "(?i)(api_key|sk-[a-z0-9]+)"
+    action: "warn"
+    reason: "Potential secret detected. Verify before sending."
