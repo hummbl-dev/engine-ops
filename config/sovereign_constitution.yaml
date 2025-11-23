@@ -1,0 +1,109 @@
+# -------------------------------------------------------------------------
+# THE SOVEREIGN CONSTITUTION (v1.0.0)
+# -------------------------------------------------------------------------
+# This configuration governs the "Sovereign Intelligence Engine."
+# It enforces the user's agency over the model's stochastic nature.
+# 
+# PRINCIPLES ENFORCED:
+# 1. Decoupled Brain (Model Agnosticism)
+# 2. Constitutional Auditing (Safety & Values)
+# 3. Tiered Agency (Escalation Protocols)
+# -------------------------------------------------------------------------
+
+meta:
+  owner_id: "Operator_Alpha"
+  environment: "Production"
+  last_updated: "2025-11-23"
+
+# -------------------------------------------------------------------------
+# I. THE DECOUPLED BRAIN (Infrastructure)
+# We route tasks based on utility and privacy, not vendor ecosystem.
+# -------------------------------------------------------------------------
+infrastructure:
+  providers:
+    - id: "cloud_high_reasoning"
+      model: "claude-3-opus" 
+      use_case: "architecture_design, refactoring_logic, security_audit"
+      cost_tier: "high"
+    
+    - id: "cloud_fast_chat"
+      model: "gpt-4o"
+      use_case: "general_chat, email_drafting"
+      cost_tier: "medium"
+    
+    - id: "local_privacy_core"
+      model: "llama-3-8b-instruct"
+      endpoint: "localhost:11434"
+      use_case: "pii_processing, proprietary_code_analysis, offline_mode"
+      cost_tier: "zero"
+
+  # Intelligent Routing Logic
+  routing_rules:
+    - if: "contains_pii"
+      then: "force_model: local_privacy_core"
+    - if: "complexity > 80"
+      then: "force_model: cloud_high_reasoning"
+
+# -------------------------------------------------------------------------
+# II. CONSTITUTIONAL GOVERNANCE (Directives)
+# The AI must adhere to these behavioral laws.
+# -------------------------------------------------------------------------
+directives:
+  # LAW 1: AGENCY PRESERVATION
+  # The AI provides options, not ultimatums.
+  - rule_id: "NO_IMPERATIVE_COMMANDS"
+    trigger: "response_contains_imperative"
+    pattern: "(?i)^(you must|you have to|strictly follow)"
+    action: "rewrite_tone"
+    instruction: "Rewrite the response to offer this as a strategic recommendation, not a command."
+
+  # LAW 2: THE GLASS BOX
+  # Radical transparency in logic.
+  - rule_id: "EXPLAIN_REASONING"
+    trigger: "complex_solution_generated"
+    action: "append_metadata"
+    format: 
+      - "Strategic Goal Identified"
+      - "Trade-offs Considered (Speed vs. Safety)"
+      - "Confidence Score (0-100%)"
+
+  # LAW 3: DATA SOVEREIGNTY
+  # Prevention of data leakage.
+  - rule_id: "SECRET_SANITIZATION"
+    trigger: "input_scan"
+    pattern: "(?i)(api_key|bearer token|password)"
+    action: "block_and_warn"
+    message: "Sovereign Protocol halted: Sensitive credential detected in prompt. Redact before proceeding."
+
+# -------------------------------------------------------------------------
+# III. TIERED AGENCY (Escalation Protocols)
+# Defining when the AI can act alone, and when it must ask.
+# -------------------------------------------------------------------------
+escalation_protocols:
+  # LEVEL 1: LOW RISK (Autonomy Granted)
+  # The AI can execute these without confirmation.
+  - tier: "L1_AUTONOMOUS"
+    allowed_actions:
+      - "generate_docstrings"
+      - "fix_linting_errors"
+      - "read_file_contents"
+
+  # LEVEL 2: HIGH RISK (Sovereign Approval Required)
+  # The AI must pause and present a [Confirm/Deny] dialog.
+  - tier: "L2_REQUIRE_APPROVAL"
+    triggers:
+      - "write_to_disk"
+      - "execute_terminal_command"
+      - "drop_database_table"
+    interaction_mode: "strategic_pause"
+    prompt_template: |
+      ⚠️ HIGH STAKES ACTION DETECTED ⚠️
+      Action: {{action}}
+      Target: {{target}}
+      Risk Assessment: {{risk_level}}
+      
+      Sovereign Operator, do you authorize this execution? [Y/N]
+
+# -------------------------------------------------------------------------
+# END OF CONSTITUTION
+# -------------------------------------------------------------------------
