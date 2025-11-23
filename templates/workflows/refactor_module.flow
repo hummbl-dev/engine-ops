@@ -1,0 +1,48 @@
+# /workflows/refactor_module.flow
+# INTENT: Safe Refactoring with Dependency Checks
+
+name: "Refactor Module (Safe)"
+inputs:
+  - name: "target_file"
+    type: "filepath"
+  - name: "goal"
+    type: "string"
+
+steps:
+  # Step 1: Information Gathering (Read-Only)
+  - step_id: "scan_dependencies"
+    action: "mcp.tools.search_references"
+    args:
+      query: "{{target_file}}"
+    description: "Find all files that import the target."
+
+  # Step 2: Strategic Planning (Reasoning Model)
+  - step_id: "draft_plan"
+    model: "complex_reasoning" # (Uses Claude-3-Opus via constitution)
+    persona: "senior_architect"
+    prompt: |
+      Review dependencies: {{scan_dependencies.output}}.
+      Goal: {{goal}} for file {{target_file}}.
+      Draft a refactoring plan. Identify breaking changes.
+      Output format: JSON { risk_score: 1-10, breaking_changes: [], plan: "" }
+
+  # Step 3: The Sovereign Check (Human Intervention)
+  - step_id: "human_approval"
+    action: "system.pause"
+    condition: "{{draft_plan.risk_score}} > 5"
+    message: |
+      ⚠️ HIGH RISK REFACTOR (Score: {{draft_plan.risk_score}})
+      Potential Breaking Changes: {{draft_plan.breaking_changes}}
+      Proceed? [Y/N]
+
+  # Step 4: Execution (Coding Model)
+  - step_id: "generate_code"
+    model: "fast_chat" # (Uses GPT-4o)
+    persona: "senior_architect"
+    prompt: "Execute the plan. Output the full file content."
+
+  # Step 5: Verification (Local Tool)
+  - step_id: "run_linter"
+    action: "shell.execute"
+    args:
+      command: "npm run lint {{target_file}}"
