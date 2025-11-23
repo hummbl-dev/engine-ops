@@ -1,20 +1,33 @@
 {
-  "name": "engine-ops-extension",
-  "version": "0.0.1",
-  "description": "VS Code extension for engine-ops integration",
-  "main": "extension.js",
-  "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "lint": "eslint . --ext .ts,.js",
-    "test": "echo \"No tests yet\""
-  },
-  "keywords": ["engine-ops", "vscode-extension"],
-  "author": "hummbl-dev",
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "typescript": "^5.0.0",
-    "eslint": "^8.0.0"
-  },
-  "dependencies": {}
+    "name": "engine-ops-extension",
+    "version": "0.1.0",
+    "description": "VS Code MCP Extension for HUMMBL Engine",
+    "main": "./dist/extension.js",
+    "scripts": {
+        "build": "node esbuild.js",
+        "watch": "node esbuild.js --watch"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^9.0.1",
+        "@modelcontextprotocol/sdk": "^1.22.0"
+    },
+    "devDependencies": {
+        "esbuild": "^0.19.0",
+        "@types/vscode": "^1.85.0"
+    },
+    "engines": {
+        "vscode": "~1.85.0"
+    },
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "contributes": {
+        "chatParticipants": [
+            {
+                "id": "hummbl.chat",
+                "name": "HUMMBL Chat",
+                "description": "Chat participant powered by the Engine"
+            }
+        ]
+    }
 }

@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "name": "ROOT",
+            "path": "."
+        },
+        {
+            "name": "ENGINE (Python)",
+            "path": "engine"
+        },
+        {
+            "name": "EXTENSION (TS)",
+            "path": "extension"
+        }
+    ],
+    "settings": {
+        "typescript.tsdk": "extension/node_modules/typescript/lib"
+    }
+}
