@@ -6,4 +6,6 @@ __pycache__/
 extension/dist/
 engine/venv/
 .vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 !hummbl.code-workspace
