@@ -226,6 +226,9 @@ def load_persona_by_enum(enum_value: str) -> Optional[PersonaSchema]:
     loader = get_loader()
     return loader.get_by_enum(enum_value)
 
+# Singleton instance for direct import
+persona_loader = get_loader()
+
 if __name__ == "__main__":
     # Test the loader
     loader = PersonaLoader()
