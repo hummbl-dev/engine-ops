@@ -5,42 +5,34 @@ This is the visual asset for social media, presentations, and README shock value
 ## The Comparison Diagram
 
 ```mermaid
-graph TB
-    subgraph FEUDAL["⛓️ THE FEUDAL LOOP (Status Quo)"]
-        F_User["👤 Developer"] -->|"Prompt"| F_Black["🔒 BLACK BOX<br/>(Closed Model)"]
-        F_Black -->|"No visibility"| F_Decision["❓ Decision Logic<br/>(Hidden)"]
-        F_Decision -->|"No control"| F_Vendor["🏢 Vendor Lock-In<br/>(OpenAI/Anthropic)"]
-        F_Vendor -->|"Code"| F_User
-        
-        F_Rot["💀 Context Rot"] -.->|"Fragments over time"| F_Black
-        F_Trust["⚠️ Trust Erosion"] -.->|"No audit trail"| F_Decision
-    end
-
-    subgraph SOVEREIGN["⚡ THE SOVEREIGN STACK (Our System)"]
-        S_User["👤 Sovereign Operator"] -->|"Prompt"| S_Const["📜 Constitution<br/>(Your Rules)"]
-        S_Const -->|"Audit"| S_DT["🧠 D-T Framework<br/>(Transparent Reasoning)"]
-        S_DT -->|"Glass Box"| S_Persona["🎭 Persona Layer<br/>(Expert Modes)"]
-        S_Persona -->|"Governed Output"| S_User
-        
-        S_History["📝 Full History"] -.->|"Audit trail"| S_Const
-        S_Agency["✅ Human Agency"] -.->|"You own the rules"| S_DT
-    end
-
-    style FEUDAL fill:#2d0d0d,stroke:#ff4444,stroke-width:3px,color:#fff
-    style SOVEREIGN fill:#0d2d0d,stroke:#44ff44,stroke-width:3px,color:#fff
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize':'15px'}}}%%
+graph LR
+    %% Feudal side
+    F_User["👤 Developer"] -->|"Prompt"| F_Black["🔒 Black Box\n(Closed Model)"]
+    F_Black -->|"No visibility"| F_Decision["❓ Decision Logic\n(Hidden)"]
+    F_Decision -->|"No control"| F_Vendor["🏢 Vendor Lock‑In\n(OpenAI/Anthropic)"]
+    F_Vendor -->|"Code"| F_User
     
-    style F_Black fill:#330000,stroke:#ff0000,color:#fff
-    style F_Decision fill:#330000,stroke:#ff0000,color:#fff
-    style F_Vendor fill:#330000,stroke:#ff0000,color:#fff
+    F_Rot["💀 Context Rot"] -.->|"Fragments over time"| F_Black
+    F_Trust["⚠️ Trust Erosion"] -.->|"No audit trail"| F_Decision
     
-    style S_Const fill:#003300,stroke:#00ff00,color:#fff
-    style S_DT fill:#003300,stroke:#00ff00,color:#fff
-    style S_Persona fill:#003300,stroke:#00ff00,color:#fff
+    %% Sovereign side
+    S_User["👤 Sovereign Operator"] -->|"Prompt"| S_Const["📜 Constitution\n(Your Rules)"]
+    S_Const -->|"Audit"| S_DT["🧠 D‑T Framework\n(Transparent Reasoning)"]
+    S_DT -->|"Glass Box"| S_Persona["🎭 Persona Layer\n(Expert Modes)"]
+    S_Persona -->|"Governed Output"| S_User
     
-    style F_Rot fill:#660000,stroke:#ff0000,stroke-dasharray: 5 5
-    style F_Trust fill:#660000,stroke:#ff0000,stroke-dasharray: 5 5
-    style S_History fill:#006600,stroke:#00ff00,stroke-dasharray: 5 5
-    style S_Agency fill:#006600,stroke:#00ff00,stroke-dasharray: 5 5
+    S_History["📝 Full History"] -.->|"Audit trail"| S_Const
+    S_Agency["✅ Human Agency"] -.->|"You own the rules"| S_DT
+    
+    style F_User fill:#ffdddd,stroke:#ff4444,color:#000
+    style F_Black fill:#ffcccc,stroke:#ff0000,color:#000
+    style F_Decision fill:#ffcccc,stroke:#ff0000,color:#000
+    style F_Vendor fill:#ffcccc,stroke:#ff0000,color:#000
+    style S_User fill:#ddffdd,stroke:#44ff44,color:#000
+    style S_Const fill:#ccffcc,stroke:#00ff00,color:#000
+    style S_DT fill:#ccffcc,stroke:#00ff00,color:#000
+    style S_Persona fill:#ccffcc,stroke:#00ff00,color:#000
 ```
 
 ## Side-by-Side Comparison Table
@@ -60,7 +52,7 @@ graph TB
 
 **Feudal AI:**
 
-```
+```text
 You → [???????] → Code
       ↑
    (What happened here?)
@@ -68,7 +60,7 @@ You → [???????] → Code
 
 **Sovereign AI:**
 
-```
+```text
 You → [Constitution] → [D-T Reasoning] → [Persona] → Code
       ↑                ↑                  ↑
    (Your Rules)    (Visible Logic)   (Audit Log)
@@ -78,7 +70,7 @@ You → [Constitution] → [D-T Reasoning] → [Persona] → Code
 
 ### Twitter/X Thread Starter
 
-```
+```text
 🧵 I built a firewall for my mind.
 
 Your AI assistant is a black box. You have no idea why it suggests what it suggests, no control over its behavior, and no record of what it's doing to your codebase.

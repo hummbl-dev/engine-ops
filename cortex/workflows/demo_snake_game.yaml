@@ -1,0 +1,26 @@
+name: "Snake Game Live Demo"
+description: "Architect demonstration - watch it build a Snake game"
+
+steps:
+  - id: generate_snake
+    provider: gemini
+    prompt: |
+      Generate a complete, fully functional Snake game in Python using pygame.
+      
+      Requirements:
+      1. Classic Snake gameplay - snake grows when eating food
+      2. Game over when snake hits walls or itself  
+      3. Score display on screen
+      4. Colorful graphics (green snake, red food, black background)
+      5. Smooth controls using arrow keys
+      6. Proper game loop with FPS control (10 FPS)
+      7. Window size: 600x600 pixels
+      8. Include clear instructions as comments at the top
+      
+      The code must be complete and ready to run.
+      Output ONLY the Python code with NO markdown formatting, NO explanations.
+      
+  - id: save_snake
+    action: write
+    filename: "snake_game.py"
+    input_from: generate_snake

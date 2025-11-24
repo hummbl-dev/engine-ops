@@ -6,100 +6,61 @@
 
 ---
 
-## ⚡ The Kill Sheet: Why This Exists
+## [>] The Kill Sheet: Why This Exists
 
 ```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'fontSize':'16px'}}}%%
 graph TB
-    subgraph FEUDAL["⛓️ THE FEUDAL LOOP (Status Quo)"]
-        F_User["👤 Developer"] -->|"Prompt"| F_Black["🔒 BLACK BOX<br/>(Closed Model)"]
-        F_Black -->|"No visibility"| F_Decision["❓ Decision Logic<br/>(Hidden)"]
-        F_Decision -->|"No control"| F_Vendor["🏢 Vendor Lock-In<br/>(OpenAI/Anthropic)"]
-        F_Vendor -->|"Code"| F_User
+    subgraph FEUDAL["[CHAIN]  FEUDAL AI (Status Quo)"]
+        direction TB
+        F1["[USER] You"]
+        F1 -->|"Send Prompt"| F2["[LOCK] BLACK BOX"]
+        F2 -->|"???"| F3["[X] Unknown Logic"]
+        F3 -->|"Code Output"| F1
         
-        F_Rot["💀 Context Rot"] -.->|"Fragments over time"| F_Black
-        F_Trust["⚠️ Trust Erosion"] -.->|"No audit trail"| F_Decision
+        F4["[X] Context Rots<br/>[!] No Audit Trail<br/>[CORP] Vendor Lock-In"] -.-> F2
     end
 
-    subgraph SOVEREIGN["⚡ THE SOVEREIGN STACK (Our System)"]
-        S_User["👤 Sovereign Operator"] -->|"Prompt"| S_Const["📜 Constitution<br/>(Your Rules)"]
-        S_Const -->|"Audit"| S_DT["🧠 D-T Framework<br/>(Transparent Reasoning)"]
-        S_DT -->|"Glass Box"| S_Persona["🎭 Persona Layer<br/>(Expert Modes)"]
-        S_Persona -->|"Governed Output"| S_User
+    subgraph SOVEREIGN["[>]  SOVEREIGN AI (Our System)"]
+        direction TB
+        S1["[USER] You"]
+        S1 -->|"Send Prompt"| S2["[DOC] Your Constitution"]
+        S2 -->|"Audit Pass"| S3["[BRAIN] D-T Reasoning"]
+        S3 -->|"Glass Box"| S4["[MASK] Expert Persona"]
+        S4 -->|"Governed Code"| S1
         
-        S_History["📝 Full History"] -.->|"Audit trail"| S_Const
-        S_Agency["✅ Human Agency"] -.->|"You own the rules"| S_DT
+        S5["[OK] Full Transparency<br/>[LOG] Audit Logs<br/>[USER] You Own Rules"] -.-> S2
     end
 
-    style FEUDAL fill:#2d0d0d,stroke:#ff4444,stroke-width:3px,color:#fff
-    style SOVEREIGN fill:#0d2d0d,stroke:#44ff44,stroke-width:3px,color:#fff
+    style FEUDAL fill:#1a0000,stroke:#ff0000,stroke-width:4px,color:#fff
+    style SOVEREIGN fill:#001a00,stroke:#00ff00,stroke-width:4px,color:#fff
     
-    style F_Black fill:#330000,stroke:#ff0000,color:#fff
-    style F_Decision fill:#330000,stroke:#ff0000,color:#fff
-    style F_Vendor fill:#330000,stroke:#ff0000,color:#fff
+    style F2 fill:#4d0000,stroke:#ff0000,stroke-width:2px,color:#fff
+    style F3 fill:#4d0000,stroke:#ff0000,stroke-width:2px,color:#fff
     
-    style S_Const fill:#003300,stroke:#00ff00,color:#fff
-    style S_DT fill:#003300,stroke:#00ff00,color:#fff
-    style S_Persona fill:#003300,stroke:#00ff00,color:#fff
+    style S2 fill:#004d00,stroke:#00ff00,stroke-width:2px,color:#fff
+    style S3 fill:#004d00,stroke:#00ff00,stroke-width:2px,color:#fff
+    style S4 fill:#004d00,stroke:#00ff00,stroke-width:2px,color:#fff
     
-    style F_Rot fill:#660000,stroke:#ff0000,stroke-dasharray: 5 5
-    style F_Trust fill:#660000,stroke:#ff0000,stroke-dasharray: 5 5
-    style S_History fill:#006600,stroke:#00ff00,stroke-dasharray: 5 5
-    style S_Agency fill:#006600,stroke:#00ff00,stroke-dasharray: 5 5
+    style F4 fill:#330000,stroke:#ff4444,stroke-dasharray: 5 5,color:#ff8888
+    style S5 fill:#003300,stroke:#44ff44,stroke-dasharray: 5 5,color:#88ff88
 ```
 
-| Attribute | ⛓️ Feudal AI | ⚡ Sovereign AI |
+| Attribute | [CHAIN] Feudal AI | [>] Sovereign AI |
 |-----------|--------------|-----------------|
-| **Visibility** | 🔒 Black Box | 🔍 Glass Box |
-| **Control** | 🏢 Vendor-Owned | 👤 User-Owned |
-| **Rules** | ❓ Opaque | 📜 YAML Constitution |
-| **Agency** | 🤖 AI Decides | 🧠 Human Governs |
-| **Context** | 💀 Entropy (Rots) | 📝 Preserved (Logged) |
+| **Visibility** | [LOCK] Black Box | [VIEW] Glass Box |
+| **Control** | [CORP] Vendor-Owned | [USER] User-Owned |
+| **Rules** | [?] Opaque | [DOC] YAML Constitution |
+| **Agency** | [BOT] AI Decides | [BRAIN] Human Governs |
+| **Context** | [X] Entropy (Rots) | [LOG] Preserved (Logged) |
 
 ---
 
-## Repository Overview Architecture: Feudalism vs. Sovereignty
-
-```mermaid
-graph TD
-    subgraph FEUDAL ["❌ THE FEUDAL LOOP (Status Quo)"]
-        U1[User] -->|Prompts & Data| API[Centralized Black Box]
-        API -->|Opaque Logic| U1
-        API -.->|Harvesting| TRAINING[Vendor Training Data]
-        style FEUDAL fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
-    end
-
-    subgraph SOVEREIGN ["✅ THE SOVEREIGN STACK (Hummbl)"]
-        U2[User] -->|Intent| KERNEL[Sovereign Kernel]
-        
-        subgraph CORTEX [The Cortex]
-            CONST[Constitution.yaml]
-            MEM[Local Memory]
-        end
-        
-        KERNEL -->|Audit| CONST
-        KERNEL -->|Retrieval| MEM
-        
-        KERNEL -->|Safe Request| ROUTER{Router}
-        ROUTER -->|Reasoning| CLAUDE[Claude-3]
-        ROUTER -->|Privacy| LOCAL[Local Llama-3]
-        
-        CLAUDE -->|Raw Token| KERNEL
-        LOCAL -->|Raw Token| KERNEL
-        
-        KERNEL -->|Verified Output| U2
-        style SOVEREIGN fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    end
-```
-
-**The Difference:** In the Feudal model, you feed the machine. In the Sovereign model, the machine feeds you—but only after your Constitution approves it.
-
----
-
-## 📂 The Repository Structure
+## [DIR] The Repository Structure
 
 This repository is organized into the three pillars of Sovereignty:
 
-### 1. 🧠 The Cortex (`/cortex`)
+### 1. [BRAIN] The Cortex (`/cortex`)
 
 **The Soul of the System.**
 
@@ -107,14 +68,14 @@ This repository is organized into the three pillars of Sovereignty:
 - `/library`: Static knowledge bases and context files (e.g., `style_guide.md`).
 - `/memory`: Long-term vector storage and interaction logs.
 
-### 2. ⚖️ The Constitution (`/config`)
+### 2. [SCALE] The Constitution (`/config`)
 
 **The Law of the Land.**
 
 - `constitution.yaml`: The governance file defining safety rails, privacy rules, and agency tiers.
 - `model_routing.json`: Configuration for Model Arbitrage (routing tasks to OpenAI, Anthropic, or Local Llama based on cost/privacy).
 
-### 3. ⚡ The Engine (`/engine`)
+### 3. [>] The Engine (`/engine`)
 
 **The Machinery.**
 
@@ -123,7 +84,7 @@ This repository is organized into the three pillars of Sovereignty:
 
 ---
 
-## 📖 Documentation Index
+## [DOC] Documentation Index
 
 ### Phase 1: The Philosophy (Why we build)
 
@@ -145,31 +106,92 @@ This repository is organized into the three pillars of Sovereignty:
 
 ---
 
-## ⚡ Quick Start (Zero to Sovereign)
+## [DOC] Documentation
+
+- **[User Guide](USER_GUIDE.md)** - Complete guide on how to use the system
+- **[Manifesto](MANIFESTO.md)** - The philosophy behind Sovereign Intelligence
+- **[Architecture Docs](docs/)** - Deep technical documentation
+
+---
+
+## [>] Quick Start (Zero to Sovereign)
 
 ### 1. Initialize the Stack
 
 ```bash
 git clone https://github.com/hummbl-dev/engine-ops.git
 cd engine-ops
-cp templates/config/constitution.yaml config/
-cp templates/personas/senior_architect.md cortex/personas/
 ```
 
-### 2. Configure the Router
-
-Edit `config/model_routing.json` to point to your preferred providers (Local or Cloud).
-
-### 3. Run the Engine
+### 2. Setup the Engine
 
 ```bash
-# Example: Run a safe refactor using the Architect persona
-sovereign run workflow refactor_module --target src/main.py
+cd engine
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Create .env file with your API key
+echo "GOOGLE_API_KEY=your_api_key_here" > .env
 ```
+
+### 3. Start the Engine
+
+```bash
+uvicorn src.main:app --host 0.0.0.0 --port 8080 --reload
+```
+
+### 4. Access the Matrix UI
+
+Open `http://localhost:8080/docs` in your browser to see the Matrix-themed API interface.
+
+### 5. Test the API
+
+Try the `/consult` endpoint with:
+```json
+{
+  "topic": "How should I handle team burnout?",
+  "member": "marcus_aurelius"
+}
+```
+
+**For detailed instructions, see [USER_GUIDE.md](USER_GUIDE.md)**
 
 ---
 
-## 🤝 Contributing
+## [*] What's Included
+
+### The Engine (`engine/`)
+
+- **FastAPI Server** - RESTful API with Matrix-themed Swagger UI
+- **Sovereign Council** - Three expert personas (Sun Tzu, Marcus Aurelius, Machiavelli)
+- **Gemini Integration** - Real LLM-powered advice generation
+- **Constitutional Auditing** - Safety and agency preservation rules
+
+### The Extension (`extension/`)
+
+- **VS Code Chat Integration** - `@hummbl` chat participant
+- **Dynamic Intent Routing** - Automatically extracts member and topic from natural language
+- **MCP Protocol** - Model Context Protocol for engine communication
+
+### The UI
+
+- **Matrix Theme** - Raw hacker aesthetic with customizable intensity
+- **Terminal Interface** - Command-line overlay for power users
+- **Keyboard Shortcuts** - Full keyboard navigation support
+- **Interactive Docs** - Swagger UI with Matrix styling
+
+---
+
+## [DOC] Learn More
+
+- **[USER_GUIDE.md](USER_GUIDE.md)** - Complete user manual with examples
+- **[API Reference](USER_GUIDE.md#-api-reference)** - All endpoints documented
+- **[Troubleshooting](USER_GUIDE.md#-troubleshooting)** - Common issues and solutions
+
+---
+
+## [HAND] Contributing
 
 We follow **SovereignOps** protocols:
 

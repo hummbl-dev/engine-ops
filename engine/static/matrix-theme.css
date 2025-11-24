@@ -1,0 +1,332 @@
+/* MATRIX THEME - Raw Hacker Vibe */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+    --matrix-green: #00ff41;
+    --matrix-dark-green: #00cc33;
+    --matrix-bg: #000000;
+    --matrix-bg-secondary: #0a0a0a;
+    --matrix-border: #003300;
+    --matrix-text: #00ff41;
+    --matrix-text-dim: #00cc33;
+    --matrix-error: #ff0040;
+    --matrix-warning: #ffaa00;
+}
+
+* {
+    font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+}
+
+body {
+    background: var(--matrix-bg) !important;
+    color: var(--matrix-text) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Swagger UI Container */
+.swagger-ui {
+    background: var(--matrix-bg) !important;
+    color: var(--matrix-text) !important;
+}
+
+/* Headers */
+.swagger-ui .topbar,
+.swagger-ui .info .title,
+.swagger-ui h1,
+.swagger-ui h2,
+.swagger-ui h3,
+.swagger-ui h4 {
+    color: var(--matrix-green) !important;
+    text-shadow: 0 0 10px var(--matrix-green), 0 0 20px var(--matrix-green) !important;
+    font-weight: 700 !important;
+}
+
+/* Links */
+.swagger-ui a {
+    color: var(--matrix-green) !important;
+    text-decoration: none !important;
+}
+
+.swagger-ui a:hover {
+    color: var(--matrix-dark-green) !important;
+    text-shadow: 0 0 5px var(--matrix-green) !important;
+}
+
+/* Buttons */
+.swagger-ui .btn {
+    background: var(--matrix-bg-secondary) !important;
+    border: 1px solid var(--matrix-green) !important;
+    color: var(--matrix-green) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: all 0.3s ease !important;
+}
+
+.swagger-ui .btn:hover {
+    background: var(--matrix-green) !important;
+    color: var(--matrix-bg) !important;
+    box-shadow: 0 0 10px var(--matrix-green) !important;
+}
+
+.swagger-ui .btn.execute {
+    background: var(--matrix-green) !important;
+    color: var(--matrix-bg) !important;
+    border: 1px solid var(--matrix-green) !important;
+}
+
+.swagger-ui .btn.execute:hover {
+    background: var(--matrix-dark-green) !important;
+    box-shadow: 0 0 15px var(--matrix-green) !important;
+}
+
+/* Code blocks and JSON */
+.swagger-ui pre,
+.swagger-ui code,
+.swagger-ui .microlight,
+.swagger-ui .highlight-code {
+    background: var(--matrix-bg-secondary) !important;
+    color: var(--matrix-green) !important;
+    border: 1px solid var(--matrix-border) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    text-shadow: 0 0 5px var(--matrix-green) !important;
+}
+
+/* Request/Response sections */
+.swagger-ui .opblock {
+    background: var(--matrix-bg-secondary) !important;
+    border: 1px solid var(--matrix-border) !important;
+    border-left: 3px solid var(--matrix-green) !important;
+}
+
+.swagger-ui .opblock.opblock-post {
+    border-left-color: var(--matrix-green) !important;
+}
+
+.swagger-ui .opblock.opblock-get {
+    border-left-color: var(--matrix-dark-green) !important;
+}
+
+.swagger-ui .opblock-tag {
+    color: var(--matrix-green) !important;
+    border-bottom: 1px solid var(--matrix-border) !important;
+}
+
+/* Input fields */
+.swagger-ui input[type="text"],
+.swagger-ui input[type="email"],
+.swagger-ui input[type="password"],
+.swagger-ui textarea,
+.swagger-ui select {
+    background: var(--matrix-bg-secondary) !important;
+    border: 1px solid var(--matrix-border) !important;
+    color: var(--matrix-green) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+.swagger-ui input[type="text"]:focus,
+.swagger-ui textarea:focus,
+.swagger-ui select:focus {
+    border-color: var(--matrix-green) !important;
+    box-shadow: 0 0 10px var(--matrix-green) !important;
+    outline: none !important;
+}
+
+/* Tables */
+.swagger-ui table thead tr th {
+    background: var(--matrix-bg-secondary) !important;
+    color: var(--matrix-green) !important;
+    border-bottom: 2px solid var(--matrix-green) !important;
+}
+
+.swagger-ui table tbody tr td {
+    background: var(--matrix-bg) !important;
+    color: var(--matrix-text) !important;
+    border-bottom: 1px solid var(--matrix-border) !important;
+}
+
+/* Response codes */
+.swagger-ui .response-col_status {
+    color: var(--matrix-green) !important;
+    font-weight: 700 !important;
+}
+
+/* Tabs */
+.swagger-ui .tab li {
+    border-bottom: 2px solid var(--matrix-border) !important;
+}
+
+.swagger-ui .tab li.active {
+    border-bottom-color: var(--matrix-green) !important;
+}
+
+.swagger-ui .tab li button {
+    color: var(--matrix-text-dim) !important;
+}
+
+.swagger-ui .tab li.active button {
+    color: var(--matrix-green) !important;
+    text-shadow: 0 0 5px var(--matrix-green) !important;
+}
+
+/* Schema section */
+.swagger-ui .model-box {
+    background: var(--matrix-bg-secondary) !important;
+    border: 1px solid var(--matrix-border) !important;
+    color: var(--matrix-text) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+    background: var(--matrix-bg) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--matrix-border) !important;
+    border: 2px solid var(--matrix-bg) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--matrix-green) !important;
+}
+
+/* Loading spinner */
+.swagger-ui .loading {
+    border-color: var(--matrix-border) !important;
+    border-top-color: var(--matrix-green) !important;
+}
+
+/* Error messages */
+.swagger-ui .error {
+    color: var(--matrix-error) !important;
+    text-shadow: 0 0 5px var(--matrix-error) !important;
+}
+
+/* Success messages */
+.swagger-ui .success {
+    color: var(--matrix-green) !important;
+}
+
+/* Top bar */
+.swagger-ui .topbar {
+    background: var(--matrix-bg-secondary) !important;
+    border-bottom: 2px solid var(--matrix-green) !important;
+    box-shadow: 0 2px 10px var(--matrix-green) !important;
+}
+
+/* Info section */
+.swagger-ui .info {
+    background: var(--matrix-bg-secondary) !important;
+    border: 1px solid var(--matrix-border) !important;
+    color: var(--matrix-text) !important;
+}
+
+.swagger-ui .info .title {
+    color: var(--matrix-green) !important;
+    font-size: 2em !important;
+    text-shadow: 0 0 15px var(--matrix-green) !important;
+}
+
+/* Parameter sections */
+.swagger-ui .parameters-container {
+    background: var(--matrix-bg-secondary) !important;
+}
+
+.swagger-ui .parameter__name {
+    color: var(--matrix-green) !important;
+    font-weight: 700 !important;
+}
+
+/* Response section */
+.swagger-ui .response {
+    background: var(--matrix-bg-secondary) !important;
+}
+
+.swagger-ui .response-col_description {
+    color: var(--matrix-text) !important;
+}
+
+/* JSON viewer */
+.swagger-ui .microlight {
+    background: var(--matrix-bg) !important;
+}
+
+.swagger-ui .microlight code {
+    color: var(--matrix-green) !important;
+}
+
+/* Collapse/Expand icons */
+.swagger-ui .arrow {
+    border-color: var(--matrix-green) !important;
+}
+
+/* Badge/Version */
+.swagger-ui .info .title small {
+    background: var(--matrix-green) !important;
+    color: var(--matrix-bg) !important;
+    padding: 2px 8px !important;
+    border-radius: 3px !important;
+}
+
+/* Glitch effect on title (optional Matrix vibe) */
+@keyframes glitch {
+    0%, 100% { text-shadow: 0 0 10px var(--matrix-green), 0 0 20px var(--matrix-green); }
+    50% { text-shadow: -2px 0 var(--matrix-error), 2px 0 var(--matrix-green); }
+}
+
+.swagger-ui .info .title:hover {
+    animation: glitch 0.3s infinite;
+}
+
+/* Terminal cursor effect */
+.swagger-ui code::after {
+    content: '_';
+    animation: blink 1s infinite;
+    color: var(--matrix-green);
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Matrix rain effect background (subtle) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 255, 65, 0.03) 2px,
+            rgba(0, 255, 65, 0.03) 4px
+        );
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* Override any white backgrounds */
+.swagger-ui .wrapper,
+.swagger-ui section,
+.swagger-ui .scheme-container {
+    background: var(--matrix-bg) !important;
+    color: var(--matrix-text) !important;
+}
+
+/* Make sure text is visible */
+.swagger-ui .prop-name,
+.swagger-ui .prop-type {
+    color: var(--matrix-text-dim) !important;
+}
+
+.swagger-ui .prop-name {
+    color: var(--matrix-green) !important;
+}
+

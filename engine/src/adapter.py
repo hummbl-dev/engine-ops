@@ -63,9 +63,10 @@ def _generate_advice_sync(topic: str, member: CouncilMember, context: Optional[s
     This runs in a thread pool to avoid blocking the async event loop.
     """
     # Initialize Gemini (using API key from environment)
-    api_key = os.getenv('GOOGLE_AI_API_KEY')
+    # Note: Uses GOOGLE_API_KEY to match existing codebase standard (see engine/providers.py)
+    api_key = os.getenv('GOOGLE_API_KEY')
     if not api_key:
-        raise ValueError("GOOGLE_AI_API_KEY environment variable not set. Please add it to your .env file.")
+        raise ValueError("GOOGLE_API_KEY environment variable not set. Please add it to your .env file.")
     
     try:
         genai.configure(api_key=api_key)

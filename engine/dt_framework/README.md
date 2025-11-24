@@ -46,52 +46,41 @@ Mechanisms applied to dimensions to mutate the state vector M(t) → M(t+1):
 
 ### System Map
 
-This visualization captures both **Dependencies** (prerequisites that cause friction) and **Ripples** (cascading side effects).
+**Dependencies (Dotted Lines)** = Prerequisites that cause friction  
+**Ripples (Thick Arrows)** = Automatic cascading effects
 
 ```mermaid
-graph TD
-    %% --- STYLE DEFINITIONS ---
-    classDef dim fill:#f9f9f9,stroke:#333,stroke-width:2px;
-    classDef highLeverage fill:#e1f5fe,stroke:#01579b,stroke-width:3px;
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize':'15px'}}}%%
+graph TB
+    %% Dimensions
+    E["🧠 EPISTEMIC<br/>(Knowledge)"]:::highLeverage
+    S["🏗️ STRUCTURAL<br/>(Form)"]:::dim
+    R["🔗 RELATIONAL<br/>(Connections)"]:::dim
+    T["⏱️ TEMPORAL<br/>(Time)"]:::dim
+    A["⚡ AGENCY<br/>(Control)"]:::dim
+    V["💎 VALUE<br/>(Outcomes)"]:::dim
 
-    %% --- NODES (The 6 Dimensions) ---
-    E[Epistemic]:::highLeverage
-    S[Structural]:::dim
-    R[Relational]:::dim
-    T[Temporal]:::dim
-    A[Agency]:::dim
-    V[Value-Oriented]:::dim
+    %% Dependencies (You need X before Y)
+    E -.->|"Need knowledge<br/>to build"| S
+    E -.->|"Need understanding<br/>to optimize"| V
+    E -.->|"Need clarity<br/>to control"| A
+    S -.->|"Need stability<br/>for agency"| A
+    R -.->|"Need connections<br/>to synchronize"| T
 
-    %% --- LEGEND ---
-    subgraph LEGEND [Map Legend]
-        direction LR
-        L1[Dependency] -.->|Must exist first| L2[Target]
-        L3[Source] ==>|Synergy (+)| L4[Target]
-        L5[Source] ==>|Trade-off (-)| L6[Target]
-    end
+    %% Positive Ripples (X improves Y automatically)
+    E ==>|"+ Confidence"| A
+    E ==>|"+ Efficiency"| V
 
-    %% --- 1. CONSTRAINTS (The Dependency Engine) ---
-    %% "You cannot have Y without X"
-    E -.-> |Prereq: Knowledge| S
-    E -.-> |Prereq: Understanding| V
-    E -.-> |Prereq: Understanding| A
-    S -.-> |Prereq: Stability| A
-    R -.-> |Prereq: Connectivity| T
-
-    %% --- 2. RIPPLES (The Ripple Engine) ---
-    %% "Changing X causes Y"
+    %% Negative Ripples (X degrades Y automatically)
+    S ==>|"+ Coherence"| R
+    S ==>|"- Speed<br/>(Bureaucracy Trap)"| T
+    A ==>|"- Coordination<br/>(Herding Problem)"| R
     
-    %% Epistemic Ripples (The Knowledge Dividend)
-    E ==> |+ Control| A
-    E ==> |+ Efficiency| V
-
-    %% Structural Ripples (The Bureaucracy Trap)
-    S ==> |+ Coherence| R
-    S ==> |- Velocity| T
-
-    %% Agency Ripples (The Herding Problem)
-    A ==> |- Fragmentation| R
+    classDef highLeverage fill:#cce5ff,stroke:#0066cc,stroke-width:3px
+    classDef dim fill:#f0f0f0,stroke:#666,stroke-width:2px
 ```
+
+**🧠 EPISTEMIC (Blue)** = High-leverage node. Optimize knowledge first.
 
 ### How to Read This Map
 

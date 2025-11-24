@@ -1,0 +1,9 @@
+name: Build Game
+steps:
+  - id: design_game
+    provider: gemini
+    prompt: "Write a simple Python number guessing game. Return ONLY the code, no markdown formatting."
+  - id: save_game
+    action: write
+    filename: "game.py"
+    input_from: design_game

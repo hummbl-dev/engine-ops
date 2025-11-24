@@ -1,0 +1,35 @@
+images:
+- location: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
+  arch: "x86_64"
+mounts:
+- location: "~"
+  writable: true
+- location: "/tmp/lima"
+  writable: true
+ssh:
+  localPort: 60006
+  loadDotSSHPubKeys: true
+containerd:
+  system: false
+  user: false
+portForwards:
+- guestSocket: "/run/docker.sock"
+  hostSocket: "{{.Dir}}/sock/docker.sock"
+provision:
+- mode: system
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    command -v docker >/dev/null 2>&1 && exit 0
+    export DEBIAN_FRONTEND=noninteractive
+    curl -fsSL https://get.docker.com | sh
+    usermod -aG docker {{.User}}
+probes:
+- script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    if ! timeout 30s bash -c "until command -v docker >/dev/null 2>&1; do sleep 3; done"; then
+      echo >&2 "docker is not installed yet"
+      exit 1
+    fi
+  hint: See if docker is installed

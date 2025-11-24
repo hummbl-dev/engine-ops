@@ -1,6 +1,6 @@
 # The Sovereign Intelligence Manifesto
 
-**A Declaration of Cognitive Independence**
+## A Declaration of Cognitive Independence
 
 We hold this truth to be self-evident: **Artificial Intelligence must amplify Human Agency, never replace it.**
 

@@ -1,0 +1,35 @@
+name: "Terminal Snake Game Generator"
+description: "Generate a playable Snake game for the terminal - no dependencies!"
+
+steps:
+  - id: generate_terminal_snake
+    provider: gemini
+    prompt: |
+      Generate a complete, fully functional Snake game for the terminal using Python's built-in curses library.
+      
+      CRITICAL REQUIREMENTS:
+      1. Use ONLY Python standard library (curses module)
+      2. Classic Snake gameplay - snake grows when eating food
+      3. Game over when snake hits walls or itself
+      4. Display score on screen
+      5. Use WASD or arrow keys for controls
+      6. Display clear instructions
+      7. Colorful terminal graphics (use curses colors)
+      8. Smooth gameplay with configurable speed
+      9. Border around play area
+      10. Show snake head differently from body
+      
+      TECHNICAL REQUIREMENTS:
+      - Proper curses initialization and cleanup
+      - Handle terminal resizing gracefully
+      - 30x30 game grid
+      - Speed increases as score increases
+      - Clear game over message with final score
+      
+      The code must be complete, executable, and production-ready.
+      Output ONLY the Python code with NO markdown, NO explanations, NO code blocks.
+      
+  - id: save_terminal_snake
+    action: write
+    filename: "terminal_snake.py"
+    input_from: generate_terminal_snake
