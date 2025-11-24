@@ -194,6 +194,13 @@ class PersonaLoader:
                 results.append(persona)
         
         return results
+    
+    def reload(self):
+        """Reload all personas from disk."""
+        self.personas.clear()
+        self._persona_id_to_enum_map.clear()
+        self._enum_to_persona_id_map.clear()
+        self.load_all()
 
 # Global loader instance (lazy-loaded)
 _loader: Optional[PersonaLoader] = None

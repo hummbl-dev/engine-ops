@@ -24,6 +24,8 @@ Resolves or mitigates detected and triaged issues.
 from typing import Any, Dict, List
 from ..agent_base import Agent
 from ..context import AgentContext
+from ..enforcer import get_policy_enforcer
+from ..telemetry import TelemetryCollector, EventType
 
 
 class ResolutionAgent(Agent):
@@ -227,12 +229,40 @@ class ResolutionAgent(Agent):
             resolved = result.get("resolved", [])
             failed = result.get("failed", [])
             
+            # Enforce policy on all proposed resolutions
+            enforcer = get_policy_enforcer()
+            validated_resolved = []
+            
+            for item in resolved:
+                enforcement_result = enforcer.validate_resolution(item)
+                
+                if enforcement_result.allowed:
+                    validated_resolved.append(item)
+                    self.telemetry.info(
+                        f"Resolution passed policy check: {item.get('rule_id')}",
+                        agent_id=self.agent_id
+                    )
+                else:
+                    # Move to failed list with enforcement reason
+                    failed.append({
+                        "rule_id": item.get("rule_id"),
+                        "resolution_status": "blocked",
+                        "reason": enforcement_result.reason,
+                        "severity": enforcement_result.severity
+                    })
+                    self.telemetry.warning(
+                        f"Resolution blocked by policy: {enforcement_result.reason}",
+                        agent_id=self.agent_id,
+                        rule_id=item.get("rule_id")
+                    )
+            
+            resolved = validated_resolved
             resolved_count = len(resolved)
             failed_count = len(failed)
             total = resolved_count + failed_count
             success_rate = resolved_count / total if total > 0 else 0.0
             
-            # Memorize successful resolutions
+            # Memorize successful resolutions (only those that passed enforcement)
             for item in resolved:
                 memory_content = (
                     f"Issue: {item.get('rule_id')} ({item.get('name')}). "

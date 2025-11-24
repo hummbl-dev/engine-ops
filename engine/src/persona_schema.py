@@ -3,7 +3,7 @@ Lattice-Aware Persona Schema
 Supports nested attributes, relationships, and scalable metadata.
 """
 from typing import Dict, List, Optional, Any, Union, Literal
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from enum import Enum
 from dataclasses import dataclass
 
@@ -58,7 +58,8 @@ class LatticeAttributes(BaseModel):
     # Structured metadata (replaces unstructured extra)
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional custom attributes with structure")
     
-    @validator('role', 'field_of_study', pre=True)
+    @field_validator('role', 'field_of_study', mode='before')
+    @classmethod
     def normalize_to_list(cls, v):
         """Normalize string to list for multi-valued attributes."""
         if v is None:
@@ -69,7 +70,8 @@ class LatticeAttributes(BaseModel):
             return v
         return [str(v)]
     
-    @validator('gender', pre=True)
+    @field_validator('gender', mode='before')
+    @classmethod
     def validate_gender(cls, v):
         """Validate and normalize gender values."""
         if v is None:
@@ -96,6 +98,8 @@ class LatticeAttributes(BaseModel):
 
 class PersonaSchema(BaseModel):
     """Complete persona schema with lattice-aware structure."""
+    
+    model_config = ConfigDict()
     
     # 1. System & Identity
     persona_id: str = Field(..., description="Unique identifier (e.g., 'eur_19c_nietzsche_f')")

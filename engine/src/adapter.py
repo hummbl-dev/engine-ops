@@ -1,7 +1,7 @@
 """Adapter module for generating advice using Google Gemini with persona-specific instructions."""
 import os
 import asyncio
-from typing import Optional
+from typing import Optional, List, Dict
 from enum import Enum
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -256,6 +256,34 @@ Remember: Do not use prescriptive language like "you must" or "solution" - prese
         print(f"Adapter error in _generate_advice_sync: {e}")
         print(f"Traceback: {traceback.format_exc()}")
         raise
+
+async def generate_multi_advice(topic: str, members: List[CouncilMember], context: Optional[str] = None) -> Dict[str, str]:
+    """
+    Generate advice from multiple council members simultaneously.
+    
+    Args:
+        topic: The topic/question to address
+        members: List of council members to consult
+        context: Optional additional context
+    
+    Returns:
+        Dictionary mapping member enum value to advice string
+    """
+    import asyncio
+    
+    # Generate advice from all members in parallel
+    tasks = [generate_advice(topic, member, context) for member in members]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    
+    # Build response dictionary
+    advice_dict = {}
+    for member, result in zip(members, results):
+        if isinstance(result, Exception):
+            advice_dict[member.value] = f"Error: {str(result)}"
+        else:
+            advice_dict[member.value] = result
+    
+    return advice_dict
 
 async def generate_advice(topic: str, member: CouncilMember, context: Optional[str] = None) -> str:
     """

@@ -2,12 +2,12 @@ import os
 import re
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from .adapter import generate_advice, CouncilMember as AdapterCouncilMember
+from .adapter import generate_advice, generate_multi_advice, CouncilMember as AdapterCouncilMember
 
 app = FastAPI(
     title="HUMMBL Sovereign Engine",
@@ -2031,6 +2031,11 @@ class CouncilRequest(BaseModel):
     topic: str
     member: CouncilMember
 
+class MultiCouncilRequest(BaseModel):
+    topic: str
+    members: List[CouncilMember]
+    context: Optional[str] = None
+
 @app.post("/consult")
 async def consult_council(request: CouncilRequest):
     print(f"Consulting {request.member.value} on {request.topic}")
@@ -2050,6 +2055,62 @@ async def consult_council(request: CouncilRequest):
         "member": request.member.value,
         "advice": advice
     }
+
+@app.post("/consult/multi")
+async def consult_multi_council(request: MultiCouncilRequest):
+    """Consult multiple council members simultaneously."""
+    print(f"Consulting {len(request.members)} members on {request.topic}")
+    
+    try:
+        # Convert to adapter enum types
+        adapter_members = [AdapterCouncilMember(m.value) for m in request.members]
+        
+        # Generate advice from all members in parallel
+        advice_dict = await generate_multi_advice(
+            topic=request.topic,
+            members=adapter_members,
+            context=request.context
+        )
+        
+        # Get persona names for better response
+        from .persona_loader import persona_loader
+        
+        response = {}
+        for member_enum in request.members:
+            persona = persona_loader.get_by_enum(member_enum.value)
+            member_name = persona.name if persona else member_enum.value
+            response[member_enum.value] = {
+                "name": member_name,
+                "advice": advice_dict.get(member_enum.value, "No advice available")
+            }
+        
+        return {
+            "topic": request.topic,
+            "members": response,
+            "count": len(request.members)
+        }
+    except Exception as e:
+        print(f"Error in multi-consultation: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "error": str(e),
+            "topic": request.topic,
+            "members": {}
+        }
+
+@app.get("/graph")
+async def get_relationship_graph():
+    """Get relationship graph as JSON."""
+    from .relationship_graph import relationship_graph
+    return relationship_graph.to_json()
+
+@app.get("/graph/dot")
+async def get_relationship_graph_dot():
+    """Get relationship graph as Graphviz DOT format."""
+    from .relationship_graph import relationship_graph
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse(relationship_graph.to_dot(), media_type="text/plain")
 
 @app.post("/audit")
 async def run_constitutional_audit(data: dict):

@@ -26,6 +26,7 @@ from typing import Optional, Any, List, Dict
 import json
 import os
 import sys
+import re
 
 # Add project root to path to allow importing from engine
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -41,6 +42,7 @@ from .context import AgentContext
 from .telemetry import TelemetryCollector, EventType, get_telemetry_collector
 from .instructions import SystemPrompt, get_instructions
 from .memory import get_memory_store, MemoryEntry
+from .reasoning import get_critique_engine, ReasoningTrace, CritiqueResult
 
 
 class Agent(ABC):
@@ -162,6 +164,141 @@ class Agent(ABC):
         except Exception as e:
             self.telemetry.warning(f"Memorization failed: {e}", agent_id=self.agent_id)
             return ""
+    
+    def ask_brain_with_reasoning(
+        self,
+        prompt: str,
+        context_data: Any = None,
+        use_memory: bool = False,
+        memory_query: Optional[str] = None,
+        max_revisions: int = 2
+    ) -> tuple[str, Optional[ReasoningTrace]]:
+        """
+        Query the LLM with explicit reasoning and self-critique.
+        
+        Args:
+            prompt: The specific prompt for this request
+            context_data: Optional data to include in the context
+            use_memory: Whether to use RAG
+            memory_query: Specific query for memory retrieval
+            max_revisions: Maximum number of critique-revision cycles
+            
+        Returns:
+            Tuple of (final_answer, reasoning_trace)
+        """
+        system_prompt = self.get_system_prompt()
+        critique_engine = get_critique_engine()
+        
+        # Build memory context if needed
+        memory_context = ""
+        if use_memory:
+            query = memory_query if memory_query else prompt
+            memories = self.recall(query)
+            if memories:
+                memory_context = "\n# RELEVANT MEMORIES (PAST EXPERIENCES)\n" + "\n".join(
+                    [f"- {m.content} (Score: {m.score:.2f})" for m in memories]
+                )
+        
+        # Reasoning prompt with explicit thinking instructions
+        reasoning_prompt = f"""
+{system_prompt}
+
+{memory_context}
+
+# CONTEXT DATA
+{json.dumps(context_data, default=str, indent=2) if context_data else "No additional context"}
+
+# INSTRUCTION
+{prompt}
+
+# REASONING PROTOCOL
+Before providing your final answer, think through the problem step-by-step inside <thinking> tags:
+1. Break down the problem into steps
+2. State your assumptions explicitly
+3. Consider alternative approaches
+4. Assess risks and edge cases
+5. Provide a confidence score (0.0-1.0)
+
+Format:
+<thinking>
+Step 1: [First reasoning step]
+Step 2: [Second reasoning step]
+...
+Assumptions: [List key assumptions]
+Alternatives: [List alternatives considered]
+Risk: [Identify risks]
+Confidence: [0.0-1.0]
+</thinking>
+
+Then provide your final answer after the thinking block.
+"""
+        
+        best_trace = None
+        best_answer = ""
+        
+        for revision in range(max_revisions + 1):
+            try:
+                # Import generate_content locally to allow patching in tests
+                from engine.providers import generate_content
+                
+                # Get LLM response with reasoning
+                response = generate_content("gemini", reasoning_prompt)
+                
+                # Parse reasoning trace
+                trace = critique_engine.parse_reasoning_trace(response)
+                
+                # Extract final answer (text after </thinking>)
+                answer_match = re.search(r'</thinking>\s*(.+)', response, re.DOTALL)
+                answer = answer_match.group(1).strip() if answer_match else response
+                
+                # Critique the reasoning
+                critique = critique_engine.critique_reasoning(trace)
+                
+                # Log critique results
+                self.telemetry.info(
+                    f"Reasoning critique (revision {revision}): {len(critique.issues)} issues",
+                    agent_id=self.agent_id,
+                    needs_revision=critique.needs_revision,
+                    confidence=critique.confidence_score
+                )
+                
+                # Store best attempt
+                if best_trace is None or critique.confidence_score > best_trace.confidence:
+                    best_trace = trace
+                    best_answer = answer
+                
+                # If critique passes or we're out of revisions, return
+                if not critique.needs_revision or revision == max_revisions:
+                    self.telemetry.info(
+                        f"Reasoning finalized after {revision + 1} iteration(s)",
+                        agent_id=self.agent_id,
+                        final_confidence=critique.confidence_score
+                    )
+                    return (answer, trace)
+                
+                # Revise: add critique feedback to prompt
+                reasoning_prompt += f"""
+
+# CRITIQUE FEEDBACK (Revision {revision + 1})
+Your previous reasoning had the following issues:
+{chr(10).join([f"- {issue}" for issue in critique.issues])}
+
+Suggestions:
+{chr(10).join([f"- {suggestion}" for suggestion in critique.suggestions])}
+
+Please revise your reasoning addressing these points.
+"""
+                
+            except Exception as e:
+                self.telemetry.error(
+                    f"Reasoning iteration {revision} failed: {e}",
+                    agent_id=self.agent_id
+                )
+                if best_answer:
+                    return (best_answer, best_trace)
+                return (f"ERROR: {str(e)}", None)
+        
+        return (best_answer, best_trace)
     
     @abstractmethod
     def process(self, context: AgentContext) -> AgentContext:
