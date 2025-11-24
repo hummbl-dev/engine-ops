@@ -32,7 +32,7 @@ No critical errors that would prevent system operation.
 ### 2.1 Pydantic Deprecation Warning
 **File:** `engine/src/persona_schema.py:99`  
 **Severity:** 🔴 High (will break in Pydantic V3)  
-**Status:** ⚠️ Needs Fix
+**Status:** ✅ **FIXED**
 
 **Issue:**
 ```
@@ -52,12 +52,12 @@ class PersonaSchema(BaseModel):
 - Future: Will break when Pydantic V3 is released
 - Test Impact: 1 warning in test output
 
-**Fix Required:**
-- Verify `ConfigDict` is properly used (may already be fixed)
-- Remove any remaining class-based `Config` references
-- Update to Pydantic V2 best practices
+**Fix Applied:**
+- ✅ Removed legacy `class Config:` 
+- ✅ Moved `use_enum_values=True` to `ConfigDict(use_enum_values=True)`
+- ✅ All tests passing, no warnings
 
-**Priority:** P1 - Fix before Pydantic V3 release
+**Status:** ✅ **RESOLVED** - Committed in commit `[latest]`
 
 ---
 
