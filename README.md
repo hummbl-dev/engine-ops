@@ -148,6 +148,7 @@ Open `http://localhost:8080/docs` in your browser to see the Matrix-themed API i
 ### 5. Test the API
 
 Try the `/consult` endpoint with:
+
 ```json
 {
   "topic": "How should I handle team burnout?",
@@ -156,6 +157,22 @@ Try the `/consult` endpoint with:
 ```
 
 **For detailed instructions, see [USER_GUIDE.md](USER_GUIDE.md)**
+
+# Deployment Helper
+
+## Deploy the stack with Dockerized `kubectl`
+
+We provide a convenient script that works with any Docker runtime, including **Colima** on macOS. It runs `kubectl` inside a Docker container, mounts your local kubeconfig, and applies the manifest.
+
+```bash
+# Make sure the script is executable (run once)
+chmod +x scripts/deploy.sh
+
+# Deploy the Sovereign Stack
+./scripts/deploy.sh
+```
+
+The script will start Colima if Docker is not running, verify the manifest exists, and then apply it. This approach avoids the need for a local `kubectl` installation and works out‑of‑the‑box for developers cloning the repo.
 
 ---
 

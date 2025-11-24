@@ -95,6 +95,11 @@ class SovereignKernel:
         self.console.print(Panel(response, title="Model Output", border_style="green"))
 
 if __name__ == "__main__":
+    # Start federated memory synchronization service
+    from agentic_workflow.federated_memory import get_federated_sync_service
+    sync_service = get_federated_sync_service()
+    sync_service.start()
+
     kernel = SovereignKernel()
     
     # Get input from user
@@ -105,3 +110,6 @@ if __name__ == "__main__":
         user_prompt = input("> ")
 
     kernel.execute(user_prompt)
+    
+    # Gracefully stop the sync service on exit
+    sync_service.stop()

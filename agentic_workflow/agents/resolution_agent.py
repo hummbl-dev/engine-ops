@@ -26,6 +26,7 @@ from ..agent_base import Agent
 from ..context import AgentContext
 from ..enforcer import get_policy_enforcer
 from ..telemetry import TelemetryCollector, EventType
+from ..debate import get_debate_orchestrator
 
 
 class ResolutionAgent(Agent):
@@ -187,6 +188,176 @@ class ResolutionAgent(Agent):
         """
         import json
         
+        # Check if any issues are critical/high severity - use debate
+        critical_issues = [i for i in issues if i.get("severity") in ["critical", "high"]]
+        
+        if critical_issues:
+            self.telemetry.info(
+                f"Detected {len(critical_issues)} critical/high severity issues - triggering multi-agent debate",
+                agent_id=self.agent_id
+            )
+            return self._resolve_with_debate(critical_issues, issues, context)
+        
+        # Standard resolution for low/medium severity
+        return self._standard_resolution(issues)
+        
+        except Exception as e:
+            self.telemetry.error(f"Error in resolution analysis: {e}", agent_id=self.agent_id)
+            return {
+                "resolved": [],
+                "failed": [],
+                "resolved_count": 0,
+                "failed_count": 0,
+                "success_rate": 0.0
+            }
+    
+    def _apply_resolution_strategy(
+        self,
+        issue: Dict[str, Any],
+        strategy: Dict[str, Any],
+        context: AgentContext
+    ) -> tuple[bool, str]:
+        """
+        Apply a resolution strategy to an issue.
+        
+        Args:
+            issue: Issue to resolve
+            strategy: Resolution strategy to apply
+            context: Agent context
+            
+        Returns:
+            Tuple of (success, result_message)
+        """
+        action = strategy.get("action")
+        
+        # Simulate resolution actions
+        if action == "escalate_to_human":
+            return True, "Escalated to human operator"
+        
+        elif action == "optimize_resources":
+            # Simulated resource optimization
+            resource = issue.get("details", {}).get("resource")
+            if resource:
+                return True, f"Optimized {resource} usage"
+            return False, "No resource information available"
+        
+        elif action == "apply_error_fixes":
+            # Simulated error fix
+            error_rate = issue.get("details", {}).get("error_rate")
+            if error_rate:
+                return True, "Applied error mitigation strategies"
+            return False, "No error information available"
+        
+        elif action == "queue_for_resolution":
+            # Queue for later processing
+            return True, f"Queued with priority {issue.get('priority')}"
+        
+        else:
+            return False, f"Unknown action: {action}"
+    
+    def _resolve_with_debate(
+        self,
+        critical_issues: List[Dict[str, Any]],
+        all_issues: List[Dict[str, Any]],
+        context: AgentContext
+    ) -> Dict[str, Any]:
+        """
+        Resolve critical issues using multi-agent debate.
+        
+        Args:
+            critical_issues: List of critical/high severity issues
+            all_issues: All issues (for fallback)
+            context: Agent context
+            
+        Returns:
+            Resolution results with debate metadata
+        """
+        import json
+        
+        orchestrator = get_debate_orchestrator()
+        resolved = []
+        failed = []
+        
+        for issue in critical_issues:
+            try:
+                self.telemetry.info(
+                    f"Starting debate for issue: {issue.get('name', 'Unknown')}",
+                    agent_id=self.agent_id,
+                    rule_id=issue.get("rule_id")
+                )
+                
+                # Run debate
+                debate_result = orchestrator.orchestrate_debate(
+                    issue,
+                    max_rounds=3,
+                    convergence_threshold=0.7
+                )
+                
+                # Extract decision from debate
+                decision = debate_result.final_decision
+                
+                # Add debate metadata to resolution
+                resolution_item = {
+                    **issue,
+                    "resolution_status": "resolved",
+                    "resolution_action": decision.get("resolution_action", "unknown"),
+                    "resolution_details": decision.get("resolution_details", decision.get("rationale", "")),
+                    "debate_metadata": {
+                        "consensus_reached": debate_result.consensus_reached,
+                        "debate_rounds": debate_result.debate_rounds,
+                        "convergence_score": debate_result.convergence_score,
+                        "transcript": debate_result.transcript[:5]  # First 5 lines for brevity
+                    }
+                }
+                
+                resolved.append(resolution_item)
+                
+                self.telemetry.info(
+                    f"Debate completed for {issue.get('name')}: {decision.get('resolution_action')}",
+                    agent_id=self.agent_id,
+                    consensus=debate_result.consensus_reached,
+                    rounds=debate_result.debate_rounds
+                )
+                
+            except Exception as e:
+                self.telemetry.error(
+                    f"Debate failed for {issue.get('name')}: {e}",
+                    agent_id=self.agent_id
+                )
+                failed.append({
+                    **issue,
+                    "resolution_status": "failed",
+                    "reason": f"Debate error: {str(e)}"
+                })
+        
+        # Process non-critical issues with standard resolution
+        non_critical = [i for i in all_issues if i not in critical_issues]
+        if non_critical:
+            standard_results = self._standard_resolution(non_critical)
+            resolved.extend(standard_results.get("resolved", []))
+            failed.extend(standard_results.get("failed", []))
+        
+        resolved_count = len(resolved)
+        failed_count = len(failed)
+        total = resolved_count + failed_count
+        success_rate = resolved_count / total if total > 0 else 0.0
+        
+        return {
+            "resolved": resolved,
+            "failed": failed,
+            "resolved_count": resolved_count,
+            "failed_count": failed_count,
+            "success_rate": success_rate
+        }
+    
+    def _standard_resolution(self, issues: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Standard resolution without debate (for low/medium severity).
+        
+        This is the original _resolve_issues logic extracted for reuse.
+        """
+        import json
+        
         prompt = """
         Determine the best resolution action for each issue.
         
@@ -204,8 +375,7 @@ class ResolutionAgent(Agent):
                 {
                     ... (original issue fields) ...
                     "resolution_status": "failed",
-                    "resolution_action": (string attempted action),
-                    "failure_reason": (string reason)
+                    "reason": (string reason for failure)
                 }
             ]
         }
@@ -277,7 +447,7 @@ class ResolutionAgent(Agent):
                         "type": "resolution_success"
                     }
                 )
-
+            
             return {
                 "resolved": resolved,
                 "failed": failed,
@@ -286,65 +456,16 @@ class ResolutionAgent(Agent):
                 "success_rate": success_rate
             }
             
-        except json.JSONDecodeError:
-            self.telemetry.error(f"Failed to parse LLM resolution response: {response}", agent_id=self.agent_id)
+        except json.JSONDecodeError as e:
+            self.telemetry.error(
+                f"Failed to parse resolution response: {e}",
+                agent_id=self.agent_id
+            )
             return {
                 "resolved": [],
-                "failed": [],
+                "failed": issues,
                 "resolved_count": 0,
-                "failed_count": 0,
+                "failed_count": len(issues),
                 "success_rate": 0.0
             }
-        except Exception as e:
-            self.telemetry.error(f"Error in resolution analysis: {e}", agent_id=self.agent_id)
-            return {
-                "resolved": [],
-                "failed": [],
-                "resolved_count": 0,
-                "failed_count": 0,
-                "success_rate": 0.0
-            }
-    
-    def _apply_resolution_strategy(
-        self,
-        issue: Dict[str, Any],
-        strategy: Dict[str, Any],
-        context: AgentContext
-    ) -> tuple[bool, str]:
-        """
-        Apply a resolution strategy to an issue.
-        
-        Args:
-            issue: Issue to resolve
-            strategy: Resolution strategy to apply
-            context: Agent context
-            
-        Returns:
-            Tuple of (success, result_message)
-        """
-        action = strategy.get("action")
-        
-        # Simulate resolution actions
-        if action == "escalate_to_human":
-            return True, "Escalated to human operator"
-        
-        elif action == "optimize_resources":
-            # Simulated resource optimization
-            resource = issue.get("details", {}).get("resource")
-            if resource:
-                return True, f"Optimized {resource} usage"
-            return False, "No resource information available"
-        
-        elif action == "apply_error_fixes":
-            # Simulated error fix
-            error_rate = issue.get("details", {}).get("error_rate")
-            if error_rate:
-                return True, "Applied error mitigation strategies"
-            return False, "No error information available"
-        
-        elif action == "queue_for_resolution":
-            # Queue for later processing
-            return True, f"Queued with priority {issue.get('priority')}"
-        
-        else:
-            return False, f"Unknown action: {action}"
+

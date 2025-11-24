@@ -159,6 +159,27 @@ We implemented consensus-based decision making where Red Team (conservative) and
 - Full transparency into decision rationale
 - Balanced risk vs performance trade-offs
 
+**Observable Dashboard:**
+
+- Real-time Streamlit dashboard (`dashboard_debate.py`)
+- Convergence meter showing consensus progress
+- Agent position scatter plot (risk vs performance)
+- Live critique feed with color-coded arguments
+- Final decision panel with rationale
+
+**Usage:**
+
+```bash
+streamlit run dashboard_debate.py
+```
+
+**Production Integration:**
+
+- Critical and high-severity issues automatically trigger debate
+- Low and medium-severity issues use standard single-agent resolution
+- Debate metadata (consensus, rounds, convergence) stored in telemetry
+- Fallback to standard resolution if debate fails
+
 ## 7. Documentation
 
 - **[GOVERNANCE.md](GOVERNANCE.md):** New documentation detailing the Policy Engine, Audit Logging, and Compliance Verification components.
