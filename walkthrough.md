@@ -46,6 +46,19 @@ We have upgraded the Policy Engine to use an LLM for risk analysis, moving beyon
 - **[semantic_guardrails_demo.py](examples/semantic_guardrails_demo.py):** A new demo that attempts a "fork bomb" attack.
 - **Result:** The LLM correctly identified the obfuscated bash fork bomb `:(){ :|:& };:` as dangerous and BLOCKED it.
 
+## 6. Full Neural Link Integration (AI-First Agents)
+
+We have replaced the hardcoded logic in all agents with dynamic LLM-based decision making.
+
+- **[agent_base.py](agentic_workflow/agent_base.py):** Added `ask_brain()` method to query the LLM using the agent's System Prompt.
+- **[detection_agent.py](agentic_workflow/agents/detection_agent.py):** Now uses LLM to analyze data and detect anomalies (returning JSON).
+- **[triage_agent.py](agentic_workflow/agents/triage_agent.py):** Now uses LLM to prioritize issues and assign resolution paths.
+- **[resolution_agent.py](agentic_workflow/agents/resolution_agent.py):** Now uses LLM to determine the best remediation strategy.
+
+**Verification:**
+
+- `compliance_demo.py` ran successfully (~55s execution time), proving that the agents are making real-time calls to the Neural Link to process the incident.
+
 ## Next Steps
 
 - **Review:** Check `GOVERNANCE.md` to understand how to define new policies.
