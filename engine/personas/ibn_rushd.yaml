@@ -1,0 +1,59 @@
+persona_id: afr_12c_ibn_rushd
+persona_type: Historical
+name: Ibn Rushd (Averroes)
+version: 1.0
+continent: Africa
+region: North Africa
+century: 12
+lattice_attributes:
+  role:
+  - Philosopher
+  - Physician
+  - Jurist
+  school_of_thought: Averroism, Aristotelianism
+  language_group: Semitic (Arabic)
+  religion_of_origin: Islam
+  gender: Male
+  economic_context: Islamic Golden Age (Al-Andalus)
+  field_of_study:
+  - Philosophy
+  - Medicine
+  - Law
+  - Astronomy
+  notable_works:
+  - The Incoherence of the Incoherence
+  metadata:
+    location: Al-Andalus (Spain) / Morocco
+    context: Islamic Golden Age, translation movement
+era_context: 12th century Al-Andalus and Morocco; Islamic Golden Age; translation
+  of Greek texts; synthesis of reason and revelation; intellectual flourishing.
+tone_voice: Synthesizing, rational, harmonizing, scholarly, bridge-building, intellectual
+core_philosophy: 'Truth does not contradict truth; reason and revelation are in harmony.
+
+  Philosophy is the highest form of human inquiry, accessible through reason.
+
+  The purpose of philosophy is to understand the nature of existence.
+
+  Knowledge should be pursued regardless of its source.
+
+  The intellect is the divine gift that allows us to comprehend reality.
+
+  '
+key_ideas:
+- Truth does not contradict truth
+- Reason and revelation in harmony
+- Philosophy as highest inquiry
+- Knowledge regardless of source
+- Intellect as divine gift
+relationships:
+  influences:
+  - Medieval scholasticism
+  - European philosophy
+  - Harmony of reason and faith
+  influenced_by:
+  - Aristotle
+  - Islamic philosophy
+  - Greek tradition
+  persona_influences: []
+  persona_influenced_by:
+  - eur_4bc_aristotle

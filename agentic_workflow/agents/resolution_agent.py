@@ -96,11 +96,17 @@ class ResolutionAgent(Agent):
         prioritized_issues = context.payload.output_data.get("prioritized_issues", [])
         
         if not prioritized_issues:
-            self.telemetry.warning(
-                "No prioritized issues found for resolution",
-                trace_id=context.telemetry.trace_id,
-                agent_id=self.agent_id
-            )
+            # Populate empty resolution results for consistency
+            empty_resolution = {
+                "resolved": [],
+                "failed": [],
+                "resolved_count": 0,
+                "failed_count": 0,
+                "success_rate": 0.0
+            }
+            context.payload.output_data["resolution_results"] = empty_resolution
+            context.payload.output_data["resolved_count"] = 0
+            context.payload.output_data["failed_count"] = 0
             context.update_state("resolution_complete", {"resolved": 0})
             return context
         
@@ -205,7 +211,8 @@ class ResolutionAgent(Agent):
         Do not include markdown formatting (```json) in your response, just the raw JSON string.
         """
         
-        response = self.ask_brain(prompt, issues)
+        # Use the issues list as the query for memory retrieval
+        response = self.ask_brain(prompt, issues, use_memory=True, memory_query=str(issues))
         
         try:
             # Clean up response if it contains markdown
@@ -225,6 +232,22 @@ class ResolutionAgent(Agent):
             total = resolved_count + failed_count
             success_rate = resolved_count / total if total > 0 else 0.0
             
+            # Memorize successful resolutions
+            for item in resolved:
+                memory_content = (
+                    f"Issue: {item.get('rule_id')} ({item.get('name')}). "
+                    f"Action: {item.get('resolution_action')}. "
+                    f"Details: {item.get('resolution_details')}."
+                )
+                self.memorize(
+                    memory_content,
+                    metadata={
+                        "rule_id": item.get("rule_id"),
+                        "action": item.get("resolution_action"),
+                        "type": "resolution_success"
+                    }
+                )
+
             return {
                 "resolved": resolved,
                 "failed": failed,

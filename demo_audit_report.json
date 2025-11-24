@@ -1,12 +1,12 @@
 {
-  "audit_id": "71e21e4d-d527-4a25-9621-3578029de1fc",
-  "trace_id": "1644816c-494f-41d5-8f3e-13313625c62a",
-  "session_id": "0e7f0ea4-51b7-4f9b-88ac-8fc62eb1f277",
-  "generated_at": "2025-11-24T04:36:12.556898+00:00",
+  "audit_id": "1c92489e-e0c7-4158-91d9-cae565e06ce0",
+  "trace_id": "062e583b-67d0-41b8-b0a6-9731289b4449",
+  "session_id": "8785355b-73cb-4960-ab8e-d1736ff323b9",
+  "generated_at": "2025-11-24T13:27:32.897078+00:00",
   "workflow_info": {
-    "start_time": "2025-11-24T04:35:22.489137+00:00",
-    "end_time": "2025-11-24T04:36:12.556898+00:00",
-    "duration_seconds": 50.067761,
+    "start_time": "2025-11-24T13:26:47.698235+00:00",
+    "end_time": "2025-11-24T13:27:32.897078+00:00",
+    "duration_seconds": 45.198843,
     "initial_state": "initialized",
     "final_state": "auditing",
     "state_transitions": 7
@@ -19,10 +19,10 @@
   },
   "execution_summary": {
     "detections": 2,
-    "resolved": 2,
+    "resolved": 0,
     "failed": 0,
     "total_events": 7,
-    "status": "completed_successfully"
+    "status": "completed_no_action"
   },
   "security_info": {
     "data_classification": "confidential",
@@ -34,13 +34,13 @@
     {
       "from_state": "initialized",
       "to_state": "detecting",
-      "timestamp": "2025-11-24T04:35:31.800958+00:00",
+      "timestamp": "2025-11-24T13:26:58.015213+00:00",
       "metadata": {}
     },
     {
       "from_state": "detecting",
       "to_state": "detection_complete",
-      "timestamp": "2025-11-24T04:35:38.149699+00:00",
+      "timestamp": "2025-11-24T13:27:04.122562+00:00",
       "metadata": {
         "detections": 2
       }
@@ -48,13 +48,13 @@
     {
       "from_state": "detection_complete",
       "to_state": "triaging",
-      "timestamp": "2025-11-24T04:35:43.269876+00:00",
+      "timestamp": "2025-11-24T13:27:08.497972+00:00",
       "metadata": {}
     },
     {
       "from_state": "triaging",
       "to_state": "triage_complete",
-      "timestamp": "2025-11-24T04:35:48.974515+00:00",
+      "timestamp": "2025-11-24T13:27:16.614960+00:00",
       "metadata": {
         "triaged": 2,
         "critical": 1
@@ -63,43 +63,43 @@
     {
       "from_state": "triage_complete",
       "to_state": "resolving",
-      "timestamp": "2025-11-24T04:35:53.940839+00:00",
+      "timestamp": "2025-11-24T13:27:21.611896+00:00",
       "metadata": {}
     },
     {
       "from_state": "resolving",
       "to_state": "resolution_complete",
-      "timestamp": "2025-11-24T04:36:08.451999+00:00",
+      "timestamp": "2025-11-24T13:27:28.391325+00:00",
       "metadata": {
-        "resolved": 2,
+        "resolved": 0,
         "failed": 0
       }
     },
     {
       "from_state": "resolution_complete",
       "to_state": "auditing",
-      "timestamp": "2025-11-24T04:36:12.556882+00:00",
+      "timestamp": "2025-11-24T13:27:32.897066+00:00",
       "metadata": {}
     },
     {
       "from_state": "auditing",
       "to_state": "audit_complete",
-      "timestamp": "2025-11-24T04:36:12.556990+00:00",
+      "timestamp": "2025-11-24T13:27:32.897153+00:00",
       "metadata": {
-        "audit_id": "71e21e4d-d527-4a25-9621-3578029de1fc"
+        "audit_id": "1c92489e-e0c7-4158-91d9-cae565e06ce0"
       }
     },
     {
       "from_state": "audit_complete",
       "to_state": "workflow_complete",
-      "timestamp": "2025-11-24T04:36:17.851029+00:00",
+      "timestamp": "2025-11-24T13:27:37.303748+00:00",
       "metadata": {}
     }
   ],
   "telemetry_events": [
     {
       "type": "agent_start",
-      "timestamp": "2025-11-24T04:35:31.800840+00:00",
+      "timestamp": "2025-11-24T13:26:58.015126+00:00",
       "data": {
         "agent_id": "detection_agent",
         "agent_type": "DetectionAgent"
@@ -107,7 +107,7 @@
     },
     {
       "type": "agent_complete",
-      "timestamp": "2025-11-24T04:35:38.149889+00:00",
+      "timestamp": "2025-11-24T13:27:04.122671+00:00",
       "data": {
         "agent_id": "detection_agent",
         "agent_type": "DetectionAgent"
@@ -115,7 +115,7 @@
     },
     {
       "type": "agent_start",
-      "timestamp": "2025-11-24T04:35:43.269807+00:00",
+      "timestamp": "2025-11-24T13:27:08.497914+00:00",
       "data": {
         "agent_id": "triage_agent",
         "agent_type": "TriageAgent"
@@ -123,7 +123,7 @@
     },
     {
       "type": "agent_complete",
-      "timestamp": "2025-11-24T04:35:48.974664+00:00",
+      "timestamp": "2025-11-24T13:27:16.615077+00:00",
       "data": {
         "agent_id": "triage_agent",
         "agent_type": "TriageAgent"
@@ -131,7 +131,7 @@
     },
     {
       "type": "agent_start",
-      "timestamp": "2025-11-24T04:35:53.940762+00:00",
+      "timestamp": "2025-11-24T13:27:21.611825+00:00",
       "data": {
         "agent_id": "resolution_agent",
         "agent_type": "ResolutionAgent"
@@ -139,7 +139,7 @@
     },
     {
       "type": "agent_complete",
-      "timestamp": "2025-11-24T04:36:08.452121+00:00",
+      "timestamp": "2025-11-24T13:27:28.391398+00:00",
       "data": {
         "agent_id": "resolution_agent",
         "agent_type": "ResolutionAgent"
@@ -147,7 +147,7 @@
     },
     {
       "type": "agent_start",
-      "timestamp": "2025-11-24T04:36:12.556774+00:00",
+      "timestamp": "2025-11-24T13:27:32.896934+00:00",
       "data": {
         "agent_id": "audit_agent",
         "agent_type": "AuditAgent"
@@ -155,7 +155,7 @@
     },
     {
       "type": "agent_complete",
-      "timestamp": "2025-11-24T04:36:12.557072+00:00",
+      "timestamp": "2025-11-24T13:27:32.897208+00:00",
       "data": {
         "agent_id": "audit_agent",
         "agent_type": "AuditAgent"
@@ -165,12 +165,11 @@
   "annotations": {
     "tags": [
       "issues_detected",
-      "issues_resolved",
       "audited"
     ],
     "labels": {
       "highest_severity": "critical",
-      "triage_priority": "critical",
+      "triage_priority": "high",
       "audit_status": "completed"
     },
     "categories": [

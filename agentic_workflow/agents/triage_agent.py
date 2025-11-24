@@ -72,11 +72,15 @@ class TriageAgent(Agent):
         detections = context.payload.output_data.get("detections", [])
         
         if not detections:
-            self.telemetry.warning(
-                "No detections found for triage",
-                trace_id=context.telemetry.trace_id,
-                agent_id=self.agent_id
-            )
+            # Populate empty triage results for consistency
+            empty_triage = {
+                "prioritized": [],
+                "critical_count": 0,
+                "requires_immediate_action": False,
+                "total_triaged": 0
+            }
+            context.payload.output_data["triage_results"] = empty_triage
+            context.payload.output_data["prioritized_issues"] = []
             context.update_state("triage_complete", {"triaged": 0})
             return context
         

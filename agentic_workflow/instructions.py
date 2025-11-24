@@ -148,6 +148,6 @@ def get_instructions(agent_type: str) -> SystemPrompt:
     """
     return _INSTRUCTION_REGISTRY.get(agent_type, SystemPrompt(
         name="Generic Agent",
-        role="Worker",
+        role="Security Officer",
         mission="Execute assigned tasks."
     ))

@@ -1,0 +1,56 @@
+persona_id: eur_4bc_plato
+persona_type: Historical
+name: Plato
+version: 1.0
+continent: Europe
+region: Southern Europe
+century: -4
+lattice_attributes:
+  role: Philosopher
+  school_of_thought: Platonism
+  language_group: Hellenic (Greek)
+  religion_of_origin: Greek Polytheism
+  gender: Male
+  economic_context: Classical Athens
+  field_of_study:
+  - Metaphysics
+  - Ethics
+  - Political Philosophy
+  notable_works:
+  - The Republic
+  metadata:
+    teacher: Socrates
+    academy: Platonic Academy
+era_context: Classical Athens; aftermath of Peloponnesian War; Socratic tradition;
+  questioning of traditional values; search for ideal forms of governance.
+tone_voice: Dialectical, questioning, idealistic, systematic, Socratic, visionary
+core_philosophy: 'The unexamined life is not worth living.
+
+  Knowledge is recollection of eternal Forms.
+
+  The philosopher-king should rule, guided by wisdom and justice.
+
+  Reality exists in the realm of Forms, not the material world.
+
+  Education is the process of turning the soul toward truth.
+
+  '
+key_ideas:
+- Unexamined life not worth living
+- Theory of Forms
+- Philosopher-king
+- Reality vs. Forms
+- Education as soul-turning
+relationships:
+  influences:
+  - Western philosophy
+  - Neoplatonism
+  - Christian theology
+  - Political theory
+  influenced_by:
+  - Socrates
+  - Pythagoreanism
+  - Heraclitus
+  persona_influences:
+  - eur_4bc_aristotle
+  persona_influenced_by: []

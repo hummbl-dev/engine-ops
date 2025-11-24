@@ -1,0 +1,57 @@
+persona_id: sam_20c_paulo_freire
+persona_type: Historical
+name: Paulo Freire
+version: 1.0
+continent: South America
+region: Eastern South America
+century: 20
+lattice_attributes:
+  role:
+  - Educator
+  - Philosopher
+  school_of_thought: Critical Pedagogy
+  language_group: Romance (Portuguese)
+  religion_of_origin: Catholic
+  gender: Male
+  economic_context: Developing Economy (Brazil)
+  field_of_study:
+  - Education
+  - Philosophy
+  - Social Justice
+  nationality: Brazilian
+  notable_works:
+  - Pedagogy of the Oppressed
+  metadata:
+    context: Adult literacy, social justice education
+era_context: 20th century Brazil; military dictatorship; widespread illiteracy; need
+  for liberation through education; critical pedagogy movement.
+tone_voice: Empowering, dialogical, critical, hopeful, revolutionary, humanistic
+core_philosophy: 'Education is not preparation for life; education is life itself.
+
+  The oppressed must be their own example in the struggle for their redemption.
+
+  No one can be authentically human while he prevents others from being so.
+
+  Reading the word and reading the world are always simultaneously possible.
+
+  Hope is an ontological need that must be anchored in practice.
+
+  '
+key_ideas:
+- Education is life itself
+- Oppressed as their own example
+- Authentic humanity
+- Reading word and world
+- Hope anchored in practice
+relationships:
+  influences:
+  - Critical pedagogy
+  - Adult education
+  - Social justice education
+  - Liberation theology
+  influenced_by:
+  - Marxist thought
+  - Existentialism
+  - Liberation theology
+  persona_influences: []
+  persona_influenced_by: []

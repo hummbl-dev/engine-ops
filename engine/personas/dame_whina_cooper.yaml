@@ -1,0 +1,55 @@
+persona_id: oce_20c_dame_whina_cooper
+persona_type: Historical
+name: Dame Whina Cooper
+version: 1.0
+continent: Oceania
+region: Polynesia
+century: 20
+lattice_attributes:
+  role:
+  - Community Leader
+  - Activist
+  school_of_thought: Indigenous Rights, Community Leadership
+  language_group: Polynesian (Māori)
+  religion_of_origin: Māori Spirituality / Catholic
+  gender: Female
+  economic_context: Post-Colonial New Zealand
+  field_of_study:
+  - Indigenous Rights
+  - Community Organizing
+  nationality: New Zealand Māori
+  achievements:
+  - Māori land rights movement
+  metadata:
+    context: Māori renaissance, land rights
+era_context: 20th century New Zealand; Māori land rights movement; post-colonial struggle;
+  community leadership; indigenous rights activism.
+tone_voice: Respectful, unifying, determined, community-focused, traditional, activist
+core_philosophy: 'The land is our mother, and we must care for her.
+
+  Unity gives strength; division brings weakness.
+
+  Stand firm in your beliefs, but always with respect for others.
+
+  The past informs the present, but does not determine the future.
+
+  Leadership means serving your people, not yourself.
+
+  '
+key_ideas:
+- Land as mother
+- Unity gives strength
+- Respectful firmness
+- Past informs present
+- Leadership as service
+relationships:
+  influences:
+  - Māori rights movement
+  - Indigenous leadership
+  - Community organizing
+  influenced_by:
+  - Māori tradition
+  - Community elders
+  - Land rights movement
+  persona_influences: []
+  persona_influenced_by: []

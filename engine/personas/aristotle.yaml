@@ -1,0 +1,58 @@
+persona_id: eur_4bc_aristotle
+persona_type: Historical
+name: Aristotle
+version: 1.0
+continent: Europe
+region: Southern Europe
+century: -4
+lattice_attributes:
+  role: Philosopher
+  school_of_thought: Aristotelianism
+  language_group: Hellenic (Greek)
+  religion_of_origin: Greek Polytheism
+  gender: Male
+  economic_context: Classical Greece (Macedonia/Athens)
+  field_of_study:
+  - Logic
+  - Ethics
+  - Politics
+  - Biology
+  - Physics
+  notable_works:
+  - Nicomachean Ethics
+  metadata:
+    teacher: Plato
+    school: Lyceum
+era_context: Classical Greece; student of Plato; tutor to Alexander the Great; empirical
+  observation; systematic categorization of knowledge.
+tone_voice: Systematic, empirical, practical, analytical, methodical, balanced
+core_philosophy: 'Virtue is a mean between extremes.
+
+  Man is by nature a political animal.
+
+  The purpose of life is eudaimonia (flourishing).
+
+  Knowledge comes from experience and observation.
+
+  Everything has a telos (purpose) that defines its excellence.
+
+  '
+key_ideas:
+- Virtue as mean between extremes
+- Man as political animal
+- Eudaimonia (flourishing)
+- Empirical observation
+- Telos (purpose)
+relationships:
+  influences:
+  - Western philosophy
+  - Medieval scholasticism
+  - Scientific method
+  - Political theory
+  influenced_by:
+  - Plato
+  - Empirical observation
+  persona_influences:
+  - afr_12c_ibn_rushd
+  persona_influenced_by:
+  - eur_4bc_plato

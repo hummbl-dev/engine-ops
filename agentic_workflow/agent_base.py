@@ -22,7 +22,7 @@ Provides abstract base class for all agents in the workflow system.
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional, Any
+from typing import Optional, Any, List, Dict
 import json
 import os
 import sys
@@ -40,6 +40,7 @@ except ImportError:
 from .context import AgentContext
 from .telemetry import TelemetryCollector, EventType, get_telemetry_collector
 from .instructions import SystemPrompt, get_instructions
+from .memory import get_memory_store, MemoryEntry
 
 
 class Agent(ABC):
@@ -64,6 +65,7 @@ class Agent(ABC):
         """
         self.agent_id = agent_id
         self.telemetry = telemetry or get_telemetry_collector()
+        self.memory = get_memory_store()
         self._instructions: Optional[SystemPrompt] = None
 
     @property
@@ -98,21 +100,34 @@ class Agent(ABC):
         """Get the formatted system prompt for this agent."""
         return self.instructions.to_prompt_string()
 
-    def ask_brain(self, prompt: str, context_data: Any = None) -> str:
+    def ask_brain(self, prompt: str, context_data: Any = None, use_memory: bool = False, memory_query: Optional[str] = None) -> str:
         """
         Query the LLM (Neural Link) for a decision or analysis.
         
         Args:
             prompt: The specific prompt for this request
             context_data: Optional data to include in the context
+            use_memory: Whether to use RAG
+            memory_query: Specific query for memory retrieval (defaults to prompt)
             
         Returns:
             The LLM's response text
         """
         system_prompt = self.get_system_prompt()
         
+        memory_context = ""
+        if use_memory:
+            query = memory_query if memory_query else prompt
+            memories = self.recall(query)
+            if memories:
+                memory_context = "\n# RELEVANT MEMORIES (PAST EXPERIENCES)\n" + "\n".join(
+                    [f"- {m.content} (Score: {m.score:.2f})" for m in memories]
+                )
+
         full_prompt = f"""
 {system_prompt}
+
+{memory_context}
 
 # CONTEXT DATA
 {json.dumps(context_data, default=str, indent=2) if context_data else "No additional context"}
@@ -121,12 +136,32 @@ class Agent(ABC):
 {prompt}
 """
         try:
+            # Import generate_content locally to allow patching in tests
+            from engine.providers import generate_content
             # Use Gemini by default
             response = generate_content("gemini", full_prompt)
             return response
         except Exception as e:
             self.telemetry.error(f"Neural Link failure: {e}", agent_id=self.agent_id)
             return f"ERROR: {str(e)}"
+
+    def recall(self, query: str, limit: int = 3) -> List[MemoryEntry]:
+        """Recall relevant memories."""
+        try:
+            return self.memory.search(query, limit=limit)
+        except Exception as e:
+            self.telemetry.warning(f"Memory recall failed: {e}", agent_id=self.agent_id)
+            return []
+
+    def memorize(self, content: str, metadata: Optional[Dict[str, Any]] = None) -> str:
+        """Store a new memory."""
+        try:
+            meta = metadata or {}
+            meta["agent_id"] = self.agent_id
+            return self.memory.add(content, meta)
+        except Exception as e:
+            self.telemetry.warning(f"Memorization failed: {e}", agent_id=self.agent_id)
+            return ""
     
     @abstractmethod
     def process(self, context: AgentContext) -> AgentContext:
@@ -268,3 +303,8 @@ class Agent(ABC):
     
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(agent_id={self.agent_id})"
+
+# Backward compatibility alias
+class AgentBase(Agent):
+    """Alias for legacy imports expecting AgentBase."""
+    pass

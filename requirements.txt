@@ -10,3 +10,5 @@ pyyaml
 python-dotenv
 locust
 requests
+chromadb
+sentence-transformers

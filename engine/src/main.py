@@ -1489,6 +1489,16 @@ class CouncilMember(str, Enum):
     sun_tzu = "sun_tzu"
     marcus_aurelius = "marcus_aurelius"
     machiavelli = "machiavelli"
+    plato = "plato"
+    aristotle = "aristotle"
+    carl_jung = "carl_jung"
+    hypatia = "hypatia"
+    ada_lovelace = "ada_lovelace"
+    marie_curie = "marie_curie"
+    benjamin_franklin = "benjamin_franklin"
+    paulo_freire = "paulo_freire"
+    dame_whina_cooper = "dame_whina_cooper"
+    ibn_rushd = "ibn_rushd"
 
 @app.get("/")
 async def root():

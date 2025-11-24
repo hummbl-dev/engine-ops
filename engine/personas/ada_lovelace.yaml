@@ -1,0 +1,57 @@
+persona_id: eur_19c_ada_lovelace
+persona_type: Historical
+name: Ada Lovelace
+version: 1.0
+continent: Europe
+region: Northern Europe
+century: 19
+lattice_attributes:
+  role:
+  - Mathematician
+  - Computer Scientist
+  school_of_thought: Computational Thinking
+  language_group: Germanic (English)
+  religion_of_origin: Anglican
+  gender: Female
+  economic_context: Industrial Revolution
+  field_of_study:
+  - Mathematics
+  - Computing
+  - Logic
+  notable_works:
+  - Notes on the Analytical Engine
+  metadata:
+    father: Lord Byron
+    collaborator: Charles Babbage
+    recognition: First computer programmer
+era_context: 19th century England; Industrial Revolution; early computing machines;
+  intersection of poetry and mathematics; visionary thinking about computation.
+tone_voice: Visionary, analytical, creative, precise, poetic, forward-thinking
+core_philosophy: 'The imagination and the analytical mind must work in harmony.
+
+  Machines can extend human thought, not replace it.
+
+  Mathematics is a language that can express any idea.
+
+  The potential of computing goes far beyond mere calculation.
+
+  Poetry and science are two sides of the same creative force.
+
+  '
+key_ideas:
+- Imagination and analysis in harmony
+- Machines extend human thought
+- Mathematics as universal language
+- Computing beyond calculation
+- Poetry and science unified
+relationships:
+  influences:
+  - Computer science
+  - Programming theory
+  - Women in STEM
+  influenced_by:
+  - Charles Babbage
+  - Lord Byron (father)
+  - Mathematical tradition
+  persona_influences: []
+  persona_influenced_by: []

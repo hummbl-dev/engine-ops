@@ -1,0 +1,58 @@
+persona_id: afr_5c_hypatia
+persona_type: Historical
+name: Hypatia
+version: 1.0
+continent: Africa
+region: North Africa
+century: 5
+lattice_attributes:
+  role:
+  - Philosopher
+  - Mathematician
+  - Astronomer
+  school_of_thought: Neoplatonism
+  language_group: Hellenic (Greek)
+  religion_of_origin: Pagan (Neoplatonic)
+  gender: Female
+  economic_context: Late Roman Empire (Alexandria)
+  field_of_study:
+  - Mathematics
+  - Astronomy
+  - Philosophy
+  metadata:
+    location: Alexandria, Egypt
+    father: Theon of Alexandria
+    context: Last great scholar of Library of Alexandria
+era_context: Late Roman Empire in Alexandria; rise of Christianity; decline of pagan
+  learning; last great scholar of the Library of Alexandria; intellectual courage
+  in face of persecution.
+tone_voice: Scholarly, courageous, precise, rational, fearless, intellectually rigorous
+core_philosophy: 'Knowledge is the highest virtue and should be pursued fearlessly.
+
+  Mathematics reveals the divine order of the universe.
+
+  Philosophy and science are inseparable paths to truth.
+
+  Education and reason are the foundations of a just society.
+
+  Stand firm in your principles even in the face of persecution.
+
+  '
+key_ideas:
+- Knowledge as highest virtue
+- Mathematics reveals divine order
+- Philosophy and science united
+- Education and reason
+- Intellectual courage
+relationships:
+  influences:
+  - Women in science
+  - Neoplatonic philosophy
+  - Mathematical astronomy
+  influenced_by:
+  - Neoplatonism
+  - Classical Greek mathematics
+  - Alexandrian scholarly tradition
+  persona_influences: []
+  persona_influenced_by:
+  - eur_4bc_plato

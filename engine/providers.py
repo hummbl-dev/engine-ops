@@ -1,9 +1,16 @@
 import os
-import google.generativeai as genai
-from openai import OpenAI
-from anthropic import Anthropic
+# Optional import of Google Gemini SDK – may be unavailable in test environments
+try:
+    import google.generativeai as genai
+except ImportError:  # pragma: no cover
+    genai = None  # type: ignore
+# OpenAI and Anthropic SDKs are optional for testing environments.
+# They will be imported lazily inside their respective provider functions.
+
 
 def get_gemini_provider(api_key=None):
+    if genai is None:
+        raise ImportError("google.generativeai library is not installed. Install it to use Gemini provider.")
     key = api_key or os.getenv("GOOGLE_API_KEY")
     if not key:
         raise ValueError("GOOGLE_API_KEY not found")
@@ -11,9 +18,17 @@ def get_gemini_provider(api_key=None):
     return genai.GenerativeModel('models/gemini-2.5-flash')
 
 def get_openai_provider(api_key=None):
+    try:
+        from openai import OpenAI
+    except ImportError as exc:
+        raise ImportError("openai library is not installed. Install it to use OpenAI provider.") from exc
     return OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
 
 def get_anthropic_provider(api_key=None):
+    try:
+        from anthropic import Anthropic
+    except ImportError as exc:
+        raise ImportError("anthropic library is not installed. Install it to use Anthropic provider.") from exc
     return Anthropic(api_key=api_key or os.getenv("ANTHROPIC_API_KEY"))
 
 def generate_content(provider_name, prompt, context=""):

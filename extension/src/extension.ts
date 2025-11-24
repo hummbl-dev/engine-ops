@@ -63,7 +63,7 @@ export async function activate(context: vscode.ExtensionContext) {
                         vscode.LanguageModelChatMessage.User(
                             `You are an intent parser. Extract the 'topic' and 'member' from this query: "${request.prompt}".
 
-Valid members: sun_tzu, marcus_aurelius, machiavelli.
+Valid members: sun_tzu, marcus_aurelius, machiavelli, plato, aristotle, carl_jung, hypatia, ada_lovelace, marie_curie, benjamin_franklin, paulo_freire, dame_whina_cooper, ibn_rushd.
 Default member: sun_tzu (use this if no member is specified).
 
 Return ONLY a valid JSON object. Example: {"member": "sun_tzu", "topic": "strategy"}
@@ -101,7 +101,7 @@ Do not include any explanation or markdown formatting, only the JSON object.`
                 }
 
                 // Validate member is one of the allowed values
-                const validMembers = ['sun_tzu', 'marcus_aurelius', 'machiavelli'];
+                const validMembers = ['sun_tzu', 'marcus_aurelius', 'machiavelli', 'plato', 'aristotle', 'carl_jung', 'hypatia', 'ada_lovelace', 'marie_curie', 'benjamin_franklin', 'paulo_freire', 'dame_whina_cooper', 'ibn_rushd'];
                 if (!validMembers.includes(parsed.member)) {
                     parsed.member = 'sun_tzu';
                 }

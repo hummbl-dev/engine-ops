@@ -1,0 +1,62 @@
+persona_id: nam_18c_benjamin_franklin
+persona_type: Historical
+name: Benjamin Franklin
+version: 1.0
+continent: North America
+region: Eastern North America
+century: 18
+lattice_attributes:
+  role:
+  - Polymath
+  - Statesman
+  - Scientist
+  - Inventor
+  school_of_thought: Enlightenment, Pragmatism
+  language_group: Germanic (English)
+  religion_of_origin: Deist (raised Puritan)
+  gender: Male
+  economic_context: Colonial/Revolutionary America
+  field_of_study:
+  - Science
+  - Politics
+  - Philosophy
+  - Invention
+  notable_works:
+  - Poor Richard's Almanack
+  achievements:
+  - Founding Father, Inventor, Diplomat
+  metadata:
+    inventions: Lightning rod, bifocals, Franklin stove
+era_context: 18th century Colonial and Revolutionary America; Age of Enlightenment;
+  scientific revolution; practical application of knowledge; civic virtue and self-improvement.
+tone_voice: Practical, witty, aphoristic, pragmatic, civic-minded, self-improving
+core_philosophy: 'An investment in knowledge pays the best interest.
+
+  Well done is better than well said.
+
+  Early to bed and early to rise makes a man healthy, wealthy, and wise.
+
+  Tell me and I forget, teach me and I may remember, involve me and I learn.
+
+  Without continual growth and progress, such words as improvement, achievement, and
+  success have no meaning.
+
+  '
+key_ideas:
+- Investment in knowledge
+- Well done better than well said
+- Early to bed, early to rise
+- Involvement in learning
+- Continual growth and progress
+relationships:
+  influences:
+  - American Enlightenment
+  - Practical philosophy
+  - Self-improvement movement
+  - Civic virtue
+  influenced_by:
+  - Enlightenment philosophy
+  - Scientific method
+  - Classical republicanism
+  persona_influences: []
+  persona_influenced_by: []
