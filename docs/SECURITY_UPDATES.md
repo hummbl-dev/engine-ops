@@ -48,16 +48,31 @@ Addressed GitHub Dependabot security alerts by updating dependencies to their la
 - **Performance**: Potential performance improvements from Uvicorn update
 - **Security**: Addressed known vulnerabilities in PyYAML and other dependencies
 
+## Additional Updates
+
+### Extension Dependencies
+
+| Package | Previous | Updated | Reason |
+|---------|----------|---------|--------|
+| esbuild | 0.25.0 | 0.25.12 | Latest patch version with bug fixes |
+
+### Dependency Constraints
+
+- **protobuf**: Kept at 5.x (5.26.1+) due to Google AI library constraint requiring `<6.0.0`
+- All other dependencies updated to latest compatible versions
+
 ## Next Steps
 
 1. Monitor GitHub Dependabot for any new alerts
 2. Consider setting up automated dependency updates via Dependabot
 3. Regular security audits (monthly recommended)
 4. Keep dependencies within supported version ranges
+5. Note: 2 moderate vulnerabilities may remain in transitive dependencies - monitor Dependabot dashboard
 
 ## Notes
 
 - CodeQL workflow still uses `actions/checkout@v4` - this is intentional as v4 is still supported and secure for CodeQL analysis
 - Python packages were updated within existing version constraints in `requirements.txt`
+- protobuf version constrained by Google AI library requirements
 - All changes have been tested and verified before commit
 
