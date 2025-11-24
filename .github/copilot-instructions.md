@@ -1,46 +1,44 @@
+
 # Copilot Instructions for engine-ops
 
-## Project Architecture
-- **Multi-agent workflow system**: Core logic in `agentic_workflow/` (Python) and `core/` (TypeScript).
-- **Agentic Workflow**: Agents collaborate via context propagation, policy enforcement, and telemetry. See `agentic_workflow/README.md` for context types and agent lifecycle.
-- **Major Python agents**: Detection, Triage, Resolution, Audit (`agentic_workflow/agents/`).
-- **Workflow orchestration**: `agentic_workflow/workflow.py` coordinates agent execution and context flow.
-- **Policy engine**: `agentic_workflow/policy.py` for runtime policy checks and escalation.
-- **Telemetry**: `agentic_workflow/telemetry.py` for structured logging, metrics, and audit trails.
-- **TypeScript engine**: `core/` implements session management, analytics, plugins, and cloud integrations.
+## Big Picture Architecture
+- **Multi-agent workflow system**: Python (`agentic_workflow/`) and TypeScript (`core/`) engines coordinate agents for detection, triage, resolution, and audit. Context flows between agents, enforcing policies and logging telemetry for full traceability.
+- **Context-first design**: All agent logic operates on a rich, multi-type `AgentContext` (see `agentic_workflow/context.py`). Key context types: Identity, State, Session, Intent, Policy, Telemetry, Knowledge, Dependencies, Annotation, Security.
+- **TypeScript core**: Implements session management, analytics, plugin support, and cloud integrations. Provider pattern and interface-driven design are used throughout (`core/README.md`).
+- **Hybrid licensing**: BSL 1.1 for core IP, Apache 2.0 for public APIs/infra. See `README.md` for boundaries and rationale.
 
 ## Developer Workflows
-- **Build TypeScript**: `npm run build` (see `package.json`).
-- **Run tests**: `npm test` for TypeScript; Python tests in `agentic_workflow/tests/` via `pytest`.
-- **Lint**: `npm run lint` for TypeScript; Python linting is not enforced by default.
-- **Run examples**: See `examples/` for usage patterns and integration demos.
-- **Kubernetes/infra**: Deployment manifests in `infra/helm/` and `infra/k8s/`.
+- **Build TypeScript**: `npm run build` (see `package.json`)
+- **Run TypeScript tests**: `npm test`
+- **Run Python tests**: `pytest agentic_workflow/tests/`
+- **Lint TypeScript**: `npm run lint`
+- **Run ML plugin examples**: See `examples/ml-plugin/README.md` for both TypeScript and Python plugin demos
+- **Kubernetes/infra**: Deploy via manifests in `infra/helm/` (Helm charts), `infra/k8s/` (raw manifests), and manage cloud infra with Terraform in `infra/terraform/`
+- **Zero-downtime deployments**: Use blue-green configs in `infra/k8s/blue-green/`
 
-## Key Conventions & Patterns
-- **Context-first design**: All agent logic operates on a rich, multi-type context object (`AgentContext`).
-- **Policy enforcement**: Always validate context against policies before agent actions.
-- **Telemetry required**: All agent lifecycle events must be logged for auditability.
-- **Error handling**: Agents use `execute(context)` for error capture and reporting.
-- **Extensibility**: Add new agents by subclassing `agent_base.py` and implementing `process(context)`.
-- **Plugins**: Extend engine via `core/plugins/` (TypeScript) or custom ML plugins in `examples/ml-plugin/`.
+## Project-Specific Conventions & Patterns
+- **Agent extensibility**: Add new agents by subclassing `agent_base.py` and implementing `process(context)`
+- **Policy enforcement**: Always validate context against policies before agent actions (`policy.py`)
+- **Telemetry required**: All agent lifecycle events must be logged (`telemetry.py`)
+- **Error handling**: Use `execute(context)` for agent error capture/reporting
+- **Plugin architecture**: Extend via `core/plugins/` (TypeScript) or custom ML plugins (`examples/ml-plugin/`)
+- **Provider pattern**: Used for AI, credentials, and cloud integrations (`core/`)
+- **Separation of concerns**: Business logic is isolated from API/infra
 
-## Integration Points
-- **External systems**: Integrate via context `DependenciesContext` and plugin interfaces.
-- **Observability**: Use telemetry hooks for distributed tracing and metrics.
-- **Policy escalation**: Register custom handlers for escalation levels in `policy.py`.
+## Integration Points & External Dependencies
+- **External systems**: Integrate via `DependenciesContext` and plugin interfaces
+- **Observability**: Use telemetry hooks for distributed tracing and Prometheus metrics (`core/observability/metrics.ts`)
+- **Policy escalation**: Register custom escalation handlers in `policy.py`
+- **Cloud infra**: Managed via Terraform (`infra/terraform/`), Helm (`infra/helm/`), and ArgoCD (`infra/argocd/`)
 
-## Examples
-- **DetectionAgent**: Finds anomalies, tags context, outputs detection metrics.
-- **TriageAgent**: Prioritizes issues, assigns resolution paths.
-- **ResolutionAgent**: Resolves issues, supports rollback and success tracking.
-- **AuditAgent**: Generates compliance audit reports.
-- **TypeScript plugins**: See `core/plugins/` and `examples/ml-plugin/typescript-example.ts`.
-
-## References
-- `agentic_workflow/README.md`: Full context and agent lifecycle details
-- `core/README.md`: Engine and plugin architecture (if present)
-- `examples/`: Usage and integration demos
-- `infra/`: Deployment and ops manifests
+## Examples & References
+- **DetectionAgent**: Finds anomalies, tags context, outputs detection metrics (`agentic_workflow/agents/detection_agent.py`)
+- **TriageAgent**: Prioritizes issues, assigns resolution paths (`agentic_workflow/agents/triage_agent.py`)
+- **ResolutionAgent**: Resolves issues, supports rollback and success tracking (`agentic_workflow/agents/resolution_agent.py`)
+- **AuditAgent**: Generates compliance audit reports (`agentic_workflow/agents/audit_agent.py`)
+- **TypeScript plugins**: See `core/plugins/` and `examples/ml-plugin/typescript-example.ts`
+- **Python plugins**: See `examples/ml-plugin/python-example.py`
+- **Docs**: `agentic_workflow/README.md`, `core/README.md`, `docs/README.md`, `infra/README.md`, `examples/ml-plugin/README.md`
 
 ---
-_If any section is unclear or missing, please provide feedback for further refinement._
+_If any section is unclear, incomplete, or missing, please provide feedback for further refinement._
