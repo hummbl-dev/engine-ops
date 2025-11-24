@@ -2,7 +2,55 @@
 
 > **Version:** v1.0  
 > **Last updated:** 2025-11-24  
-> **Changelog:** Major expansion—technical/non-technical onboarding, golden use cases, order of operations, troubleshooting, and more.
+> **Changelog:** Major expansion—technical onboarding, troubleshooting, compatibility, and product guidance.
+
+---
+
+**See also:**
+
+- [Non-Technical Overview](engine-ops-overview-non-technical.md)
+- [Onboarding Quickstart](onboarding-quickstart.md)
+- [Copilot Instructions](../.github/copilot-instructions.md)
+
+---
+
+## Limitations & Compatibility
+
+- **Operating System Support:**
+  - Engine-Ops is tested on recent macOS, Windows, and Linux releases.
+  - Older OS versions (e.g., macOS 13) may have limited support for Homebrew, Python, Terraform, and other dependencies.
+  - For unsupported systems, consider MacPorts or manual installation.
+- **Hardware Requirements:**
+  - Recommended: Multi-core CPU, 8GB+ RAM for local development; cloud or dedicated servers for production/staging.
+- **Tool Licensing & Deprecation:**
+  - Python@3.9 and open-source Terraform are deprecated; future updates may require manual management or migration to alternatives.
+  - Monitor upstream changes for critical dependencies.
+- **Troubleshooting:**
+  - See the Troubleshooting & FAQ section for common issues, version mismatches, and environment setup tips.
+
+## Onboarding Guidance
+
+- **Local Setup:**
+  1. Install Node.js, Python, Git, Helm, Terraform (see [Onboarding Quickstart](onboarding-quickstart.md)).
+  2. Clone the repo and run `npm install`, `pytest agentic_workflow/tests/`.
+  3. Validate environment with `npm run lint` and test commands.
+- **Cloud Deployment:**
+  1. Use Helm charts, Kubernetes manifests, and Terraform scripts in `infra/`.
+  2. Ensure cloud credentials and permissions are configured.
+- **Hybrid Use:**
+  1. Mix local and cloud resources; agents communicate via context propagation.
+  2. Review environment support and integration points in technical docs.
+
+## Support & Feedback
+
+- Open issues in the repository for help.
+- Community resources and technical documentation in `docs/`.
+- Feedback is welcome for onboarding and product improvements.
+
+## Learn More
+
+- See the full technical documentation for architecture, agent lifecycle, and advanced troubleshooting.
+- Explore onboarding quickstart and troubleshooting tips for smooth setup.
 
 ## Table of Contents
 
