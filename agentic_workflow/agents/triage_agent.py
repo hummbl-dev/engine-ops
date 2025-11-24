@@ -59,6 +59,12 @@ class TriageAgent(Agent):
             agent_id=self.agent_id
         )
         
+        self.telemetry.debug(
+            f"Mission: {self.instructions.mission}",
+            trace_id=context.telemetry.trace_id,
+            agent_id=self.agent_id
+        )
+        
         # Update state
         context.update_state("triaging")
         
@@ -133,7 +139,7 @@ class TriageAgent(Agent):
         context: AgentContext
     ) -> Dict[str, Any]:
         """
-        Perform triage logic on detected issues.
+        Perform triage logic on detected issues using the Neural Link (LLM).
         
         Args:
             detections: List of detected issues
@@ -142,51 +148,68 @@ class TriageAgent(Agent):
         Returns:
             Triage results with prioritization
         """
-        prioritized = []
-        critical_count = 0
+        import json
         
-        for detection in detections:
-            severity = detection.get("severity", "low")
-            confidence = detection.get("confidence", 0.5)
-            
-            # Calculate priority score
-            severity_weight = self.severity_weights.get(severity, 1)
-            priority_score = severity_weight * confidence
-            
-            # Determine priority level
-            if priority_score >= 9:
-                priority = "critical"
-                critical_count += 1
-            elif priority_score >= 6:
-                priority = "high"
-            elif priority_score >= 3:
-                priority = "normal"
-            else:
-                priority = "low"
-            
-            # Assign resolution path
-            resolution_path = self._assign_resolution_path(detection, priority)
-            
-            # Create triage entry
-            triage_entry = {
-                **detection,
-                "priority": priority,
-                "priority_score": priority_score,
-                "resolution_path": resolution_path,
-                "triaged_at": context.temporal.start_time.isoformat()
-            }
-            
-            prioritized.append(triage_entry)
+        prompt = """
+        Review the detected issues and prioritize them for resolution.
         
-        # Sort by priority score (descending)
-        prioritized.sort(key=lambda x: x["priority_score"], reverse=True)
-        
-        return {
-            "prioritized": prioritized,
-            "critical_count": critical_count,
-            "requires_immediate_action": critical_count > 0,
-            "total_triaged": len(detections)
+        Return a JSON object with the following structure:
+        {
+            "prioritized": [
+                {
+                    ... (original issue fields) ...
+                    "priority": "low" | "normal" | "high" | "critical",
+                    "priority_score": (float 0-10),
+                    "resolution_path": "immediate_escalation" | "resource_optimization" | "error_mitigation" | "priority_queue" | "standard_queue"
+                }
+            ],
+            "critical_count": (int),
+            "requires_immediate_action": (bool)
         }
+        
+        Do not include markdown formatting (```json) in your response, just the raw JSON string.
+        """
+        
+        response = self.ask_brain(prompt, detections)
+        
+        try:
+            # Clean up response if it contains markdown
+            cleaned_response = response.strip()
+            if cleaned_response.startswith("```json"):
+                cleaned_response = cleaned_response[7:]
+            if cleaned_response.endswith("```"):
+                cleaned_response = cleaned_response[:-3]
+            
+            result = json.loads(cleaned_response.strip())
+            
+            # Ensure prioritized list exists
+            if "prioritized" not in result:
+                result["prioritized"] = []
+                
+            # Add triaged_at timestamp
+            for item in result["prioritized"]:
+                item["triaged_at"] = context.temporal.start_time.isoformat()
+                
+            result["total_triaged"] = len(detections)
+            return result
+            
+        except json.JSONDecodeError:
+            self.telemetry.error(f"Failed to parse LLM triage response: {response}", agent_id=self.agent_id)
+            # Fallback to empty result
+            return {
+                "prioritized": [],
+                "critical_count": 0,
+                "requires_immediate_action": False,
+                "total_triaged": len(detections)
+            }
+        except Exception as e:
+            self.telemetry.error(f"Error in triage analysis: {e}", agent_id=self.agent_id)
+            return {
+                "prioritized": [],
+                "critical_count": 0,
+                "requires_immediate_action": False,
+                "total_triaged": len(detections)
+            }
     
     def _assign_resolution_path(
         self,

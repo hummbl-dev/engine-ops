@@ -24,7 +24,7 @@ state, session, intent, policy, telemetry, and more.
 
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 
@@ -51,8 +51,8 @@ class StateContext:
 class SessionContext:
     """Session-level tracking information."""
     session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    last_updated: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_updated: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     ttl_seconds: Optional[int] = 3600
     attributes: Dict[str, Any] = field(default_factory=dict)
 
@@ -137,7 +137,7 @@ class ResourceContext:
 @dataclass
 class TemporalContext:
     """Temporal information and scheduling."""
-    start_time: datetime = field(default_factory=datetime.utcnow)
+    start_time: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     deadline: Optional[datetime] = None
     estimated_duration_seconds: Optional[int] = None
     timezone: str = "UTC"
@@ -203,18 +203,18 @@ class AgentContext:
         self.state.state_history.append({
             "from_state": self.state.current_state,
             "to_state": new_state,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "metadata": metadata or {}
         })
         self.state.previous_state = self.state.current_state
         self.state.current_state = new_state
-        self.session.last_updated = datetime.utcnow()
+        self.session.last_updated = datetime.now(timezone.utc)
     
     def add_telemetry_event(self, event_type: str, event_data: Dict[str, Any]) -> None:
         """Add a telemetry event for tracking."""
         self.telemetry.events.append({
             "type": event_type,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "data": event_data
         })
     

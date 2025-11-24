@@ -76,6 +76,12 @@ class DetectionAgent(Agent):
             agent_id=self.agent_id
         )
         
+        self.telemetry.debug(
+            f"Mission: {self.instructions.mission}",
+            trace_id=context.telemetry.trace_id,
+            agent_id=self.agent_id
+        )
+        
         # Update state
         context.update_state("detecting")
         
@@ -131,7 +137,7 @@ class DetectionAgent(Agent):
     
     def _detect_issues(self, data: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
-        Perform actual detection logic.
+        Perform actual detection logic using the Neural Link (LLM).
         
         Args:
             data: Input data to analyze
@@ -139,53 +145,45 @@ class DetectionAgent(Agent):
         Returns:
             List of detected issues
         """
-        detections = []
+        import json
+        import re
         
-        # Check for high error rate
-        error_rate = data.get("error_rate", 0.0)
-        if error_rate > 0.05:
-            detections.append({
-                "rule_id": "high_error_rate",
-                "name": "High Error Rate Detected",
-                "severity": "high",
-                "confidence": 0.9,
-                "details": {
-                    "error_rate": error_rate,
-                    "threshold": 0.05
-                }
-            })
+        prompt = """
+        Analyze the provided input data for any anomalies, errors, security threats, or resource exhaustion issues.
         
-        # Check for resource exhaustion
-        resource_usage = data.get("resource_usage", {})
-        for resource, usage in resource_usage.items():
-            if isinstance(usage, (int, float)) and usage > 0.90:
-                detections.append({
-                    "rule_id": "resource_exhaustion",
-                    "name": f"Resource Exhaustion: {resource}",
-                    "severity": "critical",
-                    "confidence": 0.95,
-                    "details": {
-                        "resource": resource,
-                        "usage": usage,
-                        "threshold": 0.90
-                    }
-                })
+        Return a JSON array of detected issues. Each issue object must have:
+        - rule_id: A short identifier (e.g., "high_error_rate")
+        - name: A human-readable name
+        - severity: "low", "medium", "high", or "critical"
+        - confidence: A float between 0.0 and 1.0
+        - details: A dictionary of supporting evidence
         
-        # Check for anomalous patterns
-        metrics = data.get("metrics", {})
-        for metric_name, metric_value in metrics.items():
-            if isinstance(metric_value, (int, float)):
-                # Simplified anomaly detection (would be more sophisticated in production)
-                if metric_value < -100 or metric_value > 1000:
-                    detections.append({
-                        "rule_id": "anomalous_pattern",
-                        "name": f"Anomalous Pattern: {metric_name}",
-                        "severity": "medium",
-                        "confidence": 0.7,
-                        "details": {
-                            "metric": metric_name,
-                            "value": metric_value
-                        }
-                    })
+        If no issues are found, return an empty array [].
+        Do not include markdown formatting (```json) in your response, just the raw JSON string.
+        """
         
-        return detections
+        response = self.ask_brain(prompt, data)
+        
+        try:
+            # Clean up response if it contains markdown
+            cleaned_response = response.strip()
+            if cleaned_response.startswith("```json"):
+                cleaned_response = cleaned_response[7:]
+            if cleaned_response.endswith("```"):
+                cleaned_response = cleaned_response[:-3]
+            
+            detections = json.loads(cleaned_response.strip())
+            
+            # Validate structure (basic check)
+            if not isinstance(detections, list):
+                self.telemetry.warning("LLM returned non-list detection result", agent_id=self.agent_id)
+                return []
+                
+            return detections
+            
+        except json.JSONDecodeError:
+            self.telemetry.error(f"Failed to parse LLM detection response: {response}", agent_id=self.agent_id)
+            return []
+        except Exception as e:
+            self.telemetry.error(f"Error in detection analysis: {e}", agent_id=self.agent_id)
+            return []

@@ -1,5 +1,10 @@
 import yaml
-from engine.core import SovereignEngine
+from engine.core import SovereignEngine, workflow_executions, active_workflows
+from prometheus_client import Histogram
+
+# Workflow-specific metrics
+workflow_step_duration = Histogram('workflow_step_duration_seconds', 'Time per workflow step', ['step_type'])
+files_generated = Histogram('files_generated_bytes', 'Size of files written to workspace')
 
 # The SVM (State Vector Machine)
 class WorkflowExecutor:
@@ -49,6 +54,13 @@ class WorkflowExecutor:
         return self.engine.process_signal(step['provider'], step['prompt'], context)
 
     def execute_workflow(self, workflow_yaml, context=""):
+        active_workflows.inc()
+        try:
+            return self._execute_workflow_impl(workflow_yaml, context)
+        finally:
+            active_workflows.dec()
+    
+    def _execute_workflow_impl(self, workflow_yaml, context=""):
         spec = yaml.safe_load(workflow_yaml)
         for step in spec['steps']:
             result = self.execute_step(step, context)

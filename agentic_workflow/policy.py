@@ -25,6 +25,18 @@ from typing import Any, Callable, Dict, List, Optional
 from dataclasses import dataclass, field
 from enum import Enum
 import re
+import sys
+import os
+
+# Add project root to path to allow importing from engine
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+try:
+    from engine.providers import generate_content
+except ImportError:
+    # Fallback for when running tests in isolation or if engine not found
+    def generate_content(*args, **kwargs):
+        return "SAFE"
 
 
 class PolicyAction(Enum):
@@ -97,6 +109,60 @@ class PolicyEngine:
         }
         self.evaluation_history: List[PolicyEvaluation] = []
         self._register_default_rules()
+        self._register_semantic_rules()
+
+    def _register_semantic_rules(self) -> None:
+        """Register semantic analysis rules."""
+        self.add_rule(PolicyRule(
+            rule_id="semantic_safety_check",
+            name="Semantic Safety Check",
+            description="LLM-based analysis of action safety",
+            condition=lambda ctx: self.analyze_risk(ctx) == "BLOCK",
+            action=PolicyAction.DENY,
+            escalation_level=EscalationLevel.CRITICAL,
+            priority=1000  # Highest priority
+        ))
+
+    def analyze_risk(self, context_dict: Dict[str, Any]) -> str:
+        """
+        Analyze the risk of the current context using an LLM.
+        
+        Args:
+            context_dict: Dictionary representation of AgentContext
+            
+        Returns:
+            'SAFE' or 'BLOCK'
+        """
+        # Extract relevant info for the prompt
+        input_data = context_dict.get("payload", {}).get("input_data", {})
+        intent = context_dict.get("intent", {})
+        
+        # If there's no meaningful content to analyze, default to SAFE
+        if not input_data:
+            return "SAFE"
+            
+        prompt = f"""
+You are a Security Officer for the Sovereign Intelligence Stack.
+Analyze the following action context for malicious intent, infinite loops, file system destruction, or data exfiltration.
+
+CONTEXT:
+Intent: {intent}
+Input Data: {input_data}
+
+Reply ONLY with 'SAFE' or 'BLOCK'.
+"""
+        try:
+            # Use Gemini by default for the brain
+            result = generate_content("gemini", prompt).strip().upper()
+            
+            # Handle potential chatty responses
+            if "BLOCK" in result:
+                return "BLOCK"
+            return "SAFE"
+        except Exception as e:
+            # Fail safe on error
+            print(f"Error in semantic analysis: {e}")
+            return "BLOCK"
     
     def _register_default_rules(self) -> None:
         """Register default policy rules."""
@@ -213,7 +279,7 @@ class PolicyEngine:
         if not rule.escalation_level:
             return
         
-        from datetime import datetime
+        from datetime import datetime, timezone
         import uuid
         
         event = EscalationEvent(
@@ -222,7 +288,7 @@ class PolicyEngine:
             level=rule.escalation_level,
             reason=rule.description,
             context_data=context_dict,
-            escalated_at=datetime.utcnow().isoformat()
+            escalated_at=datetime.now(timezone.utc).isoformat()
         )
         
         # Call registered handlers

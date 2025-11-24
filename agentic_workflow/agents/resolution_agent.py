@@ -83,6 +83,12 @@ class ResolutionAgent(Agent):
             agent_id=self.agent_id
         )
         
+        self.telemetry.debug(
+            f"Mission: {self.instructions.mission}",
+            trace_id=context.telemetry.trace_id,
+            agent_id=self.agent_id
+        )
+        
         # Update state
         context.update_state("resolving")
         
@@ -162,7 +168,7 @@ class ResolutionAgent(Agent):
         context: AgentContext
     ) -> Dict[str, Any]:
         """
-        Perform resolution logic on issues.
+        Perform resolution logic on issues using the Neural Link (LLM).
         
         Args:
             issues: List of prioritized issues
@@ -171,51 +177,80 @@ class ResolutionAgent(Agent):
         Returns:
             Resolution results
         """
-        resolved = []
-        failed = []
+        import json
         
-        for issue in issues:
-            resolution_path = issue.get("resolution_path", "standard_queue")
-            strategy = self.resolution_strategies.get(resolution_path)
-            
-            if not strategy:
-                failed.append({
-                    **issue,
-                    "resolution_status": "failed",
-                    "failure_reason": "Unknown resolution path"
-                })
-                continue
-            
-            # Attempt resolution
-            success, result = self._apply_resolution_strategy(issue, strategy, context)
-            
-            if success:
-                resolved.append({
-                    **issue,
+        prompt = """
+        Determine the best resolution action for each issue.
+        
+        Return a JSON object with the following structure:
+        {
+            "resolved": [
+                {
+                    ... (original issue fields) ...
                     "resolution_status": "resolved",
-                    "resolution_action": strategy["action"],
-                    "resolution_details": result
-                })
-            else:
-                failed.append({
-                    **issue,
+                    "resolution_action": (string describing action taken),
+                    "resolution_details": (string details)
+                }
+            ],
+            "failed": [
+                {
+                    ... (original issue fields) ...
                     "resolution_status": "failed",
-                    "resolution_action": strategy["action"],
-                    "failure_reason": result
-                })
-        
-        resolved_count = len(resolved)
-        failed_count = len(failed)
-        total = resolved_count + failed_count
-        success_rate = resolved_count / total if total > 0 else 0.0
-        
-        return {
-            "resolved": resolved,
-            "failed": failed,
-            "resolved_count": resolved_count,
-            "failed_count": failed_count,
-            "success_rate": success_rate
+                    "resolution_action": (string attempted action),
+                    "failure_reason": (string reason)
+                }
+            ]
         }
+        
+        Do not include markdown formatting (```json) in your response, just the raw JSON string.
+        """
+        
+        response = self.ask_brain(prompt, issues)
+        
+        try:
+            # Clean up response if it contains markdown
+            cleaned_response = response.strip()
+            if cleaned_response.startswith("```json"):
+                cleaned_response = cleaned_response[7:]
+            if cleaned_response.endswith("```"):
+                cleaned_response = cleaned_response[:-3]
+            
+            result = json.loads(cleaned_response.strip())
+            
+            resolved = result.get("resolved", [])
+            failed = result.get("failed", [])
+            
+            resolved_count = len(resolved)
+            failed_count = len(failed)
+            total = resolved_count + failed_count
+            success_rate = resolved_count / total if total > 0 else 0.0
+            
+            return {
+                "resolved": resolved,
+                "failed": failed,
+                "resolved_count": resolved_count,
+                "failed_count": failed_count,
+                "success_rate": success_rate
+            }
+            
+        except json.JSONDecodeError:
+            self.telemetry.error(f"Failed to parse LLM resolution response: {response}", agent_id=self.agent_id)
+            return {
+                "resolved": [],
+                "failed": [],
+                "resolved_count": 0,
+                "failed_count": 0,
+                "success_rate": 0.0
+            }
+        except Exception as e:
+            self.telemetry.error(f"Error in resolution analysis: {e}", agent_id=self.agent_id)
+            return {
+                "resolved": [],
+                "failed": [],
+                "resolved_count": 0,
+                "failed_count": 0,
+                "success_rate": 0.0
+            }
     
     def _apply_resolution_strategy(
         self,

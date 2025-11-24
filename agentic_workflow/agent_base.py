@@ -22,9 +22,24 @@ Provides abstract base class for all agents in the workflow system.
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Any
+import json
+import os
+import sys
+
+# Add project root to path to allow importing from engine
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+try:
+    from engine.providers import generate_content
+except ImportError:
+    # Fallback
+    def generate_content(*args, **kwargs):
+        return "ERROR: Engine not found"
+
 from .context import AgentContext
 from .telemetry import TelemetryCollector, EventType, get_telemetry_collector
+from .instructions import SystemPrompt, get_instructions
 
 
 class Agent(ABC):
@@ -49,6 +64,69 @@ class Agent(ABC):
         """
         self.agent_id = agent_id
         self.telemetry = telemetry or get_telemetry_collector()
+        self._instructions: Optional[SystemPrompt] = None
+
+    @property
+    def instructions(self) -> SystemPrompt:
+        """Get the instructions for this agent."""
+        if self._instructions is None:
+            # Default to looking up by agent_id/type if not set
+            # In a real system, we might map agent_id to a specific type
+            # For now, we assume agent_id might contain the type or we use a default mapping
+            # We'll try to match the class name to a registry key if possible, or use agent_id
+            
+            # Simple heuristic: check if agent_id matches a known key
+            self._instructions = get_instructions(self.agent_id)
+            
+            # If default returned and agent_id didn't match, try class name mapping
+            # (This is a simplification for the demo)
+            if self._instructions.name == "Generic Agent":
+                # Try to map "DetectionAgent" -> "detection_agent"
+                class_name = self.__class__.__name__
+                if "Detection" in class_name:
+                    self._instructions = get_instructions("detection_agent")
+                elif "Triage" in class_name:
+                    self._instructions = get_instructions("triage_agent")
+                elif "Resolution" in class_name:
+                    self._instructions = get_instructions("resolution_agent")
+                elif "Audit" in class_name:
+                    self._instructions = get_instructions("audit_agent")
+        
+        return self._instructions
+
+    def get_system_prompt(self) -> str:
+        """Get the formatted system prompt for this agent."""
+        return self.instructions.to_prompt_string()
+
+    def ask_brain(self, prompt: str, context_data: Any = None) -> str:
+        """
+        Query the LLM (Neural Link) for a decision or analysis.
+        
+        Args:
+            prompt: The specific prompt for this request
+            context_data: Optional data to include in the context
+            
+        Returns:
+            The LLM's response text
+        """
+        system_prompt = self.get_system_prompt()
+        
+        full_prompt = f"""
+{system_prompt}
+
+# CONTEXT DATA
+{json.dumps(context_data, default=str, indent=2) if context_data else "No additional context"}
+
+# INSTRUCTION
+{prompt}
+"""
+        try:
+            # Use Gemini by default
+            response = generate_content("gemini", full_prompt)
+            return response
+        except Exception as e:
+            self.telemetry.error(f"Neural Link failure: {e}", agent_id=self.agent_id)
+            return f"ERROR: {str(e)}"
     
     @abstractmethod
     def process(self, context: AgentContext) -> AgentContext:
@@ -88,6 +166,15 @@ class Agent(ABC):
             agent_type=self.__class__.__name__
         )
         
+        # Add to context
+        context.add_telemetry_event(
+            EventType.AGENT_START.value,
+            {
+                "agent_id": self.agent_id,
+                "agent_type": self.__class__.__name__
+            }
+        )
+        
         self.telemetry.info(
             f"Agent {self.agent_id} starting execution",
             trace_id=context.telemetry.trace_id,
@@ -111,6 +198,15 @@ class Agent(ABC):
                 agent_type=self.__class__.__name__
             )
             
+            # Add to context
+            updated_context.add_telemetry_event(
+                EventType.AGENT_COMPLETE.value,
+                {
+                    "agent_id": self.agent_id,
+                    "agent_type": self.__class__.__name__
+                }
+            )
+            
             self.telemetry.info(
                 f"Agent {self.agent_id} completed successfully",
                 trace_id=updated_context.telemetry.trace_id,
@@ -130,6 +226,17 @@ class Agent(ABC):
                 agent_type=self.__class__.__name__,
                 error_type=type(e).__name__,
                 error_message=str(e)
+            )
+            
+            # Add to context
+            context.add_telemetry_event(
+                EventType.AGENT_ERROR.value,
+                {
+                    "agent_id": self.agent_id,
+                    "agent_type": self.__class__.__name__,
+                    "error_type": type(e).__name__,
+                    "error_message": str(e)
+                }
             )
             
             self.telemetry.error(

@@ -23,7 +23,7 @@ Provides auditable logging and telemetry tracking for agent operations.
 
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 import json
 
@@ -119,7 +119,7 @@ class TelemetryCollector:
             **metadata: Additional key-value metadata
         """
         entry = LogEntry(
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             level=level,
             message=message,
             trace_id=trace_id,
@@ -185,7 +185,7 @@ class TelemetryCollector:
         event = TelemetryEvent(
             event_id=str(uuid.uuid4()),
             event_type=event_type,
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             trace_id=trace_id,
             span_id=span_id,
             agent_id=agent_id,
@@ -228,7 +228,7 @@ class TelemetryCollector:
         metric = MetricPoint(
             metric_name=metric_name,
             value=value,
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             unit=unit,
             tags=tags
         )
@@ -335,7 +335,7 @@ class TelemetryCollector:
         
         return {
             "trace_id": trace_id,
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "summary": {
                 "total_logs": len(trace_logs),
                 "total_events": len(trace_events),

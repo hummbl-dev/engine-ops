@@ -1,0 +1,172 @@
+{
+  "audit_id": "39e59b37-3a7d-498f-abb1-2a0afd69e7f3",
+  "trace_id": "38ed1cda-26fd-4d47-b794-04751b02c24a",
+  "session_id": "4599e475-2224-4911-80b9-8d82daa7d0ed",
+  "generated_at": "2025-11-24T03:35:24.756759+00:00",
+  "workflow_info": {
+    "start_time": "2025-11-24T03:35:24.753734+00:00",
+    "end_time": "2025-11-24T03:35:24.756759+00:00",
+    "duration_seconds": 0.003025,
+    "initial_state": "initialized",
+    "final_state": "auditing",
+    "state_transitions": 7
+  },
+  "identity_info": {
+    "agent_id": "audit_agent",
+    "user_id": "admin_user",
+    "organization_id": "hummbl_corp",
+    "role": "compliance_officer"
+  },
+  "execution_summary": {
+    "detections": 0,
+    "resolved": 0,
+    "failed": 0,
+    "total_events": 7,
+    "status": "completed_no_action"
+  },
+  "security_info": {
+    "data_classification": "confidential",
+    "encryption_required": true,
+    "audit_required": true
+  },
+  "compliance_status": "compliant",
+  "state_history": [
+    {
+      "from_state": "initialized",
+      "to_state": "detecting",
+      "timestamp": "2025-11-24T03:35:24.755253+00:00",
+      "metadata": {}
+    },
+    {
+      "from_state": "detecting",
+      "to_state": "detection_complete",
+      "timestamp": "2025-11-24T03:35:24.755286+00:00",
+      "metadata": {
+        "detections": 0
+      }
+    },
+    {
+      "from_state": "detection_complete",
+      "to_state": "triaging",
+      "timestamp": "2025-11-24T03:35:24.755817+00:00",
+      "metadata": {}
+    },
+    {
+      "from_state": "triaging",
+      "to_state": "triage_complete",
+      "timestamp": "2025-11-24T03:35:24.755843+00:00",
+      "metadata": {
+        "triaged": 0
+      }
+    },
+    {
+      "from_state": "triage_complete",
+      "to_state": "resolving",
+      "timestamp": "2025-11-24T03:35:24.756297+00:00",
+      "metadata": {}
+    },
+    {
+      "from_state": "resolving",
+      "to_state": "resolution_complete",
+      "timestamp": "2025-11-24T03:35:24.756319+00:00",
+      "metadata": {
+        "resolved": 0
+      }
+    },
+    {
+      "from_state": "resolution_complete",
+      "to_state": "auditing",
+      "timestamp": "2025-11-24T03:35:24.756752+00:00",
+      "metadata": {}
+    },
+    {
+      "from_state": "auditing",
+      "to_state": "audit_complete",
+      "timestamp": "2025-11-24T03:35:24.756826+00:00",
+      "metadata": {
+        "audit_id": "39e59b37-3a7d-498f-abb1-2a0afd69e7f3"
+      }
+    },
+    {
+      "from_state": "audit_complete",
+      "to_state": "workflow_complete",
+      "timestamp": "2025-11-24T03:35:24.757336+00:00",
+      "metadata": {}
+    }
+  ],
+  "telemetry_events": [
+    {
+      "type": "agent_start",
+      "timestamp": "2025-11-24T03:35:24.755138+00:00",
+      "data": {
+        "agent_id": "detection_agent",
+        "agent_type": "DetectionAgent"
+      }
+    },
+    {
+      "type": "agent_complete",
+      "timestamp": "2025-11-24T03:35:24.755362+00:00",
+      "data": {
+        "agent_id": "detection_agent",
+        "agent_type": "DetectionAgent"
+      }
+    },
+    {
+      "type": "agent_start",
+      "timestamp": "2025-11-24T03:35:24.755749+00:00",
+      "data": {
+        "agent_id": "triage_agent",
+        "agent_type": "TriageAgent"
+      }
+    },
+    {
+      "type": "agent_complete",
+      "timestamp": "2025-11-24T03:35:24.755877+00:00",
+      "data": {
+        "agent_id": "triage_agent",
+        "agent_type": "TriageAgent"
+      }
+    },
+    {
+      "type": "agent_start",
+      "timestamp": "2025-11-24T03:35:24.756238+00:00",
+      "data": {
+        "agent_id": "resolution_agent",
+        "agent_type": "ResolutionAgent"
+      }
+    },
+    {
+      "type": "agent_complete",
+      "timestamp": "2025-11-24T03:35:24.756346+00:00",
+      "data": {
+        "agent_id": "resolution_agent",
+        "agent_type": "ResolutionAgent"
+      }
+    },
+    {
+      "type": "agent_start",
+      "timestamp": "2025-11-24T03:35:24.756691+00:00",
+      "data": {
+        "agent_id": "audit_agent",
+        "agent_type": "AuditAgent"
+      }
+    },
+    {
+      "type": "agent_complete",
+      "timestamp": "2025-11-24T03:35:24.756882+00:00",
+      "data": {
+        "agent_id": "audit_agent",
+        "agent_type": "AuditAgent"
+      }
+    }
+  ],
+  "annotations": {
+    "tags": [
+      "audited"
+    ],
+    "labels": {
+      "audit_status": "completed"
+    },
+    "categories": []
+  }
+}

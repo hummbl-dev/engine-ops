@@ -1,7 +1,52 @@
 import * as vscode from 'vscode';
+import * as http from 'http';
 
 // Engine URL - can be configured via VS Code settings
 const ENGINE_URL = vscode.workspace.getConfiguration('hummbl').get<string>('engineUrl') || 'http://localhost:8080';
+
+// Helper function to make HTTP requests (using Node's built-in http module)
+function httpRequest(url: string, options: { method: string; headers: Record<string, string>; body: string }): Promise<{ status: number; statusText: string; data: any }> {
+    return new Promise((resolve, reject) => {
+        const urlObj = new URL(url);
+        const requestOptions = {
+            hostname: urlObj.hostname,
+            port: urlObj.port || (urlObj.protocol === 'https:' ? 443 : 80),
+            path: urlObj.pathname,
+            method: options.method,
+            headers: options.headers
+        };
+
+        const req = http.request(requestOptions, (res) => {
+            let data = '';
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+            res.on('end', () => {
+                try {
+                    const jsonData = JSON.parse(data);
+                    resolve({
+                        status: res.statusCode || 500,
+                        statusText: res.statusMessage || '',
+                        data: jsonData
+                    });
+                } catch (e) {
+                    resolve({
+                        status: res.statusCode || 500,
+                        statusText: res.statusMessage || '',
+                        data: { error: data }
+                    });
+                }
+            });
+        });
+
+        req.on('error', (error) => {
+            reject(error);
+        });
+
+        req.write(options.body);
+        req.end();
+    });
+}
 
 export async function activate(context: vscode.ExtensionContext) {
     // Register chat participant
@@ -67,7 +112,7 @@ Do not include any explanation or markdown formatting, only the JSON object.`
                 }
 
                 // Call the engine directly via HTTP
-                const response = await fetch(`${ENGINE_URL}/consult`, {
+                const response = await httpRequest(`${ENGINE_URL}/consult`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -76,11 +121,11 @@ Do not include any explanation or markdown formatting, only the JSON object.`
                     })
                 });
 
-                if (!response.ok) {
+                if (response.status !== 200) {
                     throw new Error(`Engine responded with status ${response.status}: ${response.statusText}`);
                 }
 
-                const data = await response.json();
+                const data = response.data;
                 
                 // Format the response nicely
                 const advice = data.advice || 'No advice received';
@@ -88,9 +133,13 @@ Do not include any explanation or markdown formatting, only the JSON object.`
                 
                 return new vscode.ChatResponse(advice);
             } catch (error: any) {
+                // Log error for debugging
+                console.error('[HUMMBL Extension] Error:', error);
+                vscode.window.showErrorMessage(`HUMMBL Extension Error: ${error?.message || error}`);
+                
                 // Fallback: try direct call with Sun Tzu
                 try {
-                    const response = await fetch(`${ENGINE_URL}/consult`, {
+                    const response = await httpRequest(`${ENGINE_URL}/consult`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -99,14 +148,14 @@ Do not include any explanation or markdown formatting, only the JSON object.`
                         })
                     });
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        return new vscode.ChatResponse(data.advice || 'No advice received');
+                    if (response.status === 200) {
+                        return new vscode.ChatResponse(response.data.advice || 'No advice received');
                     } else {
-                        return new vscode.ChatResponse(`Error: Engine returned status ${response.status}. Make sure the engine is running at ${ENGINE_URL}`);
+                        return new vscode.ChatResponse(`Error: Engine returned status ${response.status}. Make sure the engine is running at ${ENGINE_URL}. Original error: ${error?.message || error}`);
                     }
                 } catch (fallbackError: any) {
-                    return new vscode.ChatResponse(`Error consulting council: ${error?.message || error}. Make sure the engine is running at ${ENGINE_URL}`);
+                    console.error('[HUMMBL Extension] Fallback error:', fallbackError);
+                    return new vscode.ChatResponse(`Error consulting council: ${error?.message || error}. Make sure the engine is running at ${ENGINE_URL}. Connection error: ${fallbackError?.message || fallbackError}`);
                 }
             }
         }

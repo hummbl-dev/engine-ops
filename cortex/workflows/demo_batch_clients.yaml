@@ -1,0 +1,123 @@
+name: "Batch API Client Generation Demo"
+description: "Generate 10 API client classes in one workflow - proving scale capability"
+
+steps:
+  - id: generate_user_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles User operations.
+      Include methods for: get_user(id), list_users(), create_user(data), update_user(id, data), delete_user(id).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_user_client
+    action: write
+    filename: "api_clients/user_client.py"
+    input_from: generate_user_client
+
+  - id: generate_post_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Post/Blog operations.
+      Include methods for: get_post(id), list_posts(), create_post(data), update_post(id, data), delete_post(id).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_post_client
+    action: write
+    filename: "api_clients/post_client.py"
+    input_from: generate_post_client
+
+  - id: generate_comment_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Comment operations.
+      Include methods for: get_comment(id), list_comments(), create_comment(data), delete_comment(id).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_comment_client
+    action: write
+    filename: "api_clients/comment_client.py"
+    input_from: generate_comment_client
+
+  - id: generate_product_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Product/Inventory operations.
+      Include methods for: get_product(id), list_products(), search_products(query), update_stock(id, quantity).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_product_client
+    action: write
+    filename: "api_clients/product_client.py"
+    input_from: generate_product_client
+
+  - id: generate_order_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Order operations.
+      Include methods for: get_order(id), list_orders(), create_order(data), cancel_order(id), get_order_status(id).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_order_client
+    action: write
+    filename: "api_clients/order_client.py"
+    input_from: generate_order_client
+
+  - id: generate_payment_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Payment operations.
+      Include methods for: process_payment(data), refund_payment(id), get_payment_status(id).
+      Use requests library. Include docstrings and error handling. Return ONLY code, NO markdown.
+      
+  - id: save_payment_client
+    action: write
+    filename: "api_clients/payment_client.py"
+    input_from: generate_payment_client
+
+  - id: generate_auth_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Authentication operations.
+      Include methods for: login(username, password), logout(), refresh_token(), verify_token(token).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_auth_client
+    action: write
+    filename: "api_clients/auth_client.py"
+    input_from: generate_auth_client
+
+  - id: generate_analytics_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Analytics/Metrics operations.
+      Include methods for: get_daily_stats(), get_user_metrics(user_id), get_revenue_report(start_date, end_date).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_analytics_client
+    action: write
+    filename: "api_clients/analytics_client.py"
+    input_from: generate_analytics_client
+
+  - id: generate_notification_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles Notification operations.
+      Include methods for: send_email(to, subject, body), send_sms(phone, message), send_push(user_id, message).
+      Use requests library. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_notification_client
+    action: write
+    filename: "api_clients/notification_client.py"
+    input_from: generate_notification_client
+
+  - id: generate_file_client
+    provider: gemini
+    prompt: |
+      Generate a Python class for a REST API client that handles File/Upload operations.
+      Include methods for: upload_file(file_path), download_file(file_id), delete_file(file_id), list_files().
+      Use requests library with multipart upload support. Include docstrings. Return ONLY code, NO markdown.
+      
+  - id: save_file_client
+    action: write
+    filename: "api_clients/file_client.py"
+    input_from: generate_file_client

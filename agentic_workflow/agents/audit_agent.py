@@ -22,7 +22,7 @@ Creates comprehensive audit trails and compliance records.
 """
 
 from typing import Any, Dict, List
-from datetime import datetime
+from datetime import datetime, timezone
 from ..agent_base import Agent
 from ..context import AgentContext
 
@@ -50,6 +50,12 @@ class AuditAgent(Agent):
         """
         self.telemetry.info(
             "Starting audit process",
+            trace_id=context.telemetry.trace_id,
+            agent_id=self.agent_id
+        )
+        
+        self.telemetry.debug(
+            f"Mission: {self.instructions.mission}",
             trace_id=context.telemetry.trace_id,
             agent_id=self.agent_id
         )
@@ -120,7 +126,7 @@ class AuditAgent(Agent):
         
         # Calculate workflow duration
         start_time = context.temporal.start_time
-        end_time = datetime.utcnow()
+        end_time = datetime.now(timezone.utc)
         duration_seconds = (end_time - start_time).total_seconds()
         
         # Collect state transitions
@@ -211,7 +217,7 @@ class AuditAgent(Agent):
                 "policy_id": policy,
                 "audit_id": audit_report["audit_id"],
                 "compliance_status": "compliant",
-                "checked_at": datetime.utcnow().isoformat(),
+                "checked_at": datetime.now(timezone.utc).isoformat(),
                 "details": {
                     "workflow_status": audit_report["execution_summary"]["status"],
                     "security_classification": context.security.data_classification
@@ -224,7 +230,7 @@ class AuditAgent(Agent):
                 "requirement_id": requirement,
                 "audit_id": audit_report["audit_id"],
                 "compliance_status": "compliant",
-                "checked_at": datetime.utcnow().isoformat(),
+                "checked_at": datetime.now(timezone.utc).isoformat(),
                 "details": {
                     "audit_trail_complete": True,
                     "telemetry_events_recorded": len(context.telemetry.events)
@@ -237,7 +243,7 @@ class AuditAgent(Agent):
                 "record_type": "security_audit",
                 "audit_id": audit_report["audit_id"],
                 "compliance_status": "compliant",
-                "checked_at": datetime.utcnow().isoformat(),
+                "checked_at": datetime.now(timezone.utc).isoformat(),
                 "details": {
                     "data_classification": context.security.data_classification,
                     "encryption_required": context.security.encryption_required,

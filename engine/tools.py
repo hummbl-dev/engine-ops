@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 import logging
+from prometheus_client import Histogram
+
+files_generated_bytes = Histogram('files_generated_bytes', 'Size of AI-generated files written')
 
 # Workspace root inside the container (mounted volume)
 WORKSPACE_ROOT = Path(os.getenv("WORKSPACE_ROOT", "/app/cortex/workspace"))
@@ -24,5 +27,9 @@ def write_to_workspace(filename: str, content: str) -> str:
     # Ensure parent directories exist
     path.parent.mkdir(parents=True, exist_ok=True)
     logger.info(f"Writing to workspace: {path} (size {len(content)} bytes)")
+    
+    # Track metrics
+    files_generated_bytes.observe(len(content))
+    
     path.write_text(content, encoding="utf-8")
     return str(path)
