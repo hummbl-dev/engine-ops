@@ -2,7 +2,8 @@
 
 **Date:** 2025-01-27  
 **Status:** 🟢 OPERATIONAL  
-**Version:** 1.0 (Schema-Based)
+**Version:** 1.0 (Schema-Based)  
+**Last Security Update:** 2025-01-27
 
 ---
 
@@ -234,7 +235,8 @@ loader.query(nationality="Polish-French")
 - ⚠️ 7 dependency vulnerabilities detected (non-critical)
 
 ### Recommendations
-- Review and update dependencies
+- ✅ Dependencies updated (FastAPI, Uvicorn, PyYAML, ESLint, esbuild)
+- ⚠️ 2 moderate transitive vulnerabilities remain (investigate via GitHub dashboard)
 - Add input sanitization for queries
 - Consider rate limiting for API
 
