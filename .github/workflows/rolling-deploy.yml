@@ -35,7 +35,10 @@ jobs:
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    # Temporarily disabled - requires K8s cluster access (KUBECONFIG secrets)
+    # NOTE: Enable this job after configuring KUBECONFIG secrets in GitHub
+    # Required secrets: KUBECONFIG_STAGING, KUBECONFIG_PRODUCTION
+    # Required environments: staging, production (configure in repo settings)
+    # To enable: Remove or comment out the 'if: false' line below
     if: false
     permissions:
       contents: read
@@ -98,7 +101,9 @@ jobs:
     name: Deploy to Staging
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || inputs.environment == 'staging'
+    # NOTE: Push events are disabled, so this only runs when inputs.environment == 'staging'
+    if: inputs.environment == 'staging'
+    # NOTE: Ensure 'staging' environment is configured in GitHub repo settings
     environment: staging
     permissions:
       contents: read
@@ -113,13 +118,28 @@ jobs:
       - name: Setup kubeconfig
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG_STAGING }}" | base64 -d > $HOME/.kube/config
+          # NOTE: KUBECONFIG_STAGING secret must be defined in GitHub repo settings
+          if ! echo "${{ secrets.KUBECONFIG_STAGING }}" | base64 -d > $HOME/.kube/config; then
+            echo "Error: Failed to decode KUBECONFIG_STAGING secret"
+            exit 1
+          fi
           chmod 600 $HOME/.kube/config
+          # Validate kubeconfig
+          if ! kubectl cluster-info &>/dev/null; then
+            echo "Error: Invalid kubeconfig or cluster unreachable"
+            exit 1
+          fi
 
       - name: Run database migrations
         run: |
-          # Port forward to one pod and run migrations
+          # Get pod name and validate it exists
           POD=$(kubectl get pod -l app=engine-ops -n staging -o jsonpath='{.items[0].metadata.name}')
+          if [ -z "$POD" ]; then
+            echo "Error: No pods found with label app=engine-ops in staging namespace"
+            kubectl get pods -n staging
+            exit 1
+          fi
+          echo "Running migrations on pod: $POD"
           kubectl exec -n staging $POD -- npm run migrate
 
       - name: Deploy with rolling update
@@ -151,12 +171,22 @@ jobs:
         run: |
           kubectl port-forward service/engine-ops 8080:80 -n staging &
           PF_PID=$!
-          sleep 5
-          
+          # Wait for port-forward to be ready (max 10 seconds)
+          for i in {1..10}; do
+            if curl -sf http://localhost:8080/api/v1/health >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          # Verify port-forward is working
+          if ! curl -sf http://localhost:8080/api/v1/health >/dev/null 2>&1; then
+            echo "Error: Port-forward failed or service not responding"
+            kill $PF_PID 2>/dev/null || true
+            exit 1
+          fi
           curl -sf http://localhost:8080/api/v1/health || exit 1
           curl -sf http://localhost:8080/metrics || exit 1
-          
-          kill $PF_PID
+          kill $PF_PID 2>/dev/null || true
           echo "✓ Smoke tests passed"
 
   deploy-production:
@@ -164,6 +194,7 @@ jobs:
     needs: [build, deploy-staging]
     runs-on: ubuntu-latest
     if: inputs.environment == 'production'
+    # NOTE: Ensure 'production' environment is configured in GitHub repo settings
     environment: production
     permissions:
       contents: read
@@ -178,8 +209,17 @@ jobs:
       - name: Setup kubeconfig
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG_PRODUCTION }}" | base64 -d > $HOME/.kube/config
+          # NOTE: KUBECONFIG_PRODUCTION secret must be defined in GitHub repo settings
+          if ! echo "${{ secrets.KUBECONFIG_PRODUCTION }}" | base64 -d > $HOME/.kube/config; then
+            echo "Error: Failed to decode KUBECONFIG_PRODUCTION secret"
+            exit 1
+          fi
           chmod 600 $HOME/.kube/config
+          # Validate kubeconfig
+          if ! kubectl cluster-info &>/dev/null; then
+            echo "Error: Invalid kubeconfig or cluster unreachable"
+            exit 1
+          fi
 
       - name: Create backup
         run: |
@@ -192,7 +232,14 @@ jobs:
 
       - name: Run database migrations
         run: |
+          # Get pod name and validate it exists
           POD=$(kubectl get pod -l app=engine-ops -n production -o jsonpath='{.items[0].metadata.name}')
+          if [ -z "$POD" ]; then
+            echo "Error: No pods found with label app=engine-ops in production namespace"
+            kubectl get pods -n production
+            exit 1
+          fi
+          echo "Running migrations on pod: $POD"
           kubectl exec -n production $POD -- npm run migrate
 
       - name: Deploy with rolling update
@@ -236,20 +283,30 @@ jobs:
           # Port forward and verify health
           kubectl port-forward service/engine-ops 8080:80 -n production &
           PF_PID=$!
-          sleep 5
-          
+          # Wait for port-forward to be ready (max 10 seconds)
+          for i in {1..10}; do
+            if curl -sf http://localhost:8080/api/v1/health/ready >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          # Verify port-forward is working
+          if ! curl -sf http://localhost:8080/api/v1/health/ready >/dev/null 2>&1; then
+            echo "Error: Port-forward failed or service not responding"
+            kill $PF_PID 2>/dev/null || true
+            exit 1
+          fi
           # Multiple health checks to ensure stability
           for i in {1..5}; do
             if ! curl -sf http://localhost:8080/api/v1/health/ready > /dev/null; then
               echo "Health check failed on attempt $i"
-              kill $PF_PID
+              kill $PF_PID 2>/dev/null || true
               exit 1
             fi
             echo "Health check $i passed"
             sleep 2
           done
-          
-          kill $PF_PID
+          kill $PF_PID 2>/dev/null || true
 
       - name: Monitor for issues
         run: |
@@ -275,9 +332,13 @@ jobs:
         if: failure()
         run: |
           echo "Deployment failed, rolling back..."
-          kubectl rollout undo deployment/engine-ops -n production
-          kubectl rollout status deployment/engine-ops -n production --timeout=5m
-          echo "Rollback complete"
+          if kubectl rollout undo deployment/engine-ops -n production; then
+            kubectl rollout status deployment/engine-ops -n production --timeout=5m
+            echo "Rollback complete"
+          else
+            echo "Error: Rollback failed. Manual intervention required."
+            exit 1
+          fi
 
   post-deploy:
     name: Post-Deployment Tasks
