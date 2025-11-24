@@ -189,6 +189,17 @@ jobs:
           kill $PF_PID 2>/dev/null || true
           echo "✓ Smoke tests passed"
 
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Staging deployment failed, rolling back..."
+          if kubectl rollout undo deployment/engine-ops -n staging 2>/dev/null; then
+            kubectl rollout status deployment/engine-ops -n staging --timeout=5m
+            echo "Rollback complete"
+          else
+            echo "Warning: Rollback failed or deployment doesn't exist yet"
+          fi
+
   deploy-production:
     name: Deploy to Production
     needs: [build, deploy-staging]
