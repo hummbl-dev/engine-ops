@@ -99,7 +99,7 @@ class LatticeAttributes(BaseModel):
 class PersonaSchema(BaseModel):
     """Complete persona schema with lattice-aware structure."""
     
-    model_config = ConfigDict()
+    model_config = ConfigDict(use_enum_values=True)
     
     # 1. System & Identity
     persona_id: str = Field(..., description="Unique identifier (e.g., 'eur_19c_nietzsche_f')")
@@ -123,9 +123,6 @@ class PersonaSchema(BaseModel):
     
     # 5. System Dynamics (Relational Data)
     relationships: Relationships = Field(default_factory=Relationships)
-    
-    class Config:
-        use_enum_values = True
 
 def generate_persona_prompt(persona: PersonaSchema, topic: str, context: Optional[str] = None) -> str:
     """
