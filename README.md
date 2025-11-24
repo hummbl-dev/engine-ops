@@ -1,6 +1,10 @@
 # Sovereign Intelligence Engine & Ops
 
-# Sovereign Intelligence Stack
+> **Version:** v1.0  
+> **Last updated:** 2025-11-24  
+> **Changelog:** Major documentation update—versioned, annotated, and aligned with technical/non-technical onboarding guides.
+
+## Sovereign Intelligence Stack
 
 **Escape Digital Feudalism. Own Your AI.**
 
@@ -158,7 +162,7 @@ Try the `/consult` endpoint with:
 
 **For detailed instructions, see [USER_GUIDE.md](USER_GUIDE.md)**
 
-# Deployment Helper
+## Deployment Helper
 
 ## Deploy the stack with Dockerized `kubectl`
 

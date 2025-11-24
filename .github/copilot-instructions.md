@@ -1,5 +1,8 @@
-
 # Copilot Instructions for engine-ops
+
+> **Version:** v1.0  
+> **Last updated:** 2025-11-24  
+> **Changelog:** Professionalized, expanded architecture, onboarding, and product guidance. See technical/non-technical docs for details.
 
 ## Big Picture Architecture
 - **Multi-agent workflow system**: Python (`agentic_workflow/`) and TypeScript (`core/`) engines coordinate agents for detection, triage, resolution, and audit. Context flows between agents, enforcing policies and logging telemetry for full traceability.
