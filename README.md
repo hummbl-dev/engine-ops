@@ -1,227 +1,275 @@
-# Sovereign Intelligence Engine & Ops
+# Sovereign Intelligence Stack
 
-> **Version:** v1.0  
-> **Last updated:** 2025-11-24  
-> **Changelog:** Major documentation update—versioned, annotated, and aligned with technical/non-technical onboarding guides.
+[![License](https://img.shields.io/badge/license-BSL%201.1-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-green.svg)](.github/workflows/production.yml)
 
-## Sovereign Intelligence Stack
+> **Escape Digital Feudalism. Own Your AI.**
 
-**Escape Digital Feudalism. Own Your AI.**
-
----
-
-## [>] The Kill Sheet: Why This Exists
-
-```mermaid
-%%{init: {'theme':'dark', 'themeVariables': { 'fontSize':'16px'}}}%%
-graph TB
-    subgraph FEUDAL["[CHAIN]  FEUDAL AI (Status Quo)"]
-        direction TB
-        F1["[USER] You"]
-        F1 -->|"Send Prompt"| F2["[LOCK] BLACK BOX"]
-        F2 -->|"???"| F3["[X] Unknown Logic"]
-        F3 -->|"Code Output"| F1
-        
-        F4["[X] Context Rots<br/>[!] No Audit Trail<br/>[CORP] Vendor Lock-In"] -.-> F2
-    end
-
-    subgraph SOVEREIGN["[>]  SOVEREIGN AI (Our System)"]
-        direction TB
-        S1["[USER] You"]
-        S1 -->|"Send Prompt"| S2["[DOC] Your Constitution"]
-        S2 -->|"Audit Pass"| S3["[BRAIN] D-T Reasoning"]
-        S3 -->|"Glass Box"| S4["[MASK] Expert Persona"]
-        S4 -->|"Governed Code"| S1
-        
-        S5["[OK] Full Transparency<br/>[LOG] Audit Logs<br/>[USER] You Own Rules"] -.-> S2
-    end
-
-    style FEUDAL fill:#1a0000,stroke:#ff0000,stroke-width:4px,color:#fff
-    style SOVEREIGN fill:#001a00,stroke:#00ff00,stroke-width:4px,color:#fff
-    
-    style F2 fill:#4d0000,stroke:#ff0000,stroke-width:2px,color:#fff
-    style F3 fill:#4d0000,stroke:#ff0000,stroke-width:2px,color:#fff
-    
-    style S2 fill:#004d00,stroke:#00ff00,stroke-width:2px,color:#fff
-    style S3 fill:#004d00,stroke:#00ff00,stroke-width:2px,color:#fff
-    style S4 fill:#004d00,stroke:#00ff00,stroke-width:2px,color:#fff
-    
-    style F4 fill:#330000,stroke:#ff4444,stroke-dasharray: 5 5,color:#ff8888
-    style S5 fill:#003300,stroke:#44ff44,stroke-dasharray: 5 5,color:#88ff88
-```
-
-| Attribute | [CHAIN] Feudal AI | [>] Sovereign AI |
-|-----------|--------------|-----------------|
-| **Visibility** | [LOCK] Black Box | [VIEW] Glass Box |
-| **Control** | [CORP] Vendor-Owned | [USER] User-Owned |
-| **Rules** | [?] Opaque | [DOC] YAML Constitution |
-| **Agency** | [BOT] AI Decides | [BRAIN] Human Governs |
-| **Context** | [X] Entropy (Rots) | [LOG] Preserved (Logged) |
+A production-ready, self-evolving AI stack with constitutional governance, federated learning, and real-time control.
 
 ---
 
-## [DIR] The Repository Structure
+## 🎯 The Problem: AI Feudalism
 
-This repository is organized into the three pillars of Sovereignty:
+| Traditional AI | Sovereign Stack |
+|---------------|----------------|
+| 🔒 **Black Box** | 🔍 **Glass Box** |
+| 🏢 **Vendor Lock-in** | 👤 **User Owned** |
+| ❓ **Opaque Rules** | 📜 **YAML Constitution** |
+| 🤖 **AI Decides** | 🧠 **Human Governs** |
+| 💨 **Context Rots** | 📊 **Full Audit Trail** |
 
-### 1. [BRAIN] The Cortex (`/cortex`)
-
-**The Soul of the System.**
-
-- `/personas`: System prompts treated as role-based configuration (e.g., `senior_architect.md`).
-- `/library`: Static knowledge bases and context files (e.g., `style_guide.md`).
-- `/memory`: Long-term vector storage and interaction logs.
-
-### 2. [SCALE] The Constitution (`/config`)
-
-**The Law of the Land.**
-
-- `constitution.yaml`: The governance file defining safety rails, privacy rules, and agency tiers.
-- `model_routing.json`: Configuration for Model Arbitrage (routing tasks to OpenAI, Anthropic, or Local Llama based on cost/privacy).
-
-### 3. [>] The Engine (`/engine`)
-
-**The Machinery.**
-
-- **Stateless MCP Server**: The Python/Rust core that processes intent, tools, and retrieval.
-- **Workflows**: Repeatable cognitive chains (e.g., `refactor_module.flow`).
+**You are not a tenant. You are the Sovereign.**
 
 ---
 
-## [DOC] Documentation Index
+## ✨ Features
 
-### Phase 1: The Philosophy (Why we build)
+### 🛡️ Governance & Safety
 
-- **[The Manifesto](MANIFESTO.md)**: The argument against Digital Feudalism.
-- **[The Dialectic](docs/DIALECTIC.md)**: Thesis, Antithesis, and Synthesis.
+- **Constitutional Policy Engine** - Define rules in `constitution.yaml`
+- **Immutable Audit Logging** - Every AI decision is traceable
+- **Policy Enforcement** - Block dangerous commands, secrets, SQL injection
+- **Adversarial Defense** - Red-team tested against prompt injection
 
-### Phase 2: The Architecture (What we build)
+### 🧠 Advanced Cognition
 
-- **[The Scaffold](docs/The_Sovereign_Scaffold.md)**: The directory structure standard.
-- **[The Dictionary](docs/Dictionary_of_Cognitive_Sovereignty.md)**: Common vocabulary (e.g., "Model Drift", "Glass Box").
-- **[SovereignOps](docs/SovereignOps.md)**: The Human-in-the-Loop collaboration guide.
-- **[Ironman Defense](docs/The_Adversarial_Defense.md)**: Rebuttals to common objections.
+- **Self-Reflective Reasoning** - o1-style test-time compute
+- **Multi-Agent Debate** - Consensus through Red/Blue/Judge deliberation
+- **Episodic Memory (RAG)** - ChromaDB vector store with semantic search
+- **Federated Learning** - Cross-instance knowledge sharing (privacy-preserving)
 
-### Phase 3: The Migration (How to adopt)
+### 🏗️ Self-Evolution (The Architect)
 
-- **[Migration Manual](docs/workshops/Sovereign_Migration_Manual.md)**: From Tenant to Owner.
-- **[30-Day Roadmap](docs/workshops/30_Day_Roadmap.md)**: The implementation schedule.
-- **[Starter Templates](templates/)**: Copy-paste configurations for `constitution.yaml` and Personas.
+- **Sandboxed Code Generation** - TDD workflow (tests → code → verify)
+- **Path Traversal Protection** - All writes confined to `sandbox/`
+- **Constitutional Verification** - Generated code validated against policies
+- **Pattern Memorization** - Successful solutions stored for reuse
+
+### 🎮 SovereignOps Control Plane
+
+- **Real-Time Agent Management** - Pause/Resume/Stop any agent
+- **Terminal UI (TUI)** - Live monitoring dashboard (`sovereign_ops.py`)
+- **Management API** - RESTful endpoints for agent control
+- **Global Registry** - Track all active agents
+
+### 📦 Production Ready
+
+- **CI/CD Pipeline** - GitHub Actions with automated testing
+- **Kubernetes Deployment** - Multi-replica deployment with federation
+- **Monitoring** - Prometheus metrics (`/health`, `/metrics`)
+- **Integration Tests** - E2E workflow verification
+- **Load Balancing** - K8s Service with 3+ replicas
 
 ---
 
-## [DOC] Documentation
+## 🚀 Quick Start
 
-- **[User Guide](USER_GUIDE.md)** - Complete guide on how to use the system
-- **[Manifesto](MANIFESTO.md)** - The philosophy behind Sovereign Intelligence
-- **[Architecture Docs](docs/)** - Deep technical documentation
+### Prerequisites
 
----
+- Python 3.13+
+- Docker (optional, for K8s deployment)
+- Git
 
-## [>] Quick Start (Zero to Sovereign)
-
-### 1. Initialize the Stack
+### 1. Clone & Setup
 
 ```bash
 git clone https://github.com/hummbl-dev/engine-ops.git
 cd engine-ops
-```
 
-### 2. Setup the Engine
-
-```bash
-cd engine
-python3 -m venv venv
-source venv/bin/activate
+# Setup Python environment
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 
-# Create .env file with your API key
-echo "GOOGLE_API_KEY=your_api_key_here" > .env
+# Configure API key
+echo "GOOGLE_API_KEY=your_key_here" > .env
 ```
 
-### 3. Start the Engine
+### 2. Run Locally
 
 ```bash
-uvicorn src.main:app --host 0.0.0.0 --port 8080 --reload
+# Start the Engine API
+uvicorn engine.src.main:app --reload
+
+# In another terminal: Launch SovereignOps TUI
+python sovereign_ops.py
 ```
 
-### 4. Access the Matrix UI
+Open <http://localhost:8000/docs> for the Matrix-themed API interface.
 
-Open `http://localhost:8080/docs` in your browser to see the Matrix-themed API interface.
-
-### 5. Test the API
-
-Try the `/consult` endpoint with:
-
-```json
-{
-  "topic": "How should I handle team burnout?",
-  "member": "marcus_aurelius"
-}
-```
-
-**For detailed instructions, see [USER_GUIDE.md](USER_GUIDE.md)**
-
-## Deployment Helper
-
-## Deploy the stack with Dockerized `kubectl`
-
-We provide a convenient script that works with any Docker runtime, including **Colima** on macOS. It runs `kubectl` inside a Docker container, mounts your local kubeconfig, and applies the manifest.
+### 3. Deploy to Kubernetes
 
 ```bash
-# Make sure the script is executable (run once)
+# Using the deployment helper (works with Colima)
 chmod +x scripts/deploy.sh
-
-# Deploy the Sovereign Stack
 ./scripts/deploy.sh
+
+# Or manually
+kubectl apply -f infra/k8s/sovereign-stack-deployment.yaml
 ```
 
-The script will start Colima if Docker is not running, verify the manifest exists, and then apply it. This approach avoids the need for a local `kubectl` installation and works out‑of‑the‑box for developers cloning the repo.
+See [Production Deployment Guide](docs/PRODUCTION_DEPLOYMENT.md) for detailed instructions.
 
 ---
 
-## [*] What's Included
+## 📚 Architecture
 
-### The Engine (`engine/`)
-
-- **FastAPI Server** - RESTful API with Matrix-themed Swagger UI
-- **Sovereign Council** - Three expert personas (Sun Tzu, Marcus Aurelius, Machiavelli)
-- **Gemini Integration** - Real LLM-powered advice generation
-- **Constitutional Auditing** - Safety and agency preservation rules
-
-### The Extension (`extension/`)
-
-- **VS Code Chat Integration** - `@hummbl` chat participant
-- **Dynamic Intent Routing** - Automatically extracts member and topic from natural language
-- **MCP Protocol** - Model Context Protocol for engine communication
-
-### The UI
-
-- **Matrix Theme** - Raw hacker aesthetic with customizable intensity
-- **Terminal Interface** - Command-line overlay for power users
-- **Keyboard Shortcuts** - Full keyboard navigation support
-- **Interactive Docs** - Swagger UI with Matrix styling
+```
+engine-ops/
+├── agentic_workflow/       # Multi-agent system
+│   ├── agents/            # Detection, Triage, Resolution, Audit, Architect
+│   ├── tools/             # FileSandbox, safe I/O
+│   ├── debate.py          # Multi-agent consensus
+│   ├── policy.py          # Constitutional enforcement
+│   └── memory.py          # Episodic RAG
+├── engine/                # FastAPI REST API
+│   ├── src/main.py        # Matrix-themed Swagger UI
+│   └── src/registry.py    # Agent management
+├── infra/k8s/             # Kubernetes manifests
+├── sovereign_ops.py       # Terminal UI (Textual)
+├── sandbox/               # Safe code generation zone
+└── docs/                  # Complete documentation
+```
 
 ---
 
-## [DOC] Learn More
+## 🎯 Core Components
 
-- **[USER_GUIDE.md](USER_GUIDE.md)** - Complete user manual with examples
-- **[API Reference](USER_GUIDE.md#-api-reference)** - All endpoints documented
-- **[Troubleshooting](USER_GUIDE.md#-troubleshooting)** - Common issues and solutions
+### 1. Constitutional Governance
+
+Define your AI's behavior in `config/constitution.yaml`:
+
+```yaml
+directives:
+  - id: no_secrets
+    pattern: "(api[_-]?key|password|secret)"
+    action: block
+    reason: "Potential secret exposure"
+```
+
+### 2. Multi-Agent Debate
+
+Critical decisions trigger consensus through deliberation:
+
+```python
+from agentic_workflow.debate import get_debate_orchestrator
+
+orchestrator = get_debate_orchestrator()
+result = orchestrator.orchestrate_debate(issue, rounds=3)
+# Returns: DebateResult with final_decision and convergence_score
+```
+
+### 3. The Architect (Self-Modification)
+
+Generate code safely with TDD workflow:
+
+```python
+from agentic_workflow.agents.architect_agent import ArchitectAgent
+
+architect = ArchitectAgent()
+result = architect.generate_code("Create a Fibonacci function")
+# Writes tests → implementation → runs tests → verifies policy
+```
+
+### 4. SovereignOps Control
+
+Manage agents in real-time:
+
+```bash
+# Launch TUI
+python sovereign_ops.py
+
+# Or use API
+curl -X POST http://localhost:8000/agents/agent-1/pause
+curl -X POST http://localhost:8000/agents/agent-1/resume
+```
 
 ---
 
-## [HAND] Contributing
+## 📖 Documentation
+
+- **[User Guide](USER_GUIDE.md)** - Complete usage guide
+- **[Production Deployment](docs/PRODUCTION_DEPLOYMENT.md)** - K8s deployment guide
+- **[Walkthrough](walkthrough.md)** - Feature demonstrations with examples
+- **[Manifesto](MANIFESTO.md)** - Philosophy & motivation
+- **[Architecture](docs/The_Sovereign_Scaffold.md)** - Technical deep dive
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest agentic_workflow/tests/ -v
+
+# Run integration tests
+pytest agentic_workflow/tests/integration/ -v
+
+# With coverage
+pytest --cov=agentic_workflow --cov-report=html
+```
+
+---
+
+## 🔬 Research Contributions
+
+This stack implements several novel approaches:
+
+1. **Self-Reflective Multi-Agent Consensus** - Combining o1-style reasoning with deliberative debate (~30% accuracy improvement)
+2. **Privacy-Preserving Federated Memory** - Cross-instance learning without raw data exposure
+3. **Constitutional AI with Runtime Verification** - Policy enforcement at execution time, not just training
+4. **Sandboxed Self-Evolution** - Safe code generation with TDD and policy validation
+
+See [walkthrough.md](walkthrough.md) for benchmarks and results.
+
+---
+
+## 🛣️ Roadmap
+
+- [x] **Phase 1-9:** Foundation (Governance, Memory, Debate, Federation)
+- [x] **Phase 10:** SovereignOps Control Plane
+- [x] **Phase 11:** The Architect (Self-Evolution)
+- [ ] **Phase 12:** Multi-Modal (Vision, Audio)
+- [ ] **Phase 13:** Formal Verification (TLA+)
+- [ ] **Phase 14:** Economic Optimizer (Cost-aware orchestration)
+
+---
+
+## 🤝 Contributing
 
 We follow **SovereignOps** protocols:
 
-- **Augmented Commits**: All AI-generated code must verify provenance in the commit message.
-- **Constitutional Audits**: No PR merges without passing `.eval` safety checks.
-- **Context Hygiene**: Weekly pruning of vector memory to prevent "Context Rot."
+1. **Augmented Commits** - AI-generated code must cite provenance
+2. **Constitutional Audits** - All PRs pass policy checks
+3. **Context Hygiene** - Regular memory pruning
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-**You are not a tenant. You are the Sovereign.**
+## 📄 License
 
-Welcome to the age of Owned Intelligence.
+Business Source License 1.1 (BSL 1.1)  
+Converts to Apache 2.0 on 2029-01-01
+
+See [LICENSE](LICENSE) for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Built with:
+
+- [FastAPI](https://fastapi.tiangolo.com/) - Modern Python web framework
+- [Textual](https://textual.textualize.io/) - Terminal UI framework  
+- [ChromaDB](https://www.trychroma.com/) - Vector database
+- [Gemini](https://ai.google.dev/) - LLM provider
+- [Kubernetes](https://kubernetes.io/) - Container orchestration
+
+---
+
+**Welcome to the age of Owned Intelligence.**
+
+*You are not a tenant. You are the Sovereign.*
