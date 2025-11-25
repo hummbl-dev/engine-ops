@@ -200,16 +200,6 @@ class ResolutionAgent(Agent):
         
         # Standard resolution for low/medium severity
         return self._standard_resolution(issues)
-        
-        except Exception as e:
-            self.telemetry.error(f"Error in resolution analysis: {e}", agent_id=self.agent_id)
-            return {
-                "resolved": [],
-                "failed": [],
-                "resolved_count": 0,
-                "failed_count": 0,
-                "success_rate": 0.0
-            }
     
     def _apply_resolution_strategy(
         self,

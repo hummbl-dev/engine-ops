@@ -27,7 +27,6 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
 import json
 
-from .agents.resolution_agent import ResolutionAgent
 from .instructions import SystemPrompt
 
 @dataclass
@@ -215,7 +214,7 @@ class DebateOrchestrator:
     
     def _get_position(
         self,
-        agent: ResolutionAgent,
+        agent: "ResolutionAgent",  # Type annotation as string to avoid circular import
         issue: Dict[str, Any],
         stance: str,
         round_num: int,

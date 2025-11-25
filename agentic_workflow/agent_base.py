@@ -69,6 +69,48 @@ class Agent(ABC):
         self.telemetry = telemetry or get_telemetry_collector()
         self.memory = get_memory_store()
         self._instructions: Optional[SystemPrompt] = None
+        self._status = "RUNNING"  # RUNNING, PAUSED, STOPPED
+        self._pause_event = None  # Lazy initialization to avoid pickling issues if needed
+
+        # Register with SovereignOps Control Plane
+        try:
+            from engine.src.registry import AgentManager
+            AgentManager.register(self)
+        except ImportError:
+            # Graceful fallback if engine is not available
+            pass
+
+    @property
+    def status(self) -> str:
+        """Get current agent status."""
+        return self._status
+
+    def pause(self) -> None:
+        """Pause the agent execution."""
+        self._status = "PAUSED"
+        self.telemetry.info(f"Agent {self.agent_id} PAUSED", agent_id=self.agent_id)
+
+    def resume(self) -> None:
+        """Resume the agent execution."""
+        self._status = "RUNNING"
+        self.telemetry.info(f"Agent {self.agent_id} RESUMED", agent_id=self.agent_id)
+
+    def stop(self) -> None:
+        """Stop the agent execution."""
+        self._status = "STOPPED"
+        self.telemetry.info(f"Agent {self.agent_id} STOPPED", agent_id=self.agent_id)
+
+    def _check_status(self) -> None:
+        """Check status and block if paused, or raise if stopped."""
+        if self._status == "STOPPED":
+            raise RuntimeError(f"Agent {self.agent_id} has been STOPPED")
+        
+        if self._status == "PAUSED":
+            import time
+            self.telemetry.info(f"Agent {self.agent_id} waiting for resume...", agent_id=self.agent_id)
+            while self._status == "PAUSED":
+                time.sleep(0.5)
+            self.telemetry.info(f"Agent {self.agent_id} resuming execution", agent_id=self.agent_id)
 
     @property
     def instructions(self) -> SystemPrompt:
@@ -357,6 +399,9 @@ Please revise your reasoning addressing these points.
         try:
             # Update context to reflect current agent
             context.identity.agent_id = self.agent_id
+            
+            # Check status before processing
+            self._check_status()
             
             # Execute the agent's process method
             updated_context = self.process(context)

@@ -15,6 +15,32 @@ app = FastAPI(
     redoc_url=None
 )
 
+
+# -----------------------------------------------------------------------------
+# Health & Monitoring Endpoints
+# -----------------------------------------------------------------------------
+
+@app.get("/health", tags=["Monitoring"])
+async def health_check():
+    """Health check endpoint for K8s readiness/liveness probes."""
+    return {
+        "status": "healthy",
+        "version": "1.0.0",
+        "timestamp": "2025-11-25"
+    }
+
+@app.get("/metrics", tags=["Monitoring"])
+async def metrics():
+    """Prometheus metrics endpoint."""
+    from agentic_workflow.monitoring import get_metrics
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse(content=get_metrics())
+
+# -----------------------------------------------------------------------------
+# End Monitoring
+# -----------------------------------------------------------------------------
+
+
 # Serve static files (CSS)
 static_dir = Path(__file__).parent.parent / "static"
 if static_dir.exists():
