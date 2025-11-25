@@ -74,7 +74,7 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
-      - name: Checkout Code
+      -name: Checkout Code
         uses: actions/checkout@v4
       
       - name: Download Docker Image
@@ -86,12 +86,23 @@ jobs:
         run: |
           docker load < sovereign-stack.tar.gz
       
-      - name: Deploy to K8s (Dry Run)
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+      
+      - name: Validate K8s Manifests
         run: |
-          echo "Would deploy to Kubernetes staging environment"
-          echo "kubectl apply -f infra/k8s/"
-          # Actual deployment would require K8s credentials
-          # kubectl apply -f infra/k8s/sovereign-stack-deployment.yaml
+          echo "✅ Validating Kubernetes manifests..."
+          kubectl apply -f infra/k8s/sovereign-stack-deployment.yaml --dry-run=client
+          echo "✅ Manifest validation successful"
+      
+      - name: Deployment Info
+        run: |
+          echo "📦 Docker image loaded: sovereign-stack:latest"
+          echo "🔍 Manifest validated: infra/k8s/sovereign-stack-deployment.yaml"
+          echo "⚠️  Real deployment requires K8s cluster credentials"
+          echo "   Add KUBE_CONFIG secret to enable automated deployment"
 
   security-scan:
     name: Security Scan
