@@ -1,42 +1,12 @@
-# See docs for all config options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-    open-pull-requests-limit: 10
-    groups:
-      typescript-eslint:
-        patterns:
-          - "@typescript-eslint/*"
-        update-types:
-          - "minor"
-          - "patch"
-    labels:
-      - "dependencies"
-      - "npm"
-  
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
     open-pull-requests-limit: 5
-    groups:
-      github-actions:
-        patterns:
-          - "actions/*"
-          - "docker/*"
-          - "azure/*"
-          - "softprops/*"
-        update-types:
-          - "minor"
-          - "patch"
-    labels:
-      - "dependencies"
-      - "github-actions"
+    allow:
+      - dependency-type: "direct"
+    ignore:
+      - dependency-name: "urllib3"
+        versions: ["<2.5.0"]
