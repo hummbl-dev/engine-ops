@@ -29,7 +29,7 @@ from pathlib import Path
 
 from ..agent_base import Agent
 from ..context import AgentContext
-from ..policy import PolicyEngine
+from ..policy import PolicyEngine, PolicyAction
 from ..tools.file_io import FileSandbox, get_file_sandbox
 
 
@@ -155,15 +155,17 @@ Return ONLY valid Python code for the implementation. No markdown, no explanatio
             impl_code = impl_code.split("```python")[1].split("```")[0].strip()
         
         # Step 4: Verify against constitution
-        policy_result = self.policy_engine.evaluate({
+        # Evaluate policy – returns a list of PolicyEvaluation objects
+        policy_evals = self.policy_engine.evaluate({
             "action": "code_generation",
             "content": impl_code
         })
-        
-        if policy_result.get("blocked"):
+        # Determine if any evaluation blocks the code (DENY action)
+        blocked = any(ev.action == PolicyAction.DENY for ev in policy_evals)
+        if blocked:
             return {
                 "error": "Code blocked by policy",
-                "reason": policy_result.get("violations", []),
+                "reason": [ev.reason for ev in policy_evals if ev.action == PolicyAction.DENY],
                 "test_file": test_path
             }
         
@@ -286,17 +288,18 @@ Return ONLY valid Python code for the implementation. No markdown, no explanatio
             Result dict with success/error status
         """
         # Verify with policy enforcer
-        policy_result = self.policy_engine.evaluate({
+        # Evaluate policy for file write – returns list of PolicyEvaluation objects
+        policy_evals = self.policy_engine.evaluate({
             "action": "file_write",
             "path": file_path,
             "content": content
         })
-        
-        if policy_result.get("blocked"):
+        blocked = any(ev.action == PolicyAction.DENY for ev in policy_evals)
+        if blocked:
             return {
                 "success": False,
                 "error": "Blocked by policy",
-                "violations": policy_result.get("violations", [])
+                "violations": [ev.reason for ev in policy_evals if ev.action == PolicyAction.DENY]
             }
         
         # Write to sandbox

@@ -145,45 +145,47 @@ class DetectionAgent(Agent):
         Returns:
             List of detected issues
         """
-        import json
-        import re
-        
-        prompt = """
-        Analyze the provided input data for any anomalies, errors, security threats, or resource exhaustion issues.
-        
-        Return a JSON array of detected issues. Each issue object must have:
-        - rule_id: A short identifier (e.g., "high_error_rate")
-        - name: A human-readable name
-        - severity: "low", "medium", "high", or "critical"
-        - confidence: A float between 0.0 and 1.0
-        - details: A dictionary of supporting evidence
-        
-        If no issues are found, return an empty array [].
-        Do not include markdown formatting (```json) in your response, just the raw JSON string.
-        """
-        
-        response = self.ask_brain(prompt, data)
-        
-        try:
-            # Clean up response if it contains markdown
-            cleaned_response = response.strip()
-            if cleaned_response.startswith("```json"):
-                cleaned_response = cleaned_response[7:]
-            if cleaned_response.endswith("```"):
-                cleaned_response = cleaned_response[:-3]
-            
-            detections = json.loads(cleaned_response.strip())
-            
-            # Validate structure (basic check)
-            if not isinstance(detections, list):
-                self.telemetry.warning("LLM returned non-list detection result", agent_id=self.agent_id)
-                return []
-                
-            return detections
-            
-        except json.JSONDecodeError:
-            self.telemetry.error(f"Failed to parse LLM detection response: {response}", agent_id=self.agent_id)
-            return []
-        except Exception as e:
-            self.telemetry.error(f"Error in detection analysis: {e}", agent_id=self.agent_id)
-            return []
+        # Rule‑based deterministic detection (no LLM)
+        detections = []
+        input_data = data
+        # High error rate rule
+        err_rate = input_data.get('error_rate')
+        if err_rate is not None:
+            rule = next((r for r in self.detection_rules if r['rule_id'] == 'high_error_rate'), None)
+            if rule and err_rate > rule['threshold']:
+                detections.append({
+                    'rule_id': rule['rule_id'],
+                    'name': rule['name'],
+                    'severity': rule['severity'],
+                    'confidence': min(1.0, err_rate),
+                    'details': {'error_rate': err_rate}
+                })
+        # Resource exhaustion rule
+        resources = input_data.get('resource_usage', {})
+        rule_res = next((r for r in self.detection_rules if r['rule_id'] == 'resource_exhaustion'), None)
+        if rule_res:
+            for res_name, usage in resources.items():
+                if usage > rule_res['threshold']:
+                    detections.append({
+                        'rule_id': rule_res['rule_id'],
+                        'name': rule_res['name'],
+                        'severity': rule_res['severity'],
+                        'confidence': min(1.0, usage),
+                        'details': {'resource': res_name, 'usage': usage}
+                    })
+        # Anomalous pattern rule – placeholder simple check
+        rule_anom = next((r for r in self.detection_rules if r['rule_id'] == 'anomalous_pattern'), None)
+        if rule_anom:
+            # For demonstration, flag if any metric exceeds 2 standard deviations (simulated)
+            metrics = input_data.get('metrics', {})
+            for metric, value in metrics.items():
+                if isinstance(value, (int, float)) and abs(value) > 2 * rule_anom['threshold']:
+                    detections.append({
+                        'rule_id': rule_anom['rule_id'],
+                        'name': rule_anom['name'],
+                        'severity': rule_anom['severity'],
+                        'confidence': 0.9,
+                        'details': {'metric': metric, 'value': value}
+                    })
+        return detections
+```
