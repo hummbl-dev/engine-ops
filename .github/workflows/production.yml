@@ -74,7 +74,7 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
-      -name: Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@v4
       
       - name: Download Docker Image
@@ -112,10 +112,29 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      
+      - name: Install Security Tools
+        run: |
+          pip install safety bandit
+      
+      - name: Python Dependency Security Check
+        run: |
+          pip install -r requirements.txt
+          safety check --json --output safety-report.json || true
+      
       - name: Run Bandit Security Scanner
         run: |
-          pip install bandit
           bandit -r agentic_workflow/ engine/ -f json -o bandit-report.json || true
+      
+      - name: Upload Safety Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-report
+          path: safety-report.json
       
       - name: Upload Security Report
         uses: actions/upload-artifact@v4
