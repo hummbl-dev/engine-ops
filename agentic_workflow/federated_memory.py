@@ -86,7 +86,7 @@ class FederatedMemorySync:
         # In a real implementation this would be an HTTP GET
         # response = requests.get(IMPORT_ENDPOINT)
         # aggregated = response.json().get("embeddings", [])
-        aggregated = []  # Placeholder empty list
+        aggregated: List[Dict[str, Any]] = []  # Placeholder empty list
         if not aggregated:
             print("[FederatedMemorySync] No new embeddings to import.")
             return

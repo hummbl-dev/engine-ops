@@ -119,7 +119,7 @@ class ChromaDBStore(MemoryStore):
                 score = 1.0 / (1.0 + distances[i]) if i < len(distances) else 0.0
 
                 memories.append(
-                    MemoryEntry(id=ids[i], content=doc, metadata=metadatas[i], score=score)
+                    MemoryEntry(id=ids[i], content=doc, metadata=dict(metadatas[i]), score=score)
                 )
 
         return memories

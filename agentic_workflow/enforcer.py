@@ -22,7 +22,7 @@ Provides centralized validation and enforcement of security policies
 before agent actions are executed.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Pattern
 import re
 
@@ -34,7 +34,7 @@ class EnforcementResult:
     allowed: bool
     reason: str = ""
     severity: str = "info"  # info, warning, critical
-    violated_rules: List[str] = None
+    violated_rules: List[str] = field(default_factory=list)
 
     def __post_init__(self):
         if self.violated_rules is None:

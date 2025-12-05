@@ -48,6 +48,10 @@ class StateContext:
     state_history: List[Dict[str, Any]] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+    def get(self, key: str, default: Any = None) -> Any:
+        """Get a value from metadata with optional default."""
+        return self.metadata.get(key, default)
+
 
 @dataclass
 class SessionContext:

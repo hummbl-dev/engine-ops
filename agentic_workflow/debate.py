@@ -293,7 +293,7 @@ Provide your response in JSON format:
             return 0.3  # Low convergence if actions differ
 
     def _judge_decision(
-        self, issue: Dict[str, Any], red_position: DebatePosition, blue_position: DebatePosition
+        self, issue: Dict[str, Any], red_position: Optional[DebatePosition], blue_position: Optional[DebatePosition]
     ) -> Dict[str, Any]:
         """Have judge synthesize final decision."""
         prompt = f"""
