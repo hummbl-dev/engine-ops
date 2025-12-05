@@ -1,0 +1,212 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-workflow"
+version = "0.1.0"
+description = "Multi-agent workflow system for enterprise optimization"
+readme = "README.md"
+license = {text = "SEE LICENSE IN LICENSE"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "altair==5.5.0",
+    "annotated-doc==0.0.4",
+    "annotated-types==0.7.0",
+    "anthropic==0.75.0",
+    "anyio==4.11.0",
+    "attrs==25.4.0",
+    "backoff==2.2.1",
+    "bcrypt==5.0.0",
+    "bidict==0.23.1",
+    "blinker==1.9.0",
+    "brotli==1.2.0",
+    "build==1.3.0",
+    "cachetools==6.2.2",
+    "certifi==2025.11.12",
+    "charset-normalizer==3.4.4",
+    "chromadb==1.3.5",
+    "click==8.3.1",
+    "coloredlogs==15.0.1",
+    "ConfigArgParse==1.7.1",
+    "distro==1.9.0",
+    "docstring_parser==0.17.0",
+    "durationpy==0.10",
+    "fastapi==0.122.0",
+    "filelock==3.20.0",
+    "Flask==3.1.2",
+    "flask-cors==6.0.1",
+    "Flask-Login==0.6.3",
+    "flatbuffers==25.9.23",
+    "fsspec==2025.10.0",
+    "gevent==25.9.1",
+    "geventhttpclient==2.3.5",
+    "gitdb==4.0.12",
+    "GitPython==3.1.45",
+    "google-ai-generativelanguage==0.9.0",
+    "google-api-core==2.28.1",
+    "google-api-python-client==2.187.0",
+    "google-auth==2.43.0",
+    "google-auth-httplib2==0.2.1",
+    "google-generativeai==0.8.5",
+    "googleapis-common-protos==1.72.0",
+    "greenlet==3.2.4",
+    "grpcio==1.76.0",
+    "grpcio-status==1.75.1",
+    "h11==0.16.0",
+    "hf-xet==1.2.0",
+    "httpcore==1.0.9",
+    "httplib2==0.31.0",
+    "httptools==0.7.1",
+    "httpx==0.28.1",
+    "huggingface_hub==1.1.5",
+    "idna==3.11",
+    "importlib-metadata==8.6.1",
+    "itsdangerous==2.2.0",
+    "Jinja2==3.1.5",
+    "joblib==1.4.2",
+    "jsonschema==4.23.0",
+    "kubernetes==32.0.1",
+    "markdown-it-py==4.0.0",
+    "MarkupSafe==3.0.2",
+    "mdurl==0.1.2",
+    "mmh3==5.1.0",
+    "monotonic==1.6",
+    "mpmath==1.3.0",
+    "msgpack==1.1.2",
+    "multidict==6.1.0",
+    "numpy==2.2.2",
+    "oauthlib==3.2.2",
+    "onnxruntime==1.20.1",
+    "opentelemetry-api==1.30.0",
+    "opentelemetry-distro==0.51b0",
+    "opentelemetry-exporter-otlp-proto-common==1.30.0",
+    "opentelemetry-exporter-otlp-proto-grpc==1.30.0",
+    "opentelemetry-exporter-otlp-proto-http==1.30.0",
+    "opentelemetry-instrumentation==0.51b0",
+    "opentelemetry-instrumentation-asgi==0.51b0",
+    "opentelemetry-instrumentation-fastapi==0.51b0",
+    "opentelemetry-proto==1.30.0",
+    "opentelemetry-sdk==1.30.0",
+    "opentelemetry-semantic-conventions==0.51b0",
+    "opentelemetry-util-http==0.51b0",
+    "overrides==7.7.0",
+    "packaging==25.0",
+    "pandas==2.3.3",
+    "pillow==12.0.0",
+    "platformdirs==4.5.0",
+    "pluggy==1.6.0",
+    "posthog==5.4.0",
+    "prometheus-fastapi-instrumentator==7.1.0",
+    "prometheus_client==0.23.1",
+    "proto-plus==1.26.1",
+    "protobuf>=6.31.1,<7.0.0",
+    "psutil==7.1.3",
+    "pyarrow==21.0.0",
+    "pyasn1==0.6.1",
+    "pyasn1_modules==0.4.2",
+    "pybase64==1.4.2",
+    "pydantic==2.12.4",
+    "pydeck==0.9.1",
+    "pygit2==1.17.0",
+    "Pygments==2.19.2",
+    "PyJWT==2.10.1",
+    "pynacl==1.5.0",
+    "pyparsing==3.2.5",
+    "pyright==1.1.390",
+    "PyYAML==6.0.2",
+    "requests==2.32.5",
+    "rich==14.2.0",
+    "rsa==4.9",
+    "s3transfer==0.11.2",
+    "scikit-learn==1.6.1",
+    "scipy==1.15.1",
+    "semver==3.0.4",
+    "setuptools==75.8.0",
+    "shapely==2.0.7",
+    "six==1.17.0",
+    "smmap==5.0.1",
+    "sniffio==1.3.1",
+    "sortedcontainers==2.4.0",
+    "soupsieve==2.6",
+    "SQLAlchemy==2.0.37",
+    "starlette==0.46.0",
+    "streamlit==1.42.0",
+    "sympy==1.13.3",
+    "tenacity==9.0.0",
+    "threadpoolctl==3.5.0",
+    "toml==0.10.2",
+    "tomli==2.3.0",
+    "tomli-w==1.2.0",
+    "toolz==1.0.0",
+    "tornado==6.4.2",
+    "tqdm==4.67.1",
+    "typing_extensions==4.12.2",
+    "tzdata==2025.1",
+    "urllib3==2.6.0",
+    "uvicorn==0.34.0",
+    "uvloop==0.21.0",
+    "watchfiles==1.0.4",
+    "websockets==14.2",
+    "Werkzeug==3.1.3",
+    "wheel==0.45.1",
+    "wrapt==1.17.2",
+    "yarl==1.18.3",
+    "zipp==3.21.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/hummbl-dev/engine-ops"
+Repository = "https://github.com/hummbl-dev/engine-ops"
+Issues = "https://github.com/hummbl-dev/engine-ops/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agentic_workflow*"]
+
+[tool.setuptools.package-data]
+agentic_workflow = ["*.md", "*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["agentic_workflow/tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = ["-v", "--tb=short"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312', 'py313']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 100
+known_first_party = ["agentic_workflow"]
+skip = ["__init__.py"]
