@@ -1,0 +1,26 @@
+# Engine-Ops Integration Manifest Example (JSON)
+{
+  "integrations": [
+    {
+      "name": "Slack",
+      "type": "notification",
+      "enabled": false,
+      "setup": "OAuth2",
+      "docs": "https://docs.engine-ops.dev/integrations/slack"
+    },
+    {
+      "name": "AWS S3",
+      "type": "storage",
+      "enabled": false,
+      "setup": "Access Key/Secret",
+      "docs": "https://docs.engine-ops.dev/integrations/aws-s3"
+    },
+    {
+      "name": "Prometheus",
+      "type": "monitoring",
+      "enabled": true,
+      "setup": "Service Discovery",
+      "docs": "https://docs.engine-ops.dev/integrations/prometheus"
+    }
+  ]
+}

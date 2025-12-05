@@ -1,0 +1,36 @@
+name: Documentation Build & Link Check
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build-docs:
+    name: Build TypeScript Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build docs
+        run: npm run docs
+
+  markdown-link-check:
+    name: Markdown Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Install markdown-link-check
+        run: npm install -g markdown-link-check
+      - name: Check links in markdown files
+        run: |
+          find . -name "*.md" | xargs -n 1 markdown-link-check -c .github/workflows/mlc-config.json || true

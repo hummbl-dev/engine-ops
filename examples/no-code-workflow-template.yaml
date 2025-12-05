@@ -1,0 +1,26 @@
+# Engine-Ops No-Code Workflow Template (YAML)
+
+---
+name: Health Monitoring Workflow
+version: 1.0
+steps:
+  - name: Check System Health
+    agent: DetectionAgent
+    context:
+      intent: monitor-health
+      priority: high
+  - name: Triage Incident
+    agent: TriageAgent
+    context:
+      policy: access-control
+      escalation: warning
+  - name: Resolve Issue
+    agent: ResolutionAgent
+    context:
+      action: remediate
+      rollback: true
+  - name: Audit & Report
+    agent: AuditAgent
+    context:
+      report: compliance
+      notify: security-team

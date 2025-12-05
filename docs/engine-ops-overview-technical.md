@@ -417,6 +417,28 @@ Best Practices:
 
 For additional help, consult the relevant README files or open an issue in the repository.
 
+## Expanded Troubleshooting & FAQ (Draft)
+
+To further support users, Engine-Ops will expand troubleshooting and FAQ coverage:
+
+- **Detailed troubleshooting guides:**
+  - Step-by-step solutions for common setup, build, test, and deployment errors.
+  - Environment validation scripts and checklists for OS, hardware, and dependencies.
+  - Diagnostic commands and log file locations for rapid issue resolution.
+
+- **Advanced FAQ topics:**
+  - How to resolve cloud credential and network issues.
+  - Best practices for agent extensibility and plugin registration.
+  - Security, compliance, and audit troubleshooting.
+  - How to interpret telemetry, metrics, and audit logs.
+
+- **Pre-integration checks:**
+  - Automated preflight checks before enabling new integrations or marketplace connections.
+  - Compatibility matrix for supported tools and platforms.
+  - Guidance for reporting issues and requesting new integrations.
+
+This section will be expanded with scripts, checklists, and troubleshooting scenarios as development progresses.
+
 ## Order of Operations for Agentic Workflows
 
 Engine-Ops agents should follow this recommended sequence to ensure context-aware, policy-compliant, and traceable operations:
@@ -532,3 +554,53 @@ Engine-Ops is designed to be accessible to users of all technical backgrounds. F
 - Design user journeys for non-technical personas.
 - Prioritize UX simplicity, reliability, and support.
 - Continuously gather feedback to improve onboarding and product offerings
+
+## Documentation & Community Expansion Plan
+
+Expand Engine-Ops documentation and community resources for technical and non-technical users, while evaluating optional GitHub features. The goal is to improve onboarding, support, and discoverability without unnecessary overhead.
+
+### Steps
+
+1. Review current documentation structure in `docs/` and referenced Markdown files.
+2. Identify gaps: onboarding, troubleshooting, FAQ, use cases, and non-technical guides.
+3. Draft new/expanded sections: onboarding wizards, visual guides, managed service, no-code automation, integration marketplace.
+4. Evaluate optional GitHub features (Pages, Wiki, Discussions) for public docs, community Q&A, and support.
+5. Recommend actions: keep docs in-repo, consider Discussions for community support if demand grows.
+
+### Further Considerations
+
+1. GitHub Pages/Wiki/Discussions are optional; enable only if public docs or community engagement is needed.
+2. Prioritize clarity, accessibility, and traceability in all documentation.
+3. Gather user feedback to guide future expansions.
+
+## Implementation Details (Draft)
+
+### Onboarding Wizard & Visual Guide
+- **Tech stack:** React (dashboard), TypeScript, Python backend for environment checks.
+- **Flow:**
+  1. User launches wizard from dashboard or CLI.
+  2. Wizard runs OS/hardware checks, validates Node.js, Python, Git, Helm, Terraform.
+  3. Interactive steps: clone repo, install dependencies, run tests, configure cloud credentials.
+  4. Visual progress bar, tooltips, and error handling.
+  5. Success: user lands on dashboard with quickstart templates and links to docs.
+
+### Managed Service & No-Code Automation
+- **SaaS hosting:** Kubernetes-managed, auto-scaling, RBAC, encrypted secrets.
+- **No-code builder:** React/TypeScript drag-and-drop UI, YAML/JSON export for workflows.
+- **Policy editor:** Visual rules engine, maps to `policy.py` and TypeScript interfaces.
+- **Integration:** OAuth2 for third-party services, secure credential storage.
+
+### Troubleshooting & FAQ
+- **Validation scripts:** Python/Node.js scripts for environment checks, dependency validation, and log collection.
+- **Diagnostic commands:**
+  - `engine-ops doctor` (CLI): runs checks, outputs report.
+  - `engine-ops support --collect-logs`: bundles logs for support.
+- **Checklists:** Markdown templates for common issues, cloud setup, and agent/plugin registration.
+
+### Integration Marketplace
+- **Catalog:** JSON/YAML manifest of integrations, auto-discovered by dashboard.
+- **Enablement:** UI triggers setup scripts, validates permissions, and updates config files.
+- **Extensibility:** Plugin interface in `core/plugins/` and Python ML plugin examples.
+- **Security:** Each integration runs in sandboxed context, logs actions, and enforces policies.
+
+# ...existing code...

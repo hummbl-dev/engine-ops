@@ -1,0 +1,27 @@
+name: Python Dependency Vulnerability Scan
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  python-vuln-scan:
+    name: Scan Python Dependencies for Vulnerabilities
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Install pip-audit
+        run: python -m pip install pip-audit
+      - name: Install dependencies
+        run: |
+          if [ -f agentic_workflow/requirements.txt ]; then pip install -r agentic_workflow/requirements.txt; fi
+      - name: Run pip-audit
+        run: |
+          if [ -f agentic_workflow/requirements.txt ]; then pip-audit -r agentic_workflow/requirements.txt; else echo "No requirements.txt found"; fi
