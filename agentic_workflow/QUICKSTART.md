@@ -37,7 +37,7 @@ print(f"Found {len(result.payload.output_data['detections'])} issues")
 from agentic_workflow import WorkflowOrchestrator, AgentContext
 from agentic_workflow.context import IdentityContext, IntentContext
 from agentic_workflow.agents import (
-    DetectionAgent, TriageAgent, ResolutionAgent, AuditAgent
+    DetectionAgent, TriageAgent, ResolutionAgent, AuditAgent, ArchitectAgent
 )
 
 # Setup workflow
@@ -93,7 +93,32 @@ agent = MyAgent(agent_id="my_custom_agent")
 result = agent.execute(context)
 ```
 
-### 4. Policy Enforcement
+### 4. Code Generation with ArchitectAgent
+
+```python
+from agentic_workflow.agents import ArchitectAgent
+from agentic_workflow.context import AgentContext, IdentityContext
+
+# Create architect agent
+architect = ArchitectAgent(workspace_dir="sandbox")
+
+# Create context for code generation
+identity = IdentityContext(agent_id="architect", user_id="developer")
+context = AgentContext(identity=identity)
+context.update_state("mode", "generate")
+context.update_state("request", "Create a Python function that calculates fibonacci numbers")
+
+# Generate code (TDD approach: tests first, then implementation)
+result = architect.process(context)
+
+# Access generated code
+test_file = result.state.get("architect_result", {}).get("test_file")
+impl_file = result.state.get("architect_result", {}).get("impl_file")
+print(f"Generated test: {test_file}")
+print(f"Generated implementation: {impl_file}")
+```
+
+### 5. Policy Enforcement
 
 ```python
 from agentic_workflow.policy import PolicyEngine, PolicyRule, PolicyAction

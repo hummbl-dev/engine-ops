@@ -188,4 +188,3 @@ class DetectionAgent(Agent):
                         'details': {'metric': metric, 'value': value}
                     })
         return detections
-```

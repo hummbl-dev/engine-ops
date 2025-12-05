@@ -25,5 +25,6 @@ from .detection_agent import DetectionAgent
 from .triage_agent import TriageAgent
 from .resolution_agent import ResolutionAgent
 from .audit_agent import AuditAgent
+from .architect_agent import ArchitectAgent
 
-__all__ = ["DetectionAgent", "TriageAgent", "ResolutionAgent", "AuditAgent"]
+__all__ = ["DetectionAgent", "TriageAgent", "ResolutionAgent", "AuditAgent", "ArchitectAgent"]

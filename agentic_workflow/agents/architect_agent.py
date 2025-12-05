@@ -122,6 +122,17 @@ class ArchitectAgent(Agent):
         except Exception as e:
             return {"error": f"execution_failed: {e}"}
 
+    def write_code(self, file_path: str, content: str) -> Dict[str, Any]:
+        """Write code to sandbox with policy evaluation."""
+        policy_evals = self.policy_engine.evaluate({"action": "file_write", "path": file_path, "content": content})
+        if any(ev.action == PolicyAction.DENY for ev in policy_evals):
+            return {"success": False, "error": "blocked_by_policy", "violations": [ev.reason for ev in policy_evals if ev.action == PolicyAction.DENY]}
+        try:
+            path = self.sandbox.write_file(file_path, content)
+            return {"success": True, "path": path, "warnings": [ev.reason for ev in policy_evals if ev.action == PolicyAction.LOG]}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
 
 def get_architect_agent(workspace_dir: str = "sandbox") -> ArchitectAgent:
     """Factory function to create an ArchitectAgent instance."""
