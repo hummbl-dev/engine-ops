@@ -67,21 +67,21 @@ zsh: command not found: bandit
 ERROR: Cannot install google-ai-generativelanguage==0.6.15 and protobuf==6.33.1 because these package versions have conflicting dependencies.
 ```
 
-**Root Cause**
+### Root Cause (RESOLVED)
 
-- `google-ai-generativelanguage` requires `protobuf < 6.0.0dev` while the project pins `protobuf==6.33.1`.
+- Previously: `google-ai-generativelanguage` 0.6.15 required `protobuf < 6.0.0dev` while `grpcio-status` required `protobuf >= 6.31.1`.
 
-**Fix Options**
+**Fix Applied**
 
-1. **Downgrade protobuf** to a version compatible with the generative‑language client (e.g., `protobuf==5.29.5`).
-2. **Upgrade the client** to a newer release that supports protobuf 6.x (if available).
-3. **Remove the explicit protobuf pin** and let pip resolve a compatible version.
+1. **Upgraded google-ai-generativelanguage** from 0.6.15 to 0.9.0 (supports protobuf 6.x)
+2. **Updated protobuf constraint** to `protobuf>=6.31.1,<7.0.0` (compatible with all dependencies)
+3. **Added pyproject.toml** to define proper Python project structure for GitHub dependency submission
 
-Update `requirements.txt` accordingly, e.g.:
+Current `requirements.txt` configuration:
 
 ```text
-- protobuf==6.33.1
-+ protobuf==5.29.5  # compatible with google-ai-generativelanguage 0.6.15
+protobuf>=6.31.1,<7.0.0  # compatible with grpcio-status and other Google packages
+google-ai-generativelanguage==0.9.0
 ```
 
 ---
