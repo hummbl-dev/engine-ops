@@ -20,12 +20,14 @@ You need to create **2 secrets** in GitHub:
 If you have existing kubeconfig files for your staging and production clusters:
 
 **Staging:**
+
 ```bash
 # Copy your staging kubeconfig
 cp ~/.kube/config-staging staging-kubeconfig.yaml
 ```
 
 **Production:**
+
 ```bash
 # Copy your production kubeconfig
 cp ~/.kube/config-production production-kubeconfig.yaml
@@ -36,6 +38,7 @@ cp ~/.kube/config-production production-kubeconfig.yaml
 If you need to create new kubeconfig files:
 
 **For Staging:**
+
 ```bash
 # Get cluster credentials (example for Azure AKS)
 az aks get-credentials --resource-group <staging-rg> --name <staging-cluster> --file staging-kubeconfig.yaml
@@ -48,6 +51,7 @@ aws eks update-kubeconfig --name <staging-cluster> --region <region> --kubeconfi
 ```
 
 **For Production:**
+
 ```bash
 # Same commands but for production cluster
 az aks get-credentials --resource-group <production-rg> --name <production-cluster> --file production-kubeconfig.yaml
@@ -73,6 +77,7 @@ KUBECONFIG=production-kubeconfig.yaml kubectl config view --minify --flatten --c
 The workflow expects base64-encoded kubeconfig files. Encode them:
 
 **For Staging:**
+
 ```bash
 # macOS/Linux
 base64 -i staging-kubeconfig.yaml | pbcopy  # macOS (copies to clipboard)
@@ -84,6 +89,7 @@ base64 staging-kubeconfig.yaml > staging-kubeconfig-base64.txt
 ```
 
 **For Production:**
+
 ```bash
 base64 -i production-kubeconfig.yaml | pbcopy  # macOS
 base64 production-kubeconfig.yaml | pbcopy    # macOS alternative
@@ -91,6 +97,7 @@ base64 production-kubeconfig.yaml             # Linux
 ```
 
 **Verify the encoding:**
+
 ```bash
 # Decode to verify (should match original)
 echo "<base64-string>" | base64 -d > verify.yaml
@@ -181,6 +188,7 @@ curl -X PUT \
 ## Security Best Practices
 
 ### ✅ Do:
+
 - ✅ Use separate kubeconfig files for staging and production
 - ✅ Use service accounts with minimal required permissions
 - ✅ Rotate kubeconfig credentials regularly (every 90 days)
@@ -189,6 +197,7 @@ curl -X PUT \
 - ✅ Use read-only service accounts when possible
 
 ### ❌ Don't:
+
 - ❌ Don't commit kubeconfig files to the repository
 - ❌ Don't share kubeconfig files via insecure channels
 - ❌ Don't use admin/service account credentials with full cluster access
@@ -204,6 +213,7 @@ curl -X PUT \
 **Cause:** Secret is not base64-encoded or encoding is corrupted
 
 **Fix:**
+
 1. Re-encode the kubeconfig file:
    ```bash
    base64 staging-kubeconfig.yaml | pbcopy
@@ -216,6 +226,7 @@ curl -X PUT \
 **Cause:** Kubeconfig is invalid or cluster is not accessible from GitHub Actions
 
 **Fix:**
+
 1. Test the kubeconfig locally:
    ```bash
    export KUBECONFIG=staging-kubeconfig.yaml
@@ -232,6 +243,7 @@ curl -X PUT \
 **Cause:** Deployment doesn't exist yet or label is wrong
 
 **Fix:**
+
 1. Check if deployment exists:
    ```bash
    kubectl get deployments -n staging
@@ -253,31 +265,31 @@ A typical kubeconfig file looks like:
 apiVersion: v1
 kind: Config
 clusters:
-- cluster:
-    certificate-authority-data: <base64-cert>
-    server: https://<cluster-endpoint>
-  name: staging-cluster
+  - cluster:
+      certificate-authority-data: <base64-cert>
+      server: https://<cluster-endpoint>
+    name: staging-cluster
 contexts:
-- context:
-    cluster: staging-cluster
-    user: staging-user
-  name: staging-context
+  - context:
+      cluster: staging-cluster
+      user: staging-user
+    name: staging-context
 current-context: staging-context
 users:
-- name: staging-user
-  user:
-    token: <service-account-token>
-    # OR
-    # exec:
-    #   apiVersion: client.authentication.k8s.io/v1beta1
-    #   command: az
-    #   args:
-    #     - aks
-    #     - get-token
-    #     - --resource-group
-    #     - <rg-name>
-    #     - --name
-    #     - <cluster-name>
+  - name: staging-user
+    user:
+      token: <service-account-token>
+      # OR
+      # exec:
+      #   apiVersion: client.authentication.k8s.io/v1beta1
+      #   command: az
+      #   args:
+      #     - aks
+      #     - get-token
+      #     - --resource-group
+      #     - <rg-name>
+      #     - --name
+      #     - <cluster-name>
 ```
 
 ---
@@ -285,6 +297,7 @@ users:
 ## Quick Reference
 
 **Secret Names:**
+
 - `KUBECONFIG_STAGING`
 - `KUBECONFIG_PRODUCTION`
 
@@ -293,6 +306,7 @@ users:
 **Location:** GitHub → Repository → Settings → Secrets and variables → Actions
 
 **Workflow Usage:**
+
 ```yaml
 echo "${{ secrets.KUBECONFIG_STAGING }}" | base64 -d > $HOME/.kube/config
 ```
@@ -313,4 +327,3 @@ After setting up secrets:
 
 **Last Updated:** 2025-01-27  
 **Questions?** Check the workflow logs or review `.github/workflows/rolling-deploy.yml`
-

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -15,44 +15,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
+var __createBinding =
+  (this && this.__createBinding) ||
+  (Object.create
+    ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        var desc = Object.getOwnPropertyDescriptor(m, k);
+        if (!desc || ('get' in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+          desc = {
+            enumerable: true,
+            get: function () {
+              return m[k];
+            },
+          };
+        }
+        Object.defineProperty(o, k2, desc);
+      }
+    : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+var __setModuleDefault =
+  (this && this.__setModuleDefault) ||
+  (Object.create
+    ? function (o, v) {
+        Object.defineProperty(o, 'default', { enumerable: true, value: v });
+      }
+    : function (o, v) {
+        o['default'] = v;
+      });
+var __importStar =
+  (this && this.__importStar) ||
+  (function () {
+    var ownKeys = function (o) {
+      ownKeys =
+        Object.getOwnPropertyNames ||
+        function (o) {
+          var ar = [];
+          for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+          return ar;
         };
-        return ownKeys(o);
+      return ownKeys(o);
     };
     return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
+      if (mod && mod.__esModule) return mod;
+      var result = {};
+      if (mod != null)
+        for (var k = ownKeys(mod), i = 0; i < k.length; i++)
+          if (k[i] !== 'default') __createBinding(result, mod, k[i]);
+      __setModuleDefault(result, mod);
+      return result;
     };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-const path = __importStar(require("path"));
-const migration_manager_js_1 = require("../../core/migrations/migration-manager.js");
-const _001_add_versioning_js_1 = require("../../schemas/migrations/001-add-versioning.js");
-const _002_add_metrics_retention_js_1 = require("../../schemas/migrations/002-add-metrics-retention.js");
+  })();
+Object.defineProperty(exports, '__esModule', { value: true });
+const path = __importStar(require('path'));
+const migration_manager_js_1 = require('../../core/migrations/migration-manager.js');
+const _001_add_versioning_js_1 = require('../../schemas/migrations/001-add-versioning.js');
+const _002_add_metrics_retention_js_1 = require('../../schemas/migrations/002-add-metrics-retention.js');
 /**
  * Migration CLI Tool
  *
@@ -66,94 +85,92 @@ const _002_add_metrics_retention_js_1 = require("../../schemas/migrations/002-ad
  */
 const MIGRATIONS_PATH = path.join(process.cwd(), 'schemas', 'migrations');
 async function main() {
-    const command = process.argv[2] || 'up';
-    const arg = process.argv[3];
-    console.log('🚀 Engine-Ops Migration Tool\n');
-    // Initialize migration manager
-    const manager = new migration_manager_js_1.MigrationManager(MIGRATIONS_PATH);
-    // Register migrations
-    console.log('📋 Registering migrations...');
-    manager.registerMigration(_001_add_versioning_js_1.migration001);
-    manager.registerMigration(_002_add_metrics_retention_js_1.migration002);
-    console.log('✓ Migrations registered\n');
-    try {
-        switch (command) {
-            case 'up':
-            case 'migrate':
-                console.log('⬆️  Applying migrations...\n');
-                await manager.migrate();
-                break;
-            case 'down':
-            case 'rollback': {
-                const count = arg ? parseInt(arg, 10) : 1;
-                console.log(`⬇️  Rolling back ${count} migration(s)...\n`);
-                await manager.rollback(count);
-                break;
-            }
-            case 'status': {
-                console.log('📊 Migration Status\n');
-                const status = manager.getStatus();
-                console.log(`Total migrations: ${status.total}`);
-                console.log(`Applied: ${status.applied.length}`);
-                console.log(`Pending: ${status.pending.length}\n`);
-                if (status.applied.length > 0) {
-                    console.log('Applied Migrations:');
-                    for (const m of status.applied) {
-                        console.log(`  ✓ ${m.version} - ${m.name} (${m.appliedAt.toISOString()})`);
-                    }
-                    console.log();
-                }
-                if (status.pending.length > 0) {
-                    console.log('Pending Migrations:');
-                    for (const m of status.pending) {
-                        console.log(`  ○ ${m.version} - ${m.name}`);
-                    }
-                    console.log();
-                }
-                break;
-            }
-            case 'verify': {
-                console.log('🔍 Verifying migration integrity...\n');
-                const isValid = manager.verifyIntegrity();
-                if (isValid) {
-                    console.log('✓ All migrations are valid\n');
-                }
-                else {
-                    console.error('✗ Migration integrity check failed\n');
-                    process.exit(1);
-                }
-                break;
-            }
-            case 'help':
-            default:
-                printHelp();
-                break;
+  const command = process.argv[2] || 'up';
+  const arg = process.argv[3];
+  console.log('🚀 Engine-Ops Migration Tool\n');
+  // Initialize migration manager
+  const manager = new migration_manager_js_1.MigrationManager(MIGRATIONS_PATH);
+  // Register migrations
+  console.log('📋 Registering migrations...');
+  manager.registerMigration(_001_add_versioning_js_1.migration001);
+  manager.registerMigration(_002_add_metrics_retention_js_1.migration002);
+  console.log('✓ Migrations registered\n');
+  try {
+    switch (command) {
+      case 'up':
+      case 'migrate':
+        console.log('⬆️  Applying migrations...\n');
+        await manager.migrate();
+        break;
+      case 'down':
+      case 'rollback': {
+        const count = arg ? parseInt(arg, 10) : 1;
+        console.log(`⬇️  Rolling back ${count} migration(s)...\n`);
+        await manager.rollback(count);
+        break;
+      }
+      case 'status': {
+        console.log('📊 Migration Status\n');
+        const status = manager.getStatus();
+        console.log(`Total migrations: ${status.total}`);
+        console.log(`Applied: ${status.applied.length}`);
+        console.log(`Pending: ${status.pending.length}\n`);
+        if (status.applied.length > 0) {
+          console.log('Applied Migrations:');
+          for (const m of status.applied) {
+            console.log(`  ✓ ${m.version} - ${m.name} (${m.appliedAt.toISOString()})`);
+          }
+          console.log();
         }
-        console.log('✨ Done!\n');
+        if (status.pending.length > 0) {
+          console.log('Pending Migrations:');
+          for (const m of status.pending) {
+            console.log(`  ○ ${m.version} - ${m.name}`);
+          }
+          console.log();
+        }
+        break;
+      }
+      case 'verify': {
+        console.log('🔍 Verifying migration integrity...\n');
+        const isValid = manager.verifyIntegrity();
+        if (isValid) {
+          console.log('✓ All migrations are valid\n');
+        } else {
+          console.error('✗ Migration integrity check failed\n');
+          process.exit(1);
+        }
+        break;
+      }
+      case 'help':
+      default:
+        printHelp();
+        break;
     }
-    catch (error) {
-        console.error('❌ Migration failed:', error);
-        process.exit(1);
-    }
+    console.log('✨ Done!\n');
+  } catch (error) {
+    console.error('❌ Migration failed:', error);
+    process.exit(1);
+  }
 }
 function printHelp() {
-    console.log('Usage: npm run migrate [command] [args]\n');
-    console.log('Commands:');
-    console.log('  up, migrate       Apply all pending migrations (default)');
-    console.log('  down, rollback    Rollback last migration');
-    console.log('  down <n>          Rollback last n migrations');
-    console.log('  status            Show migration status');
-    console.log('  verify            Verify migration integrity');
-    console.log('  help              Show this help message\n');
-    console.log('Examples:');
-    console.log('  npm run migrate');
-    console.log('  npm run migrate status');
-    console.log('  npm run migrate down 2');
-    console.log('  npm run migrate verify\n');
+  console.log('Usage: npm run migrate [command] [args]\n');
+  console.log('Commands:');
+  console.log('  up, migrate       Apply all pending migrations (default)');
+  console.log('  down, rollback    Rollback last migration');
+  console.log('  down <n>          Rollback last n migrations');
+  console.log('  status            Show migration status');
+  console.log('  verify            Verify migration integrity');
+  console.log('  help              Show this help message\n');
+  console.log('Examples:');
+  console.log('  npm run migrate');
+  console.log('  npm run migrate status');
+  console.log('  npm run migrate down 2');
+  console.log('  npm run migrate verify\n');
 }
 // Run if called directly (relies on shebang and npm script)
 // This file is executed via npm script, so we always run main()
-main().catch(error => {
-    console.error('Fatal error:', error);
-    process.exit(1);
+main().catch((error) => {
+  console.error('Fatal error:', error);
+  process.exit(1);
 });

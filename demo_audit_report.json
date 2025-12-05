@@ -163,17 +163,12 @@
     }
   ],
   "annotations": {
-    "tags": [
-      "issues_detected",
-      "audited"
-    ],
+    "tags": ["issues_detected", "audited"],
     "labels": {
       "highest_severity": "critical",
       "triage_priority": "high",
       "audit_status": "completed"
     },
-    "categories": [
-      "detection"
-    ]
+    "categories": ["detection"]
   }
 }

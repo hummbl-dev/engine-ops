@@ -7,28 +7,28 @@
 
 ## 🏗️ Phase 1: The Body (v0.2 - v0.5)
 
-*Connecting the Brain to the World.*
+_Connecting the Brain to the World._
 
 - [ ] **v0.2: The Connector (MCP Integration)**
   - [ ] Implement a basic Model Context Protocol client.
   - [ ] Allow the Kernel to read local files (`--context ./README.md`).
-  - [ ] *Goal:* "Context Sovereignty" (RAG without the Cloud).
+  - [ ] _Goal:_ "Context Sovereignty" (RAG without the Cloud).
 
 - [ ] **v0.3: The Localizer (Ollama Support)**
   - [ ] Add native support for local inference endpoints (localhost:11434).
   - [ ] Create `router.py` logic to send PII-heavy prompts to Local models automatically.
-  - [ ] *Goal:* "Privacy by Design."
+  - [ ] _Goal:_ "Privacy by Design."
 
 - [ ] **v0.4: The TUI (Terminal User Interface)**
   - [ ] Upgrade `rich` print statements to a full interactive dashboard (using `Textual`).
   - [ ] Real-time token streaming.
-  - [ ] *Goal:* A UX that rivals proprietary tools.
+  - [ ] _Goal:_ A UX that rivals proprietary tools.
 
 ---
 
 ## 🧠 Phase 2: The Federation (v0.5 - v1.0)
 
-*Scaling the Intelligence.*
+_Scaling the Intelligence._
 
 - [ ] **v0.6: The Vector Vault**
   - [ ] Local ChromaDB integration for long-term memory.
@@ -39,7 +39,7 @@
 
 - [ ] **v1.0: The IDE Extension**
   - [ ] A lightweight VS Code extension that pipes the editor selection into the `sovereign.py` kernel.
-  - [ ] *Goal:* Complete replacement of Copilot.
+  - [ ] _Goal:_ Complete replacement of Copilot.
 
 ---
 

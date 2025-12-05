@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,49 +14,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.RetryPolicy = void 0;
 /**
  * Retry logic with exponential backoff and jitter
  */
 class RetryPolicy {
-    config;
-    constructor(config = {}) {
-        this.config = {
-            maxRetries: config.maxRetries ?? 3,
-            initialDelay: config.initialDelay ?? 1000,
-            maxDelay: config.maxDelay ?? 30000,
-            backoffMultiplier: config.backoffMultiplier ?? 2,
-            jitter: config.jitter ?? true
-        };
-    }
-    async execute(fn, shouldRetry = () => true) {
-        let lastError;
-        for (let attempt = 0; attempt <= this.config.maxRetries; attempt++) {
-            try {
-                return await fn();
-            }
-            catch (error) {
-                lastError = error;
-                if (attempt === this.config.maxRetries || !shouldRetry(lastError)) {
-                    throw lastError;
-                }
-                const delay = this.calculateDelay(attempt);
-                await this.sleep(delay);
-            }
+  config;
+  constructor(config = {}) {
+    this.config = {
+      maxRetries: config.maxRetries ?? 3,
+      initialDelay: config.initialDelay ?? 1000,
+      maxDelay: config.maxDelay ?? 30000,
+      backoffMultiplier: config.backoffMultiplier ?? 2,
+      jitter: config.jitter ?? true,
+    };
+  }
+  async execute(fn, shouldRetry = () => true) {
+    let lastError;
+    for (let attempt = 0; attempt <= this.config.maxRetries; attempt++) {
+      try {
+        return await fn();
+      } catch (error) {
+        lastError = error;
+        if (attempt === this.config.maxRetries || !shouldRetry(lastError)) {
+          throw lastError;
         }
-        throw lastError;
+        const delay = this.calculateDelay(attempt);
+        await this.sleep(delay);
+      }
     }
-    calculateDelay(attempt) {
-        let delay = this.config.initialDelay * Math.pow(this.config.backoffMultiplier, attempt);
-        delay = Math.min(delay, this.config.maxDelay);
-        if (this.config.jitter) {
-            delay = delay * (0.5 + Math.random() * 0.5);
-        }
-        return delay;
+    throw lastError;
+  }
+  calculateDelay(attempt) {
+    let delay = this.config.initialDelay * Math.pow(this.config.backoffMultiplier, attempt);
+    delay = Math.min(delay, this.config.maxDelay);
+    if (this.config.jitter) {
+      delay = delay * (0.5 + Math.random() * 0.5);
     }
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    return delay;
+  }
+  sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 }
 exports.RetryPolicy = RetryPolicy;

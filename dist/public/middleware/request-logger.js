@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.requestLogger = requestLogger;
 /**
  * Request logging middleware
  */
 function requestLogger(req, res, next) {
-    const start = Date.now();
-    // Log when response finishes
-    res.on('finish', () => {
-        const duration = Date.now() - start;
-        console.log(`${req.method} ${req.path} ${res.statusCode} - ${duration}ms`);
-    });
-    next();
+  const start = Date.now();
+  // Log when response finishes
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`${req.method} ${req.path} ${res.statusCode} - ${duration}ms`);
+  });
+  next();
 }

@@ -67,33 +67,39 @@ Engine-Ops is a high-performance optimization platform designed for resource all
 ## Component Breakdown
 
 ### 1. Client Layer
+
 - **REST API**: HTTP/JSON interface for synchronous requests
 - **WebSocket**: Real-time bidirectional communication
 - **Python SDK**: Native Python client library
 - **Go SDK**: Native Go client library
 
 ### 2. API Gateway
+
 - **Authentication**: API keys and JWT tokens
 - **Rate Limiting**: Token bucket algorithm, per-user limits
 - **RBAC**: Role-based access control (admin, user, readonly)
 
 ### 3. Application Layer
+
 - **Express Server**: Node.js web framework
 - **Socket.io**: WebSocket server for real-time updates
 - **Middleware**: Request logging, error handling, validation
 
 ### 4. Business Logic
+
 - **Optimization Engine**: Core orchestration and lifecycle management
 - **Request Validation**: Zod schema validation
 - **Result Caching**: LRU cache with TTL
 
 ### 5. Algorithm Layer
+
 - **Bin Packing**: First Fit Decreasing (FFD) algorithm
 - **Least Loaded**: Load-based scheduling
 - **Genetic Algorithm**: Population-based optimization
 - **Simulated Annealing**: Probabilistic optimization
 
 ### 6. Infrastructure
+
 - **LRU Cache**: In-memory caching with eviction
 - **Metrics Collector**: Performance tracking (P50/P95/P99)
 - **Structured Logger**: JSON logging with correlation IDs
@@ -136,11 +142,13 @@ Engine-Ops is a high-performance optimization platform designed for resource all
 ## Technology Stack
 
 ### Core
+
 - **Runtime**: Node.js 18+
 - **Language**: TypeScript 5.x
 - **Framework**: Express.js
 
 ### Libraries
+
 - **Validation**: Zod
 - **WebSocket**: Socket.io
 - **Metrics**: prom-client
@@ -149,6 +157,7 @@ Engine-Ops is a high-performance optimization platform designed for resource all
 - **Testing**: Jest, Supertest
 
 ### Infrastructure
+
 - **Containerization**: Docker
 - **Orchestration**: Kubernetes
 - **Package Management**: Helm

@@ -62,6 +62,7 @@ cd infra/scripts
 ```
 
 The script will:
+
 1. Detect current active environment
 2. Build and deploy to inactive environment
 3. Run health checks and smoke tests
@@ -134,11 +135,12 @@ The enhanced deployment configuration in `infra/k8s/deployment.yaml` includes:
 strategy:
   type: RollingUpdate
   rollingUpdate:
-    maxSurge: 1        # Max additional pods during update
-    maxUnavailable: 0  # Min pods that must be available
+    maxSurge: 1 # Max additional pods during update
+    maxUnavailable: 0 # Min pods that must be available
 ```
 
 Key features:
+
 - **Startup Probe**: 60 seconds grace period for startup
 - **Liveness Probe**: Ensures pods are healthy
 - **Readiness Probe**: Controls when pod receives traffic
@@ -195,12 +197,16 @@ const manager = new MigrationManager('./schemas/migrations');
 
 // Register migrations
 manager.registerMigration({
-    version: '001',
-    name: 'add-versioning',
-    up: async () => { /* migration code */ },
-    down: async () => { /* rollback code */ },
-    validateUp: async () => true,
-    validateDown: async () => true
+  version: '001',
+  name: 'add-versioning',
+  up: async () => {
+    /* migration code */
+  },
+  down: async () => {
+    /* rollback code */
+  },
+  validateUp: async () => true,
+  validateDown: async () => true,
 });
 ```
 
@@ -230,21 +236,21 @@ npm run migrate verify
 ```typescript
 // ✅ Good: Additive change
 export const migration: Migration = {
-    version: '003',
-    name: 'add-email-field',
-    async up() {
-        // Add new optional field
-        // Old code can still function
-    }
+  version: '003',
+  name: 'add-email-field',
+  async up() {
+    // Add new optional field
+    // Old code can still function
+  },
 };
 
 // ❌ Bad: Breaking change
 export const migration: Migration = {
-    version: '003',
-    name: 'rename-user-field',
-    async up() {
-        // Renaming breaks old code immediately
-    }
+  version: '003',
+  name: 'rename-user-field',
+  async up() {
+    // Renaming breaks old code immediately
+  },
 };
 ```
 
@@ -253,29 +259,29 @@ export const migration: Migration = {
 ```typescript
 // Step 1: Add new field (backward compatible)
 export const migration001: Migration = {
-    version: '001',
-    name: 'add-new-field',
-    async up() {
-        // Add new field, keep old field
-    }
+  version: '001',
+  name: 'add-new-field',
+  async up() {
+    // Add new field, keep old field
+  },
 };
 
 // Step 2: Migrate data (after code update)
 export const migration002: Migration = {
-    version: '002',
-    name: 'migrate-data',
-    async up() {
-        // Copy data from old to new field
-    }
+  version: '002',
+  name: 'migrate-data',
+  async up() {
+    // Copy data from old to new field
+  },
 };
 
 // Step 3: Remove old field (after all instances updated)
 export const migration003: Migration = {
-    version: '003',
-    name: 'remove-old-field',
-    async up() {
-        // Safe to remove old field now
-    }
+  version: '003',
+  name: 'remove-old-field',
+  async up() {
+    // Safe to remove old field now
+  },
 };
 ```
 
@@ -283,20 +289,20 @@ export const migration003: Migration = {
 
 ```typescript
 export const migration: Migration = {
-    version: '004',
-    name: 'add-index',
-    async up() {
-        // Add index for performance
-        console.log('Creating index...');
-    },
-    async down() {
-        // Remove index on rollback
-        console.log('Dropping index...');
-    },
-    async validateUp() {
-        // Verify index exists
-        return true;
-    }
+  version: '004',
+  name: 'add-index',
+  async up() {
+    // Add index for performance
+    console.log('Creating index...');
+  },
+  async down() {
+    // Remove index on rollback
+    console.log('Dropping index...');
+  },
+  async validateUp() {
+    // Verify index exists
+    return true;
+  },
 };
 ```
 
@@ -334,19 +340,18 @@ The API supports three methods of version specification:
 ### Using API Versioning
 
 ```typescript
-import { 
-    apiVersionMiddleware,
-    deprecationWarningMiddleware,
-    autoTransformMiddleware 
+import {
+  apiVersionMiddleware,
+  deprecationWarningMiddleware,
+  autoTransformMiddleware,
 } from './middleware/api-version';
 
 // Apply to routes
 app.use('/api', apiVersionMiddleware);
-app.use('/api/v1', deprecationWarningMiddleware(
-    ApiVersion.V1,
-    'Please migrate to v2',
-    '2025-12-31'
-));
+app.use(
+  '/api/v1',
+  deprecationWarningMiddleware(ApiVersion.V1, 'Please migrate to v2', '2025-12-31'),
+);
 app.use('/api', autoTransformMiddleware);
 ```
 
@@ -394,6 +399,7 @@ Link: </api/v2>; rel="successor-version"
 ### API Version Migration Strategy
 
 1. **Release v2 alongside v1**
+
    ```bash
    # Both versions available
    /api/v1/optimize  # Original
@@ -401,15 +407,13 @@ Link: </api/v2>; rel="successor-version"
    ```
 
 2. **Announce deprecation**
+
    ```typescript
-   deprecationWarningMiddleware(
-       ApiVersion.V1,
-       'v1 will be sunset on 2025-12-31',
-       '2025-12-31'
-   );
+   deprecationWarningMiddleware(ApiVersion.V1, 'v1 will be sunset on 2025-12-31', '2025-12-31');
    ```
 
 3. **Monitor v1 usage**
+
    ```bash
    # Check logs for v1 requests
    kubectl logs -l app=engine-ops | grep "X-API-Version: v1"
@@ -419,10 +423,10 @@ Link: </api/v2>; rel="successor-version"
    ```typescript
    // After sunset date
    app.use('/api/v1', (req, res) => {
-       res.status(410).json({
-           error: 'Gone',
-           message: 'API v1 is no longer supported. Use v2.'
-       });
+     res.status(410).json({
+       error: 'Gone',
+       message: 'API v1 is no longer supported. Use v2.',
+     });
    });
    ```
 
@@ -584,11 +588,13 @@ kubectl exec <pod-name> -- curl localhost:3000/health/ready
 ```
 
 **Common causes**:
+
 - Application startup time exceeds probe timeout
 - Database connection issues
 - Missing configuration
 
 **Solutions**:
+
 - Increase `initialDelaySeconds` in probes
 - Add startup probe for slow-starting applications
 - Verify ConfigMap and Secrets are present
@@ -609,6 +615,7 @@ kubectl describe pod <pod-name>
 ```
 
 **Solutions**:
+
 - Verify image exists and tag is correct
 - Add image pull secrets if using private registry
 - Check network connectivity to registry
@@ -629,6 +636,7 @@ kubectl get pods --show-labels
 ```
 
 **Solutions**:
+
 - Ensure pod labels match service selector
 - Verify pods are in Ready state
 - Check network policies
@@ -649,6 +657,7 @@ npm run migrate 2>&1 | tee migration.log
 ```
 
 **Solutions**:
+
 - Rollback failed migration: `npm run migrate:rollback`
 - Fix migration code and retry
 - Check database connectivity
@@ -667,6 +676,7 @@ kubectl describe deployment engine-ops
 ```
 
 **Solutions**:
+
 - Scale down non-critical workloads
 - Adjust resource requests/limits
 - Add more nodes to cluster
@@ -684,6 +694,7 @@ Engine-Ops provides comprehensive zero-downtime deployment capabilities:
 Choose the strategy that best fits your requirements and risk tolerance. For critical production systems, blue-green deployment with comprehensive testing is recommended.
 
 For more information:
+
 - [Blue-Green Deployment README](../infra/k8s/blue-green/README.md)
 - [Kubernetes Deployment README](../infra/k8s/README.md)
 - [Migration Examples](../schemas/migrations/)

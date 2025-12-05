@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -11,16 +11,16 @@
  * Change Date: 2029-01-01
  * Change License: Apache License, Version 2.0
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.PluginEvent = void 0;
 /**
  * Plugin registry event types
  */
 var PluginEvent;
 (function (PluginEvent) {
-    PluginEvent["REGISTERED"] = "plugin:registered";
-    PluginEvent["UNREGISTERED"] = "plugin:unregistered";
-    PluginEvent["ENABLED"] = "plugin:enabled";
-    PluginEvent["DISABLED"] = "plugin:disabled";
-    PluginEvent["ERROR"] = "plugin:error";
+  PluginEvent['REGISTERED'] = 'plugin:registered';
+  PluginEvent['UNREGISTERED'] = 'plugin:unregistered';
+  PluginEvent['ENABLED'] = 'plugin:enabled';
+  PluginEvent['DISABLED'] = 'plugin:disabled';
+  PluginEvent['ERROR'] = 'plugin:error';
 })(PluginEvent || (exports.PluginEvent = PluginEvent = {}));

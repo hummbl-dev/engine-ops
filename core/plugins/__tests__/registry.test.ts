@@ -19,139 +19,139 @@ import { OptimizationRequest, OptimizationResult } from '../../interfaces.js';
 
 // Test plugin implementation
 class TestPlugin extends BaseOptimizationPlugin {
-    public readonly metadata: PluginMetadata = {
-        name: 'test-plugin',
-        version: '1.0.0',
-        description: 'Test plugin',
-        supportedTypes: ['resource']
+  public readonly metadata: PluginMetadata = {
+    name: 'test-plugin',
+    version: '1.0.0',
+    description: 'Test plugin',
+    supportedTypes: ['resource'],
+  };
+
+  public canHandle(request: OptimizationRequest): boolean {
+    return request.type === 'resource';
+  }
+
+  public async optimize(request: OptimizationRequest): Promise<OptimizationResult> {
+    return {
+      requestId: request.id,
+      success: true,
+      result: { test: true },
+      metrics: { durationMs: 10, score: 1.0 },
     };
-
-    public canHandle(request: OptimizationRequest): boolean {
-        return request.type === 'resource';
-    }
-
-    public async optimize(request: OptimizationRequest): Promise<OptimizationResult> {
-        return {
-            requestId: request.id,
-            success: true,
-            result: { test: true },
-            metrics: { durationMs: 10, score: 1.0 }
-        };
-    }
+  }
 }
 
 describe('PluginRegistry', () => {
-    let registry: PluginRegistry;
+  let registry: PluginRegistry;
 
-    beforeEach(() => {
-        registry = new PluginRegistry();
-    });
+  beforeEach(() => {
+    registry = new PluginRegistry();
+  });
 
-    it('should register a plugin', async () => {
-        const plugin = new TestPlugin();
-        await registry.register(plugin);
+  it('should register a plugin', async () => {
+    const plugin = new TestPlugin();
+    await registry.register(plugin);
 
-        const registered = registry.getPlugin('test-plugin');
-        expect(registered).toBeDefined();
-        expect(registered?.metadata.name).toBe('test-plugin');
-    });
+    const registered = registry.getPlugin('test-plugin');
+    expect(registered).toBeDefined();
+    expect(registered?.metadata.name).toBe('test-plugin');
+  });
 
-    it('should throw error when registering duplicate plugin', async () => {
-        const plugin1 = new TestPlugin();
-        const plugin2 = new TestPlugin();
+  it('should throw error when registering duplicate plugin', async () => {
+    const plugin1 = new TestPlugin();
+    const plugin2 = new TestPlugin();
 
-        await registry.register(plugin1);
-        await expect(registry.register(plugin2)).rejects.toThrow();
-    });
+    await registry.register(plugin1);
+    await expect(registry.register(plugin2)).rejects.toThrow();
+  });
 
-    it('should unregister a plugin', async () => {
-        const plugin = new TestPlugin();
-        await registry.register(plugin);
-        await registry.unregister('test-plugin');
+  it('should unregister a plugin', async () => {
+    const plugin = new TestPlugin();
+    await registry.register(plugin);
+    await registry.unregister('test-plugin');
 
-        const registered = registry.getPlugin('test-plugin');
-        expect(registered).toBeUndefined();
-    });
+    const registered = registry.getPlugin('test-plugin');
+    expect(registered).toBeUndefined();
+  });
 
-    it('should find suitable plugin for request', async () => {
-        const plugin = new TestPlugin();
-        await registry.register(plugin);
+  it('should find suitable plugin for request', async () => {
+    const plugin = new TestPlugin();
+    await registry.register(plugin);
 
-        const request: OptimizationRequest = {
-            id: 'test-1',
-            type: 'resource',
-            data: {}
-        };
+    const request: OptimizationRequest = {
+      id: 'test-1',
+      type: 'resource',
+      data: {},
+    };
 
-        const found = registry.findPlugin(request);
-        expect(found).toBeDefined();
-        expect(found?.metadata.name).toBe('test-plugin');
-    });
+    const found = registry.findPlugin(request);
+    expect(found).toBeDefined();
+    expect(found?.metadata.name).toBe('test-plugin');
+  });
 
-    it('should return undefined when no suitable plugin found', async () => {
-        const plugin = new TestPlugin();
-        await registry.register(plugin);
+  it('should return undefined when no suitable plugin found', async () => {
+    const plugin = new TestPlugin();
+    await registry.register(plugin);
 
-        const request: OptimizationRequest = {
-            id: 'test-1',
-            type: 'scheduling',
-            data: {}
-        };
+    const request: OptimizationRequest = {
+      id: 'test-1',
+      type: 'scheduling',
+      data: {},
+    };
 
-        const found = registry.findPlugin(request);
-        expect(found).toBeUndefined();
-    });
+    const found = registry.findPlugin(request);
+    expect(found).toBeUndefined();
+  });
 
-    it('should enable and disable plugins', async () => {
-        const plugin = new TestPlugin();
-        await registry.register(plugin);
+  it('should enable and disable plugins', async () => {
+    const plugin = new TestPlugin();
+    await registry.register(plugin);
 
-        registry.disablePlugin('test-plugin');
-        let config = registry.getConfig('test-plugin');
-        expect(config?.enabled).toBe(false);
+    registry.disablePlugin('test-plugin');
+    let config = registry.getConfig('test-plugin');
+    expect(config?.enabled).toBe(false);
 
-        registry.enablePlugin('test-plugin');
-        config = registry.getConfig('test-plugin');
-        expect(config?.enabled).toBe(true);
-    });
+    registry.enablePlugin('test-plugin');
+    config = registry.getConfig('test-plugin');
+    expect(config?.enabled).toBe(true);
+  });
 
-    it('should respect plugin priority', async () => {
-        class HighPriorityPlugin extends TestPlugin {
-            public readonly metadata: PluginMetadata = {
-                name: 'high-priority',
-                version: '1.0.0',
-                description: 'High priority plugin',
-                supportedTypes: ['resource']
-            };
-        }
+  it('should respect plugin priority', async () => {
+    class HighPriorityPlugin extends TestPlugin {
+      public readonly metadata: PluginMetadata = {
+        name: 'high-priority',
+        version: '1.0.0',
+        description: 'High priority plugin',
+        supportedTypes: ['resource'],
+      };
+    }
 
-        const lowPriority = new TestPlugin();
-        const highPriority = new HighPriorityPlugin();
+    const lowPriority = new TestPlugin();
+    const highPriority = new HighPriorityPlugin();
 
-        await registry.register(lowPriority, { enabled: true, priority: 1 });
-        await registry.register(highPriority, { enabled: true, priority: 10 });
+    await registry.register(lowPriority, { enabled: true, priority: 1 });
+    await registry.register(highPriority, { enabled: true, priority: 10 });
 
-        const request: OptimizationRequest = {
-            id: 'test-1',
-            type: 'resource',
-            data: {}
-        };
+    const request: OptimizationRequest = {
+      id: 'test-1',
+      type: 'resource',
+      data: {},
+    };
 
-        const found = registry.findPlugin(request);
-        expect(found?.metadata.name).toBe('high-priority');
-    });
+    const found = registry.findPlugin(request);
+    expect(found?.metadata.name).toBe('high-priority');
+  });
 
-    it('should emit events on plugin lifecycle', async () => {
-        const plugin = new TestPlugin();
-        const events: PluginEvent[] = [];
+  it('should emit events on plugin lifecycle', async () => {
+    const plugin = new TestPlugin();
+    const events: PluginEvent[] = [];
 
-        registry.on(PluginEvent.REGISTERED, () => events.push(PluginEvent.REGISTERED));
-        registry.on(PluginEvent.UNREGISTERED, () => events.push(PluginEvent.UNREGISTERED));
+    registry.on(PluginEvent.REGISTERED, () => events.push(PluginEvent.REGISTERED));
+    registry.on(PluginEvent.UNREGISTERED, () => events.push(PluginEvent.UNREGISTERED));
 
-        await registry.register(plugin);
-        await registry.unregister('test-plugin');
+    await registry.register(plugin);
+    await registry.unregister('test-plugin');
 
-        expect(events).toContain(PluginEvent.REGISTERED);
-        expect(events).toContain(PluginEvent.UNREGISTERED);
-    });
+    expect(events).toContain(PluginEvent.REGISTERED);
+    expect(events).toContain(PluginEvent.UNREGISTERED);
+  });
 });

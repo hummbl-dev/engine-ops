@@ -1,17 +1,18 @@
 # CI Failure Response Playbook
 
 ## Purpose
+
 Standardized procedures for triaging and resolving CI pipeline failures in the `engine-ops` repository.
 
 ## Quick Reference
 
-| Failure Type | Typical Cause | First Action |
-|--------------|---------------|--------------|
-| Build (Node 20.x) | Dependency conflict | Check `package.json` versions |
-| Build (Node 18.x) | Syntax/Type errors | Review recent commits |
-| Lint | Code style violations | Run `npm run lint -- --fix` |
-| Test | Logic errors | Check test logs in artifacts |
-| License Check | Missing headers | Run `./tools/apply-license-headers.sh` |
+| Failure Type      | Typical Cause         | First Action                           |
+| ----------------- | --------------------- | -------------------------------------- |
+| Build (Node 20.x) | Dependency conflict   | Check `package.json` versions          |
+| Build (Node 18.x) | Syntax/Type errors    | Review recent commits                  |
+| Lint              | Code style violations | Run `npm run lint -- --fix`            |
+| Test              | Logic errors          | Check test logs in artifacts           |
+| License Check     | Missing headers       | Run `./tools/apply-license-headers.sh` |
 
 ---
 
@@ -22,6 +23,7 @@ Standardized procedures for triaging and resolving CI pipeline failures in the `
 **Check the CI dashboard:** [Actions](https://github.com/hummbl-dev/engine-ops/actions)
 
 **Common patterns:**
+
 - ❌ **All builds failing** → Likely main branch issue
 - ❌ **Only Node 20.x failing** → Dependency compatibility issue
 - ❌ **Specific PR failing** → PR-specific code issue
@@ -54,12 +56,14 @@ gh run download <run-id>
 ### Scenario 1: Peer Dependency Conflict
 
 **Symptoms:**
+
 ```
 npm error ERESOLVE could not resolve
 npm error Conflicting peer dependency: @typescript-eslint/parser@X.X.X
 ```
 
 **Resolution:**
+
 ```bash
 # Check current versions
 npm list @typescript-eslint/eslint-plugin @typescript-eslint/parser
@@ -83,12 +87,14 @@ git push origin main
 ### Scenario 2: TypeScript Build Errors
 
 **Symptoms:**
+
 ```
 error TS2554: Expected 2 arguments, but got 1
 error TS7006: Parameter implicitly has an 'any' type
 ```
 
 **Resolution:**
+
 ```bash
 # Run build locally
 npm run build
@@ -110,12 +116,14 @@ npm run build && npm test
 ### Scenario 3: Test Failures
 
 **Symptoms:**
+
 ```
 FAIL core/__tests__/engine.test.ts
   ● OptimizationEngine › should handle invalid requests
 ```
 
 **Resolution:**
+
 ```bash
 # Run tests locally with verbose output
 npm test -- --verbose
@@ -134,12 +142,14 @@ npm test -- --coverage
 ### Scenario 4: Lint Failures
 
 **Symptoms:**
+
 ```
 ✖ 150 problems (4 errors, 146 warnings)
   1 error and 0 warnings potentially fixable with the `--fix` option
 ```
 
 **Resolution:**
+
 ```bash
 # Auto-fix fixable issues
 npm run lint -- --fix
@@ -162,12 +172,14 @@ git commit -m "fix(lint): resolve eslint errors"
 ### Scenario 5: License Header Failures
 
 **Symptoms:**
+
 ```
 License header check failed
 Missing headers in: core/new-file.ts
 ```
 
 **Resolution:**
+
 ```bash
 # Apply license headers to all files
 ./tools/apply-license-headers.sh
@@ -185,18 +197,21 @@ git commit -m "chore: add license headers"
 ## Escalation Paths
 
 ### Level 1: Self-Service (0-30 min)
+
 - Check this playbook
 - Review recent commits
 - Run local verification
 - Apply standard fixes
 
 ### Level 2: Team Review (30 min - 2 hours)
+
 - Post in team chat with CI run link
 - Tag relevant code owner
 - Share artifact downloads
 - Pair debug if needed
 
 ### Level 3: Incident Response (> 2 hours)
+
 - Create incident ticket
 - Document timeline
 - Implement temporary workaround
@@ -207,12 +222,14 @@ git commit -m "chore: add license headers"
 ## Preventive Measures
 
 ### Before Merging PRs
+
 - ✅ All CI checks passing
 - ✅ Code reviewed by team member
 - ✅ Tests added for new features
 - ✅ Documentation updated
 
 ### Regular Maintenance
+
 - 📅 **Weekly**: Review Dependabot PRs
 - 📅 **Monthly**: Update GitHub Actions versions
 - 📅 **Quarterly**: Review and update this playbook

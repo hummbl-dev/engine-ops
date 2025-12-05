@@ -1,7 +1,7 @@
 rules:
-  - "Do not hallucinate."
-  - "Prioritize code safety."
-  - "Maintain sovereign control of data."
+  - 'Do not hallucinate.'
+  - 'Prioritize code safety.'
+  - 'Maintain sovereign control of data.'
 overrides:
   allow_recursion: true
   max_tokens: 4096

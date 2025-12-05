@@ -5,6 +5,7 @@ This example demonstrates how to create and use ML-driven optimization plugins w
 ## Overview
 
 This example shows:
+
 1. Setting up the engine with plugin support
 2. Registering a custom ML plugin
 3. Collecting workload data for training
@@ -91,12 +92,12 @@ Edit the plugin configuration in the example:
 
 ```typescript
 await registry.register(plugin, {
-    enabled: true,
-    priority: 10,
-    config: {
-        minTrainingSamples: 10,
-        confidenceThreshold: 0.8
-    }
+  enabled: true,
+  priority: 10,
+  config: {
+    minTrainingSamples: 10,
+    confidenceThreshold: 0.8,
+  },
 });
 ```
 
@@ -106,7 +107,7 @@ Replace the model implementation in `custom-ml-plugin.ts` with your own:
 
 ```typescript
 class CustomMLModel implements IMLModel {
-    // Your ML implementation
+  // Your ML implementation
 }
 ```
 
@@ -120,5 +121,6 @@ class CustomMLModel implements IMLModel {
 ## Support
 
 For questions or issues:
+
 - See main documentation: `/docs/ML_PLUGIN_GUIDE.md`
 - GitHub Issues: https://github.com/hummbl-dev/engine-ops/issues

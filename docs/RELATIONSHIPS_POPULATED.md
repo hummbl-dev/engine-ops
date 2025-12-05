@@ -9,54 +9,65 @@ All historical relationships between council members have been populated with pe
 ### Direct Lineages
 
 **Plato → Aristotle → Ibn Rushd**
+
 - Plato (eur_4bc_plato) influences Aristotle (eur_4bc_aristotle)
 - Aristotle (eur_4bc_aristotle) influences Ibn Rushd (afr_12c_ibn_rushd)
 
 **Plato → Hypatia**
+
 - Plato (eur_4bc_plato) influences Hypatia (afr_5c_hypatia) via Neoplatonism
 
 **Plato, Aristotle → Marcus Aurelius**
+
 - Both Plato and Aristotle influenced Stoic philosophy
 - Marcus Aurelius (eur_2c_marcus_aurelius) influenced by both
 
 **Marcus Aurelius → Machiavelli**
+
 - Machiavelli (eur_16c_machiavelli) studied Roman emperors including Marcus Aurelius
 
 ## Detailed Relationships
 
 ### Plato (eur_4bc_plato)
+
 - **Influences:**
   - `eur_4bc_aristotle` (direct student)
 - **Influenced by:** None in council (Socrates not in council)
 
 ### Aristotle (eur_4bc_aristotle)
+
 - **Influences:**
   - `afr_12c_ibn_rushd` (major commentator on Aristotle)
 - **Influenced by:**
   - `eur_4bc_plato` (direct teacher)
 
 ### Ibn Rushd (afr_12c_ibn_rushd)
+
 - **Influences:** None in council (influenced medieval scholasticism)
 - **Influenced by:**
   - `eur_4bc_aristotle` (major commentator on Aristotle's works)
 
 ### Hypatia (afr_5c_hypatia)
+
 - **Influences:** None in council
 - **Influenced by:**
   - `eur_4bc_plato` (Neoplatonism based on Platonic philosophy)
 
 ### Marcus Aurelius (eur_2c_marcus_aurelius)
+
 - **Influences:** None in council
 - **Influenced by:**
   - `eur_4bc_plato` (Stoicism influenced by Platonic ideas)
   - `eur_4bc_aristotle` (Aristotelian ethics influenced Stoic thought)
 
 ### Machiavelli (eur_16c_machiavelli)
+
 - **Influences:** None in council
 - **Influenced by:**
   - `eur_2c_marcus_aurelius` (studied Roman emperors as examples of leadership)
 
 ### Other Members
+
 - **Sun Tzu, Ada Lovelace, Marie Curie, Carl Jung, Benjamin Franklin, Paulo Freire, Dame Whina Cooper**
   - No direct historical relationships with other council members
   - Relationships exist in `influences`/`influenced_by` as string references
@@ -112,4 +123,3 @@ def get_lineage(persona_id):
 
 **Status:** ✅ Complete  
 **Date:** 2025-01-27
-

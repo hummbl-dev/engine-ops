@@ -7,6 +7,7 @@
 ## [STEP] Step-by-Step Setup
 
 ### Prerequisites
+
 - [x] Engine is running (verified ✓)
 - [x] Extension is built (verified ✓)
 - [ ] VS Code with Extension Development Host
@@ -18,6 +19,7 @@
 ### Option A: Extension Development Host (Recommended)
 
 1. **Open the extension folder in VS Code:**
+
    ```bash
    code /Users/others/.gemini/antigravity/scratch/engine-ops/extension
    ```
@@ -45,11 +47,13 @@
 ### Option B: Install Extension Locally
 
 1. **Package the extension:**
+
    ```bash
    cd extension
    npm install -g vsce  # If not installed
    vsce package
    ```
+
    This creates a `.vsix` file
 
 2. **Install in VS Code:**
@@ -82,6 +86,7 @@
    ```
 
 **If you see errors:**
+
 - Check the error message
 - Common: "Cannot find module" → Extension not built
 - Common: "MCP server failed" → Check server/index.js exists
@@ -91,29 +96,35 @@
 ## [3] Test the Chat Interface
 
 ### Test Case 1: Explicit Member
+
 ```
 @hummbl Ask machiavelli about leadership
 ```
 
 **Expected:**
+
 - Routes to Machiavelli
 - Returns Machiavelli-style advice
 
 ### Test Case 2: Implicit Routing
+
 ```
 @hummbl I'm feeling overwhelmed by chaos
 ```
 
 **Expected:**
+
 - Routes to Marcus Aurelius (Stoicism)
 - Returns Stoic advice
 
 ### Test Case 3: Default
+
 ```
 @hummbl What's the best strategy?
 ```
 
 **Expected:**
+
 - Routes to Sun Tzu (default)
 - Returns strategic advice
 
@@ -124,22 +135,27 @@
 ### Issue: `@hummbl` doesn't appear
 
 **Fix 1: Check Extension is Loaded**
+
 - Open Extensions view
 - Search for "HUMMBL" or "engine-ops"
 - Should show as installed
 
 **Fix 2: Reload Window**
+
 - `Cmd+Shift+P` → "Developer: Reload Window"
 
 **Fix 3: Check Activation**
+
 - Output → "Log (Extension Host)"
 - Look for "HUMMBL Engine MCP" activation
 
 **Fix 4: Rebuild Extension**
+
 ```bash
 cd extension
 npm run build
 ```
+
 Then reload VS Code window
 
 ---
@@ -147,20 +163,24 @@ Then reload VS Code window
 ### Issue: Chat responds but with errors
 
 **Check Developer Console:**
+
 1. `Cmd+Shift+P` → "Developer: Toggle Developer Tools"
 2. Check Console tab for errors
 
 **Common Errors:**
 
 **"vscode.lm.selectChatModels failed"**
+
 - **Cause:** Copilot not enabled or not available
 - **Fix:** Enable GitHub Copilot in VS Code settings
 
 **"tools/call failed"**
+
 - **Cause:** MCP server not connecting to engine
 - **Fix:** Check engine is running: `curl http://127.0.0.1:8080/`
 
 **"GOOGLE_API_KEY not set"**
+
 - **Cause:** API key missing
 - **Fix:** Create `engine/.env` with `GOOGLE_API_KEY=your_key`
 
@@ -169,18 +189,22 @@ Then reload VS Code window
 ### Issue: Extension activates but chat doesn't work
 
 **Check MCP Server:**
+
 1. Output → "HUMMBL Engine MCP"
 2. Should see "MCP server started"
 3. Should see tool registration: "consult_council"
 
 **If not:**
+
 - Check `dist/server/index.js` exists
 - Rebuild: `cd extension && npm run build`
 
 **Check Engine Connection:**
+
 ```bash
 curl http://127.0.0.1:8080/
 ```
+
 Should return JSON with endpoints
 
 ---
@@ -205,6 +229,7 @@ Should return JSON with endpoints
 ## [6] Manual Testing
 
 ### Test Engine Directly
+
 ```bash
 curl -X POST http://127.0.0.1:8080/consult \
   -H "Content-Type: application/json" \
@@ -214,6 +239,7 @@ curl -X POST http://127.0.0.1:8080/consult \
 **Expected:** JSON with `member` and `advice`
 
 ### Test MCP Server Module
+
 ```bash
 cd extension
 node -e "require('./dist/server/index.js'); console.log('OK');"
@@ -222,6 +248,7 @@ node -e "require('./dist/server/index.js'); console.log('OK');"
 **Expected:** "OK" (no errors)
 
 ### Test Extension Module
+
 ```bash
 cd extension
 node -e "require('./dist/extension.js'); console.log('OK');"
@@ -282,6 +309,7 @@ node -e "require('./dist/server/index.js'); console.log('OK');"
 ### What to Report
 
 When asking for help, include:
+
 1. **What you tried:** "I typed @hummbl in chat"
 2. **What happened:** "Nothing appeared" or "Error: ..."
 3. **Error messages:** Copy from Console/Output
@@ -305,5 +333,4 @@ If nothing works, try this order:
 
 ---
 
-*If you're still stuck, check the error messages in Developer Tools Console and Output panel.*
-
+_If you're still stuck, check the error messages in Developer Tools Console and Output panel._

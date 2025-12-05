@@ -45,7 +45,7 @@ We reject Walled Gardens; we build Bridges. We adhere to the **Model Context Pro
 
 **III. Constitutional Governance (Agency Preservation)**
 
-Speed without safety is recklessness. Guidance without agency is tyranny. Sovereign Intelligence is not "uncontrolled" intelligence; it is *self-governed* intelligence. We implement a "Constitutional Auditor" that enforces *your* values:
+Speed without safety is recklessness. Guidance without agency is tyranny. Sovereign Intelligence is not "uncontrolled" intelligence; it is _self-governed_ intelligence. We implement a "Constitutional Auditor" that enforces _your_ values:
 
 - **Non-Prescriptive:** We forbid the machine from issuing "You must" commands. The machine proposes; the human disposes.
 - **Strategic Options:** We provide choices (e.g., "Speed vs. Robustness"), forcing the human to remain the strategic decision-maker.
@@ -79,9 +79,9 @@ Where the Sovereign Manifesto argues for **Agency**, the Antithesis argues for *
 
 #### 2. Prescriptive Efficiency (Agency as Bottleneck)
 
-**Argument:** Humans are slow and error-prone. The goal of AI is not to consult but to *solve*. The system should bypass human deliberation to execute the statistically most probable optimal outcome instantly.
+**Argument:** Humans are slow and error-prone. The goal of AI is not to consult but to _solve_. The system should bypass human deliberation to execute the statistically most probable optimal outcome instantly.
 
-**Principle:** "Don't think, just accept." The AI doesn't give you choices; it gives you *the answer*.
+**Principle:** "Don't think, just accept." The AI doesn't give you choices; it gives you _the answer_.
 
 #### 3. Centralized Governance (Safety by Restriction)
 

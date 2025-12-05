@@ -45,15 +45,19 @@ with EngineOpsClient() as client:
 ## API Methods
 
 ### `optimize(request: OptimizationRequest) -> OptimizationResult`
+
 Submit an optimization request.
 
 ### `health() -> Dict[str, Any]`
+
 Check API health status.
 
 ### `metrics() -> Dict[str, Any]`
+
 Get performance metrics.
 
 ### `cache_stats() -> Dict[str, Any]`
+
 Get cache statistics.
 
 ## License

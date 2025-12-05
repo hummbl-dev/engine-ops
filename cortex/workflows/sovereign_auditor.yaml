@@ -3,9 +3,9 @@ version: 1.0
 steps:
   - id: scan
     provider: gemini
-    prompt: "Scan the following code block for vulnerabilities:"
+    prompt: 'Scan the following code block for vulnerabilities:'
     confirm: true
   - id: analysis
     provider: openai
-    prompt: "Verify the Gemini findings and suggest patches."
-    condition: "vulnerabilities_found == true"
+    prompt: 'Verify the Gemini findings and suggest patches.'
+    condition: 'vulnerabilities_found == true'

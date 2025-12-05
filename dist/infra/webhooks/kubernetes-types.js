@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,28 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.isPod = isPod;
 exports.isContainer = isContainer;
 /**
  * Type guard to check if an unknown object is a Pod
  */
 function isPod(obj) {
-    return (typeof obj === 'object' &&
-        obj !== null &&
-        'kind' in obj &&
-        obj.kind === 'Pod' &&
-        'apiVersion' in obj &&
-        'metadata' in obj &&
-        'spec' in obj &&
-        'containers' in obj.spec);
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'kind' in obj &&
+    obj.kind === 'Pod' &&
+    'apiVersion' in obj &&
+    'metadata' in obj &&
+    'spec' in obj &&
+    'containers' in obj.spec
+  );
 }
 /**
  * Type guard to check if an unknown object is a Container
  */
 function isContainer(obj) {
-    return (typeof obj === 'object' &&
-        obj !== null &&
-        'name' in obj &&
-        'image' in obj);
+  return typeof obj === 'object' && obj !== null && 'name' in obj && 'image' in obj;
 }

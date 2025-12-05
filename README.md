@@ -12,13 +12,13 @@ A production-ready, self-evolving AI stack with constitutional governance, feder
 
 ## 🎯 The Problem: AI Feudalism
 
-| Traditional AI | Sovereign Stack |
-|---------------|----------------|
-| 🔒 **Black Box** | 🔍 **Glass Box** |
-| 🏢 **Vendor Lock-in** | 👤 **User Owned** |
-| ❓ **Opaque Rules** | 📜 **YAML Constitution** |
-| 🤖 **AI Decides** | 🧠 **Human Governs** |
-| 💨 **Context Rots** | 📊 **Full Audit Trail** |
+| Traditional AI        | Sovereign Stack          |
+| --------------------- | ------------------------ |
+| 🔒 **Black Box**      | 🔍 **Glass Box**         |
+| 🏢 **Vendor Lock-in** | 👤 **User Owned**        |
+| ❓ **Opaque Rules**   | 📜 **YAML Constitution** |
+| 🤖 **AI Decides**     | 🧠 **Human Governs**     |
+| 💨 **Context Rots**   | 📊 **Full Audit Trail**  |
 
 **You are not a tenant. You are the Sovereign.**
 
@@ -144,9 +144,9 @@ Define your AI's behavior in `config/constitution.yaml`:
 ```yaml
 directives:
   - id: no_secrets
-    pattern: "(api[_-]?key|password|secret)"
+    pattern: '(api[_-]?key|password|secret)'
     action: block
-    reason: "Potential secret exposure"
+    reason: 'Potential secret exposure'
 ```
 
 ### 2. Multi-Agent Debate
@@ -263,7 +263,7 @@ See [LICENSE](LICENSE) for details.
 Built with:
 
 - [FastAPI](https://fastapi.tiangolo.com/) - Modern Python web framework
-- [Textual](https://textual.textualize.io/) - Terminal UI framework  
+- [Textual](https://textual.textualize.io/) - Terminal UI framework
 - [ChromaDB](https://www.trychroma.com/) - Vector database
 - [Gemini](https://ai.google.dev/) - LLM provider
 - [Kubernetes](https://kubernetes.io/) - Container orchestration
@@ -272,4 +272,4 @@ Built with:
 
 **Welcome to the age of Owned Intelligence.**
 
-*You are not a tenant. You are the Sovereign.*
+_You are not a tenant. You are the Sovereign._

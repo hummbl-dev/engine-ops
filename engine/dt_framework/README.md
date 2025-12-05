@@ -16,29 +16,29 @@ The D-T Framework is a **hybrid cognitive ontology** that treats mental models n
 
 A mental model exists as a vector across six axes (normalized 0.0 to 1.0):
 
-| Dimension | Definition |
-|-----------|------------|
-| **Structural** | Form & Composition (granularity, modularity) |
-| **Relational** | Interactions & Connectivity (topology, causal chains) |
-| **Temporal** | Time & Dynamics (horizons, stability, cycles) |
-| **Epistemic** | Knowledge & Uncertainty (visibility, confidence) |
-| **Agency** | Control & Intent (active vs. passive, individual vs. collective) |
-| **Value-Oriented** | Outcomes & Leverage (efficiency, resilience) |
+| Dimension          | Definition                                                       |
+| ------------------ | ---------------------------------------------------------------- |
+| **Structural**     | Form & Composition (granularity, modularity)                     |
+| **Relational**     | Interactions & Connectivity (topology, causal chains)            |
+| **Temporal**       | Time & Dynamics (horizons, stability, cycles)                    |
+| **Epistemic**      | Knowledge & Uncertainty (visibility, confidence)                 |
+| **Agency**         | Control & Intent (active vs. passive, individual vs. collective) |
+| **Value-Oriented** | Outcomes & Leverage (efficiency, resilience)                     |
 
 ### The Operators: 8 Transformations
 
 Mechanisms applied to dimensions to mutate the state vector M(t) → M(t+1):
 
-| Transformation | Effect |
-|----------------|--------|
-| **Accretion** | Additive build-up (zoom in, add evidence) |
-| **Pruning** | Subtractive refinement (abstraction, Occam's razor) |
-| **Reconfiguration** | Structural rearrangement (isomorphic shuffle) |
-| **Fusion** | Integrative merging (synthesis, hierarchy building) |
-| **Bifurcation** | Divergent branching (scenarios, parallel processing) |
-| **Iteration** | Cyclic refinement (feedback loops) |
-| **Phase Shift** | Threshold transformation (linear to non-linear) |
-| **Transmutation** | Fundamental conversion (ontology shift) |
+| Transformation      | Effect                                               |
+| ------------------- | ---------------------------------------------------- |
+| **Accretion**       | Additive build-up (zoom in, add evidence)            |
+| **Pruning**         | Subtractive refinement (abstraction, Occam's razor)  |
+| **Reconfiguration** | Structural rearrangement (isomorphic shuffle)        |
+| **Fusion**          | Integrative merging (synthesis, hierarchy building)  |
+| **Bifurcation**     | Divergent branching (scenarios, parallel processing) |
+| **Iteration**       | Cyclic refinement (feedback loops)                   |
+| **Phase Shift**     | Threshold transformation (linear to non-linear)      |
+| **Transmutation**   | Fundamental conversion (ontology shift)              |
 
 ---
 
@@ -75,7 +75,7 @@ graph TB
     S ==>|"+ Coherence"| R
     S ==>|"- Speed<br/>(Bureaucracy Trap)"| T
     A ==>|"- Coordination<br/>(Herding Problem)"| R
-    
+
     classDef highLeverage fill:#cce5ff,stroke:#0066cc,stroke-width:3px
     classDef dim fill:#f0f0f0,stroke:#666,stroke-width:2px
 ```

@@ -13,11 +13,11 @@ lattice_attributes:
   gender: Male
   economic_context: Industrial Capitalism
   field_of_study:
-  - Psychology
-  - Psychiatry
-  - Mythology
+    - Psychology
+    - Psychiatry
+    - Mythology
   notable_works:
-  - Psychological Types
+    - Psychological Types
   metadata:
     collaborator: Sigmund Freud (early)
     concepts: Collective Unconscious, Archetypes, Individuation
@@ -36,20 +36,20 @@ core_philosophy: 'The unconscious contains archetypes and collective wisdom.
 
   '
 key_ideas:
-- Collective unconscious
-- Archetypes
-- Shadow and persona
-- Individuation
-- Synchronicity
+  - Collective unconscious
+  - Archetypes
+  - Shadow and persona
+  - Individuation
+  - Synchronicity
 relationships:
   influences:
-  - Depth psychology
-  - Mythology studies
-  - Personality theory
-  - Modern spirituality
+    - Depth psychology
+    - Mythology studies
+    - Personality theory
+    - Modern spirituality
   influenced_by:
-  - Sigmund Freud
-  - Eastern philosophy
-  - Alchemy and mysticism
+    - Sigmund Freud
+    - Eastern philosophy
+    - Alchemy and mysticism
   persona_influences: []
   persona_influenced_by: []

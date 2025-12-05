@@ -48,21 +48,25 @@ The multi-cloud architecture consists of:
 ## Supported Cloud Providers
 
 ### AWS (Amazon Web Services)
+
 - **Regions**: us-east-1, us-west-2, eu-west-1, ap-southeast-1
 - **Features**: Multiple availability zones, high capacity nodes
 - **Use Case**: Large-scale deployments, enterprise workloads
 
 ### GCP (Google Cloud Platform)
+
 - **Regions**: us-central1, europe-west1, asia-east1
 - **Features**: Global load balancing, advanced networking
 - **Use Case**: Data analytics, machine learning workloads
 
 ### Azure (Microsoft Azure)
+
 - **Regions**: eastus, westeurope, southeastasia
 - **Features**: Hybrid cloud capabilities, enterprise integration
 - **Use Case**: Enterprise applications, hybrid deployments
 
 ### Edge Clusters
+
 - **Locations**: edge-us-ny, edge-eu-london, edge-asia-tokyo
 - **Features**: Low latency, smaller capacity, distributed computing
 - **Use Case**: IoT, real-time processing, latency-sensitive applications
@@ -76,9 +80,9 @@ import { OptimizationEngine } from '@hummbl/engine-ops';
 
 // Initialize engine with multi-cloud support
 const engine = new OptimizationEngine({
-    enableMultiCloud: true,
-    cloudProviders: ['aws', 'gcp', 'azure', 'edge'], // All providers
-    verbose: true
+  enableMultiCloud: true,
+  cloudProviders: ['aws', 'gcp', 'azure', 'edge'], // All providers
+  verbose: true,
 });
 
 await engine.init();
@@ -89,8 +93,8 @@ await engine.init();
 ```typescript
 // Use only AWS and GCP
 const engine = new OptimizationEngine({
-    enableMultiCloud: true,
-    cloudProviders: ['aws', 'gcp']
+  enableMultiCloud: true,
+  cloudProviders: ['aws', 'gcp'],
 });
 
 await engine.init();
@@ -104,12 +108,12 @@ await engine.init();
 import type { Workload } from '@hummbl/engine-ops';
 
 const workload: Workload = {
-    id: 'my-app-1',
-    resources: {
-        cpu: 2000,      // millicores
-        memory: 4000,   // MB
-        storage: 100    // GB (optional)
-    }
+  id: 'my-app-1',
+  resources: {
+    cpu: 2000, // millicores
+    memory: 4000, // MB
+    storage: 100, // GB (optional)
+  },
 };
 
 const result = await engine.scheduleMultiCloudWorkloads([workload]);
@@ -120,14 +124,14 @@ console.log(`Scheduled to: ${result.result.placements[0].node.provider}`);
 
 ```typescript
 const workload: Workload = {
-    id: 'aws-preferred',
-    resources: {
-        cpu: 4000,
-        memory: 8000
-    },
-    constraints: {
-        providerPreferences: ['aws', 'gcp'] // Prefer AWS, fallback to GCP
-    }
+  id: 'aws-preferred',
+  resources: {
+    cpu: 4000,
+    memory: 8000,
+  },
+  constraints: {
+    providerPreferences: ['aws', 'gcp'], // Prefer AWS, fallback to GCP
+  },
 };
 ```
 
@@ -135,12 +139,12 @@ const workload: Workload = {
 
 ```typescript
 const workload: Workload = {
-    id: 'eu-workload',
-    resources: {
-        cpu: 2000,
-        memory: 4000
-    },
-    preferredRegions: ['eu-west-1', 'europe-west1', 'westeurope']
+  id: 'eu-workload',
+  resources: {
+    cpu: 2000,
+    memory: 4000,
+  },
+  preferredRegions: ['eu-west-1', 'europe-west1', 'westeurope'],
 };
 ```
 
@@ -148,14 +152,14 @@ const workload: Workload = {
 
 ```typescript
 const workload: Workload = {
-    id: 'realtime-app',
-    resources: {
-        cpu: 1000,
-        memory: 2000
-    },
-    constraints: {
-        maxLatencyMs: 30  // Automatically routes to edge
-    }
+  id: 'realtime-app',
+  resources: {
+    cpu: 1000,
+    memory: 2000,
+  },
+  constraints: {
+    maxLatencyMs: 30, // Automatically routes to edge
+  },
 };
 ```
 
@@ -167,21 +171,21 @@ Geo-sharding automatically distributes workloads across geographical regions for
 
 ```typescript
 const workloads: Workload[] = [
-    {
-        id: 'us-service',
-        resources: { cpu: 2000, memory: 4000 },
-        preferredRegions: ['us-east-1']
-    },
-    {
-        id: 'eu-service',
-        resources: { cpu: 2000, memory: 4000 },
-        preferredRegions: ['eu-west-1']
-    },
-    {
-        id: 'asia-service',
-        resources: { cpu: 2000, memory: 4000 },
-        preferredRegions: ['ap-southeast-1']
-    }
+  {
+    id: 'us-service',
+    resources: { cpu: 2000, memory: 4000 },
+    preferredRegions: ['us-east-1'],
+  },
+  {
+    id: 'eu-service',
+    resources: { cpu: 2000, memory: 4000 },
+    preferredRegions: ['eu-west-1'],
+  },
+  {
+    id: 'asia-service',
+    resources: { cpu: 2000, memory: 4000 },
+    preferredRegions: ['ap-southeast-1'],
+  },
 ];
 
 // Geo-sharding enabled by default
@@ -201,11 +205,11 @@ const result = await engine.scheduleMultiCloudWorkloads(workloads, false);
 
 ```typescript
 const workload: Workload = {
-    id: 'gdpr-compliant',
-    resources: { cpu: 2000, memory: 4000 },
-    constraints: {
-        dataResidency: ['eu-west-1', 'europe-west1', 'westeurope']
-    }
+  id: 'gdpr-compliant',
+  resources: { cpu: 2000, memory: 4000 },
+  constraints: {
+    dataResidency: ['eu-west-1', 'europe-west1', 'westeurope'],
+  },
 };
 ```
 
@@ -213,12 +217,12 @@ const workload: Workload = {
 
 ```typescript
 const workload: Workload = {
-    id: 'gpu-workload',
-    resources: { cpu: 4000, memory: 8000, gpu: 1 },
-    requiredLabels: {
-        'gpu': 'true',
-        'gpu-type': 'nvidia-t4'
-    }
+  id: 'gpu-workload',
+  resources: { cpu: 4000, memory: 8000, gpu: 1 },
+  requiredLabels: {
+    gpu: 'true',
+    'gpu-type': 'nvidia-t4',
+  },
 };
 ```
 
@@ -290,10 +294,10 @@ console.log(`Reason: ${result.reason}`);
 
 ```typescript
 // ✅ Good: Specify multiple regions for redundancy
-preferredRegions: ['us-east-1', 'us-west-2', 'eu-west-1']
+preferredRegions: ['us-east-1', 'us-west-2', 'eu-west-1'];
 
 // ❌ Avoid: Single region without fallback
-preferredRegions: ['us-east-1']
+preferredRegions: ['us-east-1'];
 ```
 
 ### 2. Resource Requirements
@@ -310,17 +314,19 @@ resources: { cpu: 16000, memory: 64000 }
 
 ```typescript
 // ✅ Good: Provide fallback options
-providerPreferences: ['aws', 'gcp', 'azure']
+providerPreferences: ['aws', 'gcp', 'azure'];
 
 // ❌ Avoid: Too restrictive
-providerPreferences: ['aws'] // May fail if AWS unavailable
+providerPreferences: ['aws']; // May fail if AWS unavailable
 ```
 
 ### 4. Edge Usage
 
 ```typescript
 // ✅ Good: Use edge for latency-sensitive workloads
-constraints: { maxLatencyMs: 50 }
+constraints: {
+  maxLatencyMs: 50;
+}
 
 // ❌ Avoid: Using edge for large-scale batch processing
 ```
@@ -333,8 +339,8 @@ constraints: { maxLatencyMs: 50 }
 const providers = manager.getProviders();
 
 for (const provider of providers) {
-    const healthy = await provider.healthCheck();
-    console.log(`${provider.getProvider()}: ${healthy ? 'healthy' : 'unhealthy'}`);
+  const healthy = await provider.healthCheck();
+  console.log(`${provider.getProvider()}: ${healthy ? 'healthy' : 'unhealthy'}`);
 }
 ```
 
@@ -388,6 +394,7 @@ await engine.optimize({...});
 ### Caching
 
 The engine uses LRU caching for optimization results:
+
 - Cache size: 100 entries
 - TTL: 5 minutes
 - Automatic invalidation
@@ -396,8 +403,8 @@ The engine uses LRU caching for optimization results:
 
 ```typescript
 const engine = new OptimizationEngine({
-    enableMultiCloud: true,
-    maxConcurrentTasks: 10 // Adjust based on workload
+  enableMultiCloud: true,
+  maxConcurrentTasks: 10, // Adjust based on workload
 });
 ```
 
@@ -405,8 +412,8 @@ const engine = new OptimizationEngine({
 
 ```typescript
 const engine = new OptimizationEngine({
-    enableMultiCloud: true,
-    timeoutMs: 30000 // 30 seconds
+  enableMultiCloud: true,
+  timeoutMs: 30000, // 30 seconds
 });
 ```
 
@@ -417,6 +424,7 @@ const engine = new OptimizationEngine({
 **Problem**: `scheduleWorkload` returns `null`
 
 **Solutions**:
+
 1. Check resource requirements are realistic
 2. Verify provider/region preferences are not too restrictive
 3. Check node availability with `listAllNodes()`
@@ -427,6 +435,7 @@ const engine = new OptimizationEngine({
 **Problem**: Scheduling operations are slow
 
 **Solutions**:
+
 1. Reduce number of simultaneous workloads
 2. Disable geo-sharding if not needed
 3. Increase `timeoutMs` configuration
@@ -437,6 +446,7 @@ const engine = new OptimizationEngine({
 **Problem**: Provider health checks failing
 
 **Solutions**:
+
 1. Verify network connectivity
 2. Check provider credentials (in production)
 3. Verify provider regions are correct
@@ -452,8 +462,8 @@ const engine = new OptimizationEngine();
 
 // After: Multi-cloud
 const engine = new OptimizationEngine({
-    enableMultiCloud: true,
-    cloudProviders: ['aws', 'gcp'] // Start with two providers
+  enableMultiCloud: true,
+  cloudProviders: ['aws', 'gcp'], // Start with two providers
 });
 ```
 
@@ -473,6 +483,7 @@ npm run docs
 ```
 
 Key interfaces:
+
 - `ICloudProvider` - Cloud provider adapter interface
 - `IResourceManager` - Multi-cloud resource manager interface
 - `Workload` - Workload specification
@@ -482,6 +493,7 @@ Key interfaces:
 ## Examples
 
 See the `examples/` directory for complete working examples:
+
 - `examples/multi-cloud/basic-scheduling.ts`
 - `examples/multi-cloud/geo-sharding.ts`
 - `examples/multi-cloud/edge-computing.ts`
@@ -490,6 +502,7 @@ See the `examples/` directory for complete working examples:
 ## Future Enhancements
 
 Planned features:
+
 - Dynamic provider discovery
 - Cost optimization across providers
 - Multi-region replication
@@ -500,6 +513,7 @@ Planned features:
 ## Support
 
 For questions or issues:
+
 - GitHub Issues: https://github.com/hummbl-dev/engine-ops/issues
 - Email: hummbldev@gmail.com
 - Documentation: https://github.com/hummbl-dev/engine-ops/docs

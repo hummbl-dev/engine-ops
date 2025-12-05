@@ -19,89 +19,89 @@ import { Server as SocketIOServer } from 'socket.io';
 import { OptimizationRequest, OptimizationResult } from '../../core/interfaces.js';
 
 export interface OptimizationProgress {
-    requestId: string;
-    progress: number;
-    message: string;
-    timestamp: number;
+  requestId: string;
+  progress: number;
+  message: string;
+  timestamp: number;
 }
 
 /**
  * WebSocket server for real-time optimization updates
  */
 export class WebSocketServer {
-    private io: SocketIOServer;
+  private io: SocketIOServer;
 
-    constructor(httpServer: HTTPServer) {
-        this.io = new SocketIOServer(httpServer, {
-            cors: {
-                origin: '*',
-                methods: ['GET', 'POST']
-            }
-        });
+  constructor(httpServer: HTTPServer) {
+    this.io = new SocketIOServer(httpServer, {
+      cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+      },
+    });
 
-        this.setupEventHandlers();
-    }
+    this.setupEventHandlers();
+  }
 
-    private setupEventHandlers(): void {
-        this.io.on('connection', (socket) => {
-            console.log(`Client connected: ${socket.id}`);
+  private setupEventHandlers(): void {
+    this.io.on('connection', (socket) => {
+      console.log(`Client connected: ${socket.id}`);
 
-            socket.on('subscribe', (requestId: string) => {
-                socket.join(`optimization:${requestId}`);
-                console.log(`Client ${socket.id} subscribed to ${requestId}`);
-            });
+      socket.on('subscribe', (requestId: string) => {
+        socket.join(`optimization:${requestId}`);
+        console.log(`Client ${socket.id} subscribed to ${requestId}`);
+      });
 
-            socket.on('unsubscribe', (requestId: string) => {
-                socket.leave(`optimization:${requestId}`);
-                console.log(`Client ${socket.id} unsubscribed from ${requestId}`);
-            });
+      socket.on('unsubscribe', (requestId: string) => {
+        socket.leave(`optimization:${requestId}`);
+        console.log(`Client ${socket.id} unsubscribed from ${requestId}`);
+      });
 
-            socket.on('disconnect', () => {
-                console.log(`Client disconnected: ${socket.id}`);
-            });
-        });
-    }
+      socket.on('disconnect', () => {
+        console.log(`Client disconnected: ${socket.id}`);
+      });
+    });
+  }
 
-    /**
-     * Emit optimization started event
-     */
-    public emitOptimizationStart(request: OptimizationRequest): void {
-        this.io.to(`optimization:${request.id}`).emit('optimization:start', {
-            requestId: request.id,
-            type: request.type,
-            timestamp: Date.now()
-        });
-    }
+  /**
+   * Emit optimization started event
+   */
+  public emitOptimizationStart(request: OptimizationRequest): void {
+    this.io.to(`optimization:${request.id}`).emit('optimization:start', {
+      requestId: request.id,
+      type: request.type,
+      timestamp: Date.now(),
+    });
+  }
 
-    /**
-     * Emit optimization progress event
-     */
-    public emitOptimizationProgress(progress: OptimizationProgress): void {
-        this.io.to(`optimization:${progress.requestId}`).emit('optimization:progress', progress);
-    }
+  /**
+   * Emit optimization progress event
+   */
+  public emitOptimizationProgress(progress: OptimizationProgress): void {
+    this.io.to(`optimization:${progress.requestId}`).emit('optimization:progress', progress);
+  }
 
-    /**
-     * Emit optimization complete event
-     */
-    public emitOptimizationComplete(result: OptimizationResult): void {
-        this.io.to(`optimization:${result.requestId}`).emit('optimization:complete', result);
-    }
+  /**
+   * Emit optimization complete event
+   */
+  public emitOptimizationComplete(result: OptimizationResult): void {
+    this.io.to(`optimization:${result.requestId}`).emit('optimization:complete', result);
+  }
 
-    /**
-     * Emit optimization error event
-     */
-    public emitOptimizationError(requestId: string, error: Error): void {
-        this.io.to(`optimization:${requestId}`).emit('optimization:error', {
-            requestId,
-            error: error.message,
-            timestamp: Date.now()
-        });
-    }
+  /**
+   * Emit optimization error event
+   */
+  public emitOptimizationError(requestId: string, error: Error): void {
+    this.io.to(`optimization:${requestId}`).emit('optimization:error', {
+      requestId,
+      error: error.message,
+      timestamp: Date.now(),
+    });
+  }
 
-    /**
-     * Get Socket.IO server instance
-     */
-    public getIO(): SocketIOServer {
-        return this.io;
-    }
+  /**
+   * Get Socket.IO server instance
+   */
+  public getIO(): SocketIOServer {
+    return this.io;
+  }
 }

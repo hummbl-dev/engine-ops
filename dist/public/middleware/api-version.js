@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.ApiVersionTransformer = exports.ApiVersion = void 0;
 exports.apiVersionMiddleware = apiVersionMiddleware;
 exports.deprecationWarningMiddleware = deprecationWarningMiddleware;
@@ -24,8 +24,8 @@ exports.autoTransformMiddleware = autoTransformMiddleware;
  */
 var ApiVersion;
 (function (ApiVersion) {
-    ApiVersion["V1"] = "v1";
-    ApiVersion["V2"] = "v2";
+  ApiVersion['V1'] = 'v1';
+  ApiVersion['V2'] = 'v2';
 })(ApiVersion || (exports.ApiVersion = ApiVersion = {}));
 /**
  * API version detection and validation middleware
@@ -35,113 +35,116 @@ var ApiVersion;
  * - Query parameter: api_version
  */
 function apiVersionMiddleware(req, res, next) {
-    let version;
-    // 1. Check URL path
-    const pathMatch = req.path.match(/^\/api\/(v\d+)\//);
-    if (pathMatch) {
-        version = pathMatch[1];
-    }
-    // 2. Check X-API-Version header
-    if (!version && req.headers['x-api-version']) {
-        version = req.headers['x-api-version'];
-    }
-    // 3. Check query parameter
-    if (!version && req.query.api_version) {
-        version = req.query.api_version;
-    }
-    // Default to v1 if no version specified
-    version = version || ApiVersion.V1;
-    // Validate version
-    if (!Object.values(ApiVersion).includes(version)) {
-        res.status(400).json({
-            error: 'Invalid API version',
-            message: `API version '${version}' is not supported`,
-            supportedVersions: Object.values(ApiVersion)
-        });
-        return;
-    }
-    // Store version in request for use by handlers
-    req.apiVersion = version;
-    // Add version to response headers
-    res.setHeader('X-API-Version', version);
-    next();
+  let version;
+  // 1. Check URL path
+  const pathMatch = req.path.match(/^\/api\/(v\d+)\//);
+  if (pathMatch) {
+    version = pathMatch[1];
+  }
+  // 2. Check X-API-Version header
+  if (!version && req.headers['x-api-version']) {
+    version = req.headers['x-api-version'];
+  }
+  // 3. Check query parameter
+  if (!version && req.query.api_version) {
+    version = req.query.api_version;
+  }
+  // Default to v1 if no version specified
+  version = version || ApiVersion.V1;
+  // Validate version
+  if (!Object.values(ApiVersion).includes(version)) {
+    res.status(400).json({
+      error: 'Invalid API version',
+      message: `API version '${version}' is not supported`,
+      supportedVersions: Object.values(ApiVersion),
+    });
+    return;
+  }
+  // Store version in request for use by handlers
+  req.apiVersion = version;
+  // Add version to response headers
+  res.setHeader('X-API-Version', version);
+  next();
 }
 /**
  * API deprecation warning middleware
  */
 function deprecationWarningMiddleware(deprecatedVersion, message, sunsetDate) {
-    return (req, res, next) => {
-        const version = req.apiVersion;
-        if (version === deprecatedVersion) {
-            res.setHeader('Warning', `299 - "API version ${deprecatedVersion} is deprecated. ${message}"`);
-            if (sunsetDate) {
-                res.setHeader('Sunset', sunsetDate);
-            }
-            res.setHeader('Link', '</api/v2>; rel="successor-version"');
-        }
-        next();
-    };
+  return (req, res, next) => {
+    const version = req.apiVersion;
+    if (version === deprecatedVersion) {
+      res.setHeader(
+        'Warning',
+        `299 - "API version ${deprecatedVersion} is deprecated. ${message}"`,
+      );
+      if (sunsetDate) {
+        res.setHeader('Sunset', sunsetDate);
+      }
+      res.setHeader('Link', '</api/v2>; rel="successor-version"');
+    }
+    next();
+  };
 }
 /**
  * Backward compatibility transformer
  * Transforms requests/responses between API versions
  */
 class ApiVersionTransformer {
-    /**
-     * Transform request from older version to current internal format
-     */
-    static transformRequestV1ToV2(body) {
-        // Example transformation: add default values for new fields
-        return {
-            ...body,
-            version: body.version || '1.0',
-            metadata: body.metadata || {}
-        };
+  /**
+   * Transform request from older version to current internal format
+   */
+  static transformRequestV1ToV2(body) {
+    // Example transformation: add default values for new fields
+    return {
+      ...body,
+      version: body.version || '1.0',
+      metadata: body.metadata || {},
+    };
+  }
+  /**
+   * Transform response from internal format to older version
+   */
+  static transformResponseV2ToV1(data) {
+    // Example transformation: remove new fields not present in v1
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { version, metadata, ...v1Data } = data;
+    return v1Data;
+  }
+  /**
+   * Apply transformation based on API version
+   */
+  static transformRequest(req) {
+    const version = req.apiVersion;
+    if (version === ApiVersion.V1 && req.body) {
+      return this.transformRequestV1ToV2(req.body);
     }
-    /**
-     * Transform response from internal format to older version
-     */
-    static transformResponseV2ToV1(data) {
-        // Example transformation: remove new fields not present in v1
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { version, metadata, ...v1Data } = data;
-        return v1Data;
+    return req.body;
+  }
+  /**
+   * Transform response based on requested API version
+   */
+  static transformResponse(data, version) {
+    if (version === ApiVersion.V1) {
+      return this.transformResponseV2ToV1(data);
     }
-    /**
-     * Apply transformation based on API version
-     */
-    static transformRequest(req) {
-        const version = req.apiVersion;
-        if (version === ApiVersion.V1 && req.body) {
-            return this.transformRequestV1ToV2(req.body);
-        }
-        return req.body;
-    }
-    /**
-     * Transform response based on requested API version
-     */
-    static transformResponse(data, version) {
-        if (version === ApiVersion.V1) {
-            return this.transformResponseV2ToV1(data);
-        }
-        return data;
-    }
+    return data;
+  }
 }
 exports.ApiVersionTransformer = ApiVersionTransformer;
 /**
  * Middleware to automatically transform requests/responses
  */
 function autoTransformMiddleware(req, res, next) {
-    const version = req.apiVersion;
-    // Transform request body
-    if (req.body) {
-        req.body = ApiVersionTransformer.transformRequest(req);
-    }
-    // Wrap res.json to transform responses
-    const originalJson = res.json.bind(res);
-    res.json = function (data) {
-        const transformed = ApiVersionTransformer.transformResponse(data, version);
-        return originalJson(transformed);
-    };
-    next();
+  const version = req.apiVersion;
+  // Transform request body
+  if (req.body) {
+    req.body = ApiVersionTransformer.transformRequest(req);
+  }
+  // Wrap res.json to transform responses
+  const originalJson = res.json.bind(res);
+  res.json = function (data) {
+    const transformed = ApiVersionTransformer.transformResponse(data, version);
+    return originalJson(transformed);
+  };
+  next();
 }

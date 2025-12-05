@@ -14,7 +14,7 @@ lattice_attributes:
   economic_context: Warring States Period
   field_of_study: Military Strategy
   notable_works:
-  - The Art of War
+    - The Art of War
   metadata:
     dynasty: Spring and Autumn Period
 era_context: Ancient China during the Warring States period; constant warfare between
@@ -34,20 +34,20 @@ core_philosophy: 'Know yourself and know your enemy, and you will never be defea
 
   '
 key_ideas:
-- Know yourself and know your enemy
-- Supreme art of war is to subdue without fighting
-- All warfare is based on deception
-- Terrain, timing, and surprise
-- Appear weak when strong, strong when weak
+  - Know yourself and know your enemy
+  - Supreme art of war is to subdue without fighting
+  - All warfare is based on deception
+  - Terrain, timing, and surprise
+  - Appear weak when strong, strong when weak
 relationships:
   influences:
-  - Chinese military strategy
-  - Business strategy
-  - Game theory
-  - Modern leadership theory
+    - Chinese military strategy
+    - Business strategy
+    - Game theory
+    - Modern leadership theory
   influenced_by:
-  - Taoist philosophy
-  - Confucian ethics
-  - Ancient Chinese statecraft
+    - Taoist philosophy
+    - Confucian ethics
+    - Ancient Chinese statecraft
   persona_influences: []
   persona_influenced_by: []

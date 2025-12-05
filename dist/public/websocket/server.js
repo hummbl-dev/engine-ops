@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,76 +14,76 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.WebSocketServer = void 0;
-const socket_io_1 = require("socket.io");
+const socket_io_1 = require('socket.io');
 /**
  * WebSocket server for real-time optimization updates
  */
 class WebSocketServer {
-    io;
-    constructor(httpServer) {
-        this.io = new socket_io_1.Server(httpServer, {
-            cors: {
-                origin: '*',
-                methods: ['GET', 'POST']
-            }
-        });
-        this.setupEventHandlers();
-    }
-    setupEventHandlers() {
-        this.io.on('connection', (socket) => {
-            console.log(`Client connected: ${socket.id}`);
-            socket.on('subscribe', (requestId) => {
-                socket.join(`optimization:${requestId}`);
-                console.log(`Client ${socket.id} subscribed to ${requestId}`);
-            });
-            socket.on('unsubscribe', (requestId) => {
-                socket.leave(`optimization:${requestId}`);
-                console.log(`Client ${socket.id} unsubscribed from ${requestId}`);
-            });
-            socket.on('disconnect', () => {
-                console.log(`Client disconnected: ${socket.id}`);
-            });
-        });
-    }
-    /**
-     * Emit optimization started event
-     */
-    emitOptimizationStart(request) {
-        this.io.to(`optimization:${request.id}`).emit('optimization:start', {
-            requestId: request.id,
-            type: request.type,
-            timestamp: Date.now()
-        });
-    }
-    /**
-     * Emit optimization progress event
-     */
-    emitOptimizationProgress(progress) {
-        this.io.to(`optimization:${progress.requestId}`).emit('optimization:progress', progress);
-    }
-    /**
-     * Emit optimization complete event
-     */
-    emitOptimizationComplete(result) {
-        this.io.to(`optimization:${result.requestId}`).emit('optimization:complete', result);
-    }
-    /**
-     * Emit optimization error event
-     */
-    emitOptimizationError(requestId, error) {
-        this.io.to(`optimization:${requestId}`).emit('optimization:error', {
-            requestId,
-            error: error.message,
-            timestamp: Date.now()
-        });
-    }
-    /**
-     * Get Socket.IO server instance
-     */
-    getIO() {
-        return this.io;
-    }
+  io;
+  constructor(httpServer) {
+    this.io = new socket_io_1.Server(httpServer, {
+      cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+      },
+    });
+    this.setupEventHandlers();
+  }
+  setupEventHandlers() {
+    this.io.on('connection', (socket) => {
+      console.log(`Client connected: ${socket.id}`);
+      socket.on('subscribe', (requestId) => {
+        socket.join(`optimization:${requestId}`);
+        console.log(`Client ${socket.id} subscribed to ${requestId}`);
+      });
+      socket.on('unsubscribe', (requestId) => {
+        socket.leave(`optimization:${requestId}`);
+        console.log(`Client ${socket.id} unsubscribed from ${requestId}`);
+      });
+      socket.on('disconnect', () => {
+        console.log(`Client disconnected: ${socket.id}`);
+      });
+    });
+  }
+  /**
+   * Emit optimization started event
+   */
+  emitOptimizationStart(request) {
+    this.io.to(`optimization:${request.id}`).emit('optimization:start', {
+      requestId: request.id,
+      type: request.type,
+      timestamp: Date.now(),
+    });
+  }
+  /**
+   * Emit optimization progress event
+   */
+  emitOptimizationProgress(progress) {
+    this.io.to(`optimization:${progress.requestId}`).emit('optimization:progress', progress);
+  }
+  /**
+   * Emit optimization complete event
+   */
+  emitOptimizationComplete(result) {
+    this.io.to(`optimization:${result.requestId}`).emit('optimization:complete', result);
+  }
+  /**
+   * Emit optimization error event
+   */
+  emitOptimizationError(requestId, error) {
+    this.io.to(`optimization:${requestId}`).emit('optimization:error', {
+      requestId,
+      error: error.message,
+      timestamp: Date.now(),
+    });
+  }
+  /**
+   * Get Socket.IO server instance
+   */
+  getIO() {
+    return this.io;
+  }
 }
 exports.WebSocketServer = WebSocketServer;

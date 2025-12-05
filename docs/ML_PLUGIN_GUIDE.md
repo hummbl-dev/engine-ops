@@ -5,6 +5,7 @@ This guide explains how to develop and integrate ML-driven optimization plugins 
 ## Overview
 
 The Engine-Ops plugin system allows you to extend the optimization engine with custom ML models that can:
+
 - Learn from historical workload data
 - Make predictions about resource requirements
 - Optimize scheduling decisions based on patterns
@@ -36,37 +37,39 @@ import { BaseOptimizationPlugin, PluginMetadata, WorkloadDataPoint } from './plu
 import { OptimizationRequest, OptimizationResult } from './interfaces';
 
 class MyCustomPlugin extends BaseOptimizationPlugin {
-    public readonly metadata: PluginMetadata = {
-        name: 'my-custom-plugin',
-        version: '1.0.0',
-        description: 'Custom ML-driven optimizer',
-        author: 'Your Name',
-        supportedTypes: ['ml-driven', 'resource']
+  public readonly metadata: PluginMetadata = {
+    name: 'my-custom-plugin',
+    version: '1.0.0',
+    description: 'Custom ML-driven optimizer',
+    author: 'Your Name',
+    supportedTypes: ['ml-driven', 'resource'],
+  };
+
+  public canHandle(request: OptimizationRequest): boolean {
+    return this.metadata.supportedTypes.includes(request.type);
+  }
+
+  public async optimize(
+    request: OptimizationRequest,
+    historicalData?: WorkloadDataPoint[],
+  ): Promise<OptimizationResult> {
+    this.checkInitialized();
+
+    // Your optimization logic here
+    // Use historicalData for ML predictions
+
+    return {
+      requestId: request.id,
+      success: true,
+      result: {
+        /* your result */
+      },
+      metrics: {
+        durationMs: Date.now() - startTime,
+        score: 0.9,
+      },
     };
-
-    public canHandle(request: OptimizationRequest): boolean {
-        return this.metadata.supportedTypes.includes(request.type);
-    }
-
-    public async optimize(
-        request: OptimizationRequest,
-        historicalData?: WorkloadDataPoint[]
-    ): Promise<OptimizationResult> {
-        this.checkInitialized();
-        
-        // Your optimization logic here
-        // Use historicalData for ML predictions
-        
-        return {
-            requestId: request.id,
-            success: true,
-            result: { /* your result */ },
-            metrics: {
-                durationMs: Date.now() - startTime,
-                score: 0.9
-            }
-        };
-    }
+  }
 }
 ```
 
@@ -77,11 +80,11 @@ import { pluginRegistry } from './plugins';
 
 const plugin = new MyCustomPlugin();
 await pluginRegistry.register(plugin, {
-    enabled: true,
-    priority: 10, // Higher priority plugins are chosen first
-    config: {
-        // Plugin-specific configuration
-    }
+  enabled: true,
+  priority: 10, // Higher priority plugins are chosen first
+  config: {
+    // Plugin-specific configuration
+  },
 });
 ```
 
@@ -91,17 +94,19 @@ await pluginRegistry.register(plugin, {
 import { OptimizationEngine } from './core';
 
 const engine = new OptimizationEngine({
-    enablePlugins: true,
-    enableWorkloadCollection: true
+  enablePlugins: true,
+  enableWorkloadCollection: true,
 });
 
 await engine.init();
 
 // The engine will automatically use registered plugins
 const result = await engine.optimize({
-    id: 'req-1',
-    type: 'ml-driven',
-    data: { /* your data */ }
+  id: 'req-1',
+  type: 'ml-driven',
+  data: {
+    /* your data */
+  },
 });
 ```
 
@@ -124,36 +129,36 @@ class MyMLModel(BaseMLModel):
         super().__init__(model_id)
         # Initialize your model
         self.model = None
-    
+
     def train(self, data: List[WorkloadDataPoint]) -> None:
         """Train your model with historical data"""
         if not self.validate_training_data(data):
             raise ValueError("Insufficient training data")
-        
+
         # Extract features and labels
         features, labels = self.preprocess_data(data)
-        
+
         # Train your model
         # self.model.fit(features, labels)
-        
+
         self.is_trained = True
         self.training_metadata = {
             'training_samples': len(data),
             'model_type': 'custom'
         }
-    
+
     def predict(self, input_data: Dict[str, Any]) -> PredictionResult:
         """Make predictions"""
         if not self.is_trained:
             raise RuntimeError("Model not trained")
-        
+
         # Make prediction using your model
         prediction = {
             'expected_duration': 100.0,
             'recommended_resources': {'cpu': 4, 'memory': 8192},
             'confidence': 0.85
         }
-        
+
         return PredictionResult(
             prediction=prediction,
             confidence=0.85,
@@ -179,10 +184,10 @@ class MyPlugin(MLPluginInterface):
         )
         model = MyMLModel()
         super().__init__(metadata, model)
-    
+
     def optimize(
-        self, 
-        request_data: Dict[str, Any], 
+        self,
+        request_data: Dict[str, Any],
         historical_data: Optional[List[WorkloadDataPoint]] = None
     ) -> Dict[str, Any]:
         """Execute optimization"""
@@ -190,7 +195,7 @@ class MyPlugin(MLPluginInterface):
         if historical_data and len(historical_data) >= 10:
             if not self.model.is_trained:
                 self.train_model(historical_data)
-        
+
         # Make prediction
         if self.model.is_trained:
             result = self.predict(request_data)
@@ -273,7 +278,7 @@ The engine automatically collects workload data when enabled:
 
 ```typescript
 const engine = new OptimizationEngine({
-    enableWorkloadCollection: true
+  enableWorkloadCollection: true,
 });
 ```
 
@@ -306,7 +311,7 @@ workload_data = response.json()
 # Use with your model
 from engine_ops.ml import WorkloadDataPoint
 data_points = [
-    WorkloadDataPoint.from_dict(d) 
+    WorkloadDataPoint.from_dict(d)
     for d in workload_data['data']
 ]
 ```
@@ -320,6 +325,7 @@ GET /api/v1/plugins
 ```
 
 Response:
+
 ```json
 {
   "plugins": [
@@ -386,7 +392,7 @@ class SkLearnModel(BaseMLModel):
     def __init__(self):
         super().__init__("sklearn-rf")
         self.model = RandomForestRegressor()
-    
+
     def train(self, data):
         features, labels = self.preprocess_data(data)
         self.model.fit(features, labels)
@@ -403,7 +409,7 @@ class TFModel(BaseMLModel):
     def __init__(self):
         super().__init__("tensorflow-model")
         self.model = tf.keras.Sequential([...])
-    
+
     def train(self, data):
         features, labels = self.preprocess_data(data)
         # Convert to tensors and train
@@ -436,5 +442,6 @@ class TFModel(BaseMLModel):
 ## Support
 
 For issues and questions:
+
 - GitHub Issues: https://github.com/hummbl-dev/engine-ops/issues
 - Email: hummbldev@gmail.com

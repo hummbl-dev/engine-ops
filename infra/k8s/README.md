@@ -55,18 +55,21 @@ helm uninstall engine-ops
 ### Environment Variables
 
 Set via ConfigMap (`configmap.yaml`):
+
 - `RATE_LIMIT_WINDOW_MS` - Rate limit window (default: 900000ms)
 - `RATE_LIMIT_MAX_REQUESTS` - Max requests per window (default: 100)
 
 ### Resource Limits
 
 Default limits per pod:
+
 - CPU: 100m request, 500m limit
 - Memory: 128Mi request, 512Mi limit
 
 ### Autoscaling
 
 HPA configuration:
+
 - Min replicas: 2
 - Max replicas: 10
 - CPU target: 70%
@@ -75,6 +78,7 @@ HPA configuration:
 ## Health Checks
 
 The application exposes health endpoints:
+
 - `/health/live` - Liveness probe
 - `/health/ready` - Readiness probe
 - `/api/v1/health` - General health check
@@ -167,12 +171,14 @@ kubectl logs -l app=engine-ops-health-monitor -f
 ### Automatic Pod Replacement
 
 The deployment includes:
+
 - **Aggressive health checks**: Liveness and readiness probes detect failures quickly
 - **Startup probes**: Handle slow-starting containers gracefully
 - **Pod Disruption Budget**: Ensures at least 1 pod is always available
 - **Health monitor**: Actively monitors pods and logs remediation actions
 
 When a pod fails health checks:
+
 1. Kubernetes automatically restarts unhealthy pods
 2. Health monitor logs the remediation event
 3. Kubernetes events are created for auditability

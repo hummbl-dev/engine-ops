@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Kubernetes cluster (local or cloud)
-- `kubectl` configured and connected to your cluster  
+- `kubectl` configured and connected to your cluster
 - Docker installed
 - Python 3.13+
 

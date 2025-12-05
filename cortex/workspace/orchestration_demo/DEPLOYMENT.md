@@ -9,19 +9,20 @@ Follow these steps to get the Flask Todo API running on your local machine.
 
 ### Prerequisites
 
-*   Python 3.7+
-*   `pip` (Python package installer)
+- Python 3.7+
+- `pip` (Python package installer)
 
 ### Project Structure
 
 Create a project directory (e.g., `flask-todo-api`) and place your `app.py` and `test_app.py` files inside it.
-
 ```
+
 flask-todo-api/
 ├── app.py
 └── test_app.py
-└── requirements.txt  (will be created in the next step)
-```
+└── requirements.txt (will be created in the next step)
+
+````
 
 ### Create a Virtual Environment
 
@@ -30,7 +31,7 @@ It's highly recommended to use a virtual environment to manage project dependenc
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+````
 
 ### Install Dependencies
 
@@ -60,10 +61,10 @@ SECRET_KEY=your_development_secret_key
 DB_URI=sqlite:///site.db
 ```
 
-*   `FLASK_APP`: Specifies the entry point for the Flask application.
-*   `FLASK_ENV`: Sets the Flask environment. `development` enables debug mode, reloader, etc.
-*   `SECRET_KEY`: Used by Flask for session management and security features. Choose a strong, unique key for production.
-*   `DB_URI`: The SQLAlchemy database connection string. `sqlite:///site.db` creates a local SQLite file.
+- `FLASK_APP`: Specifies the entry point for the Flask application.
+- `FLASK_ENV`: Sets the Flask environment. `development` enables debug mode, reloader, etc.
+- `SECRET_KEY`: Used by Flask for session management and security features. Choose a strong, unique key for production.
+- `DB_URI`: The SQLAlchemy database connection string. `sqlite:///site.db` creates a local SQLite file.
 
 ## 2. Running the Application
 
@@ -111,15 +112,15 @@ test_app.py .....                                                        [100%]
 
 The following environment variables are essential for the application to function correctly:
 
-*   **`FLASK_APP`**: (Required) Specifies the Python file that contains your Flask application instance (e.g., `app.py`).
-*   **`FLASK_ENV`**: (Required) Sets the environment for Flask.
-    *   `development`: Enables debug mode, reloader, and detailed error messages.
-    *   `production`: Disables debug mode and provides less verbose error messages, suitable for production.
-*   **`SECRET_KEY`**: (Required) A strong, randomly generated secret key used by Flask for cryptographic operations like signing cookies and protecting against CSRF attacks. **In production, this must be a unique, complex, and securely stored value.**
-*   **`DB_URI`**: (Required) The SQLAlchemy database connection string. Examples:
-    *   `sqlite:///site.db` (for local SQLite file, not recommended for production)
-    *   `postgresql://user:password@host:port/database_name` (for PostgreSQL)
-    *   `mysql+pymysql://user:password@host:port/database_name` (for MySQL with PyMySQL driver)
+- **`FLASK_APP`**: (Required) Specifies the Python file that contains your Flask application instance (e.g., `app.py`).
+- **`FLASK_ENV`**: (Required) Sets the environment for Flask.
+  - `development`: Enables debug mode, reloader, and detailed error messages.
+  - `production`: Disables debug mode and provides less verbose error messages, suitable for production.
+- **`SECRET_KEY`**: (Required) A strong, randomly generated secret key used by Flask for cryptographic operations like signing cookies and protecting against CSRF attacks. **In production, this must be a unique, complex, and securely stored value.**
+- **`DB_URI`**: (Required) The SQLAlchemy database connection string. Examples:
+  - `sqlite:///site.db` (for local SQLite file, not recommended for production)
+  - `postgresql://user:password@host:port/database_name` (for PostgreSQL)
+  - `mysql+pymysql://user:password@host:port/database_name` (for MySQL with PyMySQL driver)
 
 ## 5. Production Deployment Considerations
 
@@ -136,36 +137,38 @@ Flask's built-in development server is not suitable for production. You should u
     pip install gunicorn
     ```
 2.  Run Gunicorn (replace `app:app` with `your_app_file_name:your_flask_app_instance_name`):
+
     ```bash
     gunicorn -w 4 -b 0.0.0.0:5000 app:app
     ```
-    *   `-w 4`: Specifies 4 worker processes. Adjust based on your server's CPU cores.
-    *   `-b 0.0.0.0:5000`: Binds Gunicorn to all network interfaces on port 5000.
-    *   `app:app`: Tells Gunicorn to load the `app` instance from the `app.py` file.
+
+    - `-w 4`: Specifies 4 worker processes. Adjust based on your server's CPU cores.
+    - `-b 0.0.0.0:5000`: Binds Gunicorn to all network interfaces on port 5000.
+    - `app:app`: Tells Gunicorn to load the `app` instance from the `app.py` file.
 
 ### Reverse Proxy
 
 Place a reverse proxy (e.g., Nginx, Apache) in front of your WSGI server. A reverse proxy provides:
 
-*   **SSL/TLS Termination (HTTPS)**: Essential for securing communication.
-*   **Load Balancing**: Distribute requests across multiple WSGI server instances.
-*   **Static File Serving**: (If your application had static assets, which this API doesn't)
-*   **Caching**: Improve performance for frequently accessed content.
-*   **Security**: Protect against certain types of attacks.
+- **SSL/TLS Termination (HTTPS)**: Essential for securing communication.
+- **Load Balancing**: Distribute requests across multiple WSGI server instances.
+- **Static File Serving**: (If your application had static assets, which this API doesn't)
+- **Caching**: Improve performance for frequently accessed content.
+- **Security**: Protect against certain types of attacks.
 
 ### Database Management
 
-*   **External Database**: The current setup uses a local SQLite file (`sqlite:///site.db`), which is **not suitable for production**. Use a robust, external database like PostgreSQL, MySQL, or a managed database service. Update the `DB_URI` environment variable accordingly.
-*   **Database Migrations**: The `db.create_all()` call inside `@app.before_request` is a **critical issue for production**. It should be removed.
-    *   `db.create_all()` should only be called once, typically during initial deployment or development.
-    *   In production, use a dedicated migration tool like [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) (which uses Alembic) to manage schema changes safely. This allows you to evolve your database schema without losing data.
-    *   The `db.drop_all()` and `db.create_all()` in the test fixture are fine for testing but must not be used in production.
+- **External Database**: The current setup uses a local SQLite file (`sqlite:///site.db`), which is **not suitable for production**. Use a robust, external database like PostgreSQL, MySQL, or a managed database service. Update the `DB_URI` environment variable accordingly.
+- **Database Migrations**: The `db.create_all()` call inside `@app.before_request` is a **critical issue for production**. It should be removed.
+  - `db.create_all()` should only be called once, typically during initial deployment or development.
+  - In production, use a dedicated migration tool like [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) (which uses Alembic) to manage schema changes safely. This allows you to evolve your database schema without losing data.
+  - The `db.drop_all()` and `db.create_all()` in the test fixture are fine for testing but must not be used in production.
 
 ### Environment Variables in Production
 
-*   **`SECRET_KEY`**: Generate a very strong, random, and unique secret key. Never hardcode it; use environment variables or a secret management service.
-*   **`FLASK_ENV=production`**: Always set this in production.
-*   **`DB_URI`**: Set this to the connection string of your production database.
+- **`SECRET_KEY`**: Generate a very strong, random, and unique secret key. Never hardcode it; use environment variables or a secret management service.
+- **`FLASK_ENV=production`**: Always set this in production.
+- **`DB_URI`**: Set this to the connection string of your production database.
 
 ### Logging
 
@@ -173,9 +176,9 @@ Configure proper logging for your application. In production, logs should be dir
 
 ### Security
 
-*   **HTTPS**: Always serve your API over HTTPS.
-*   **Input Validation**: Ensure all incoming data is properly validated to prevent common web vulnerabilities.
-*   **Error Handling**: Provide generic error messages to clients instead of detailed stack traces that could expose sensitive information.
+- **HTTPS**: Always serve your API over HTTPS.
+- **Input Validation**: Ensure all incoming data is properly validated to prevent common web vulnerabilities.
+- **Error Handling**: Provide generic error messages to clients instead of detailed stack traces that could expose sensitive information.
 
 ## 6. Docker Deployment
 
@@ -227,12 +230,14 @@ gunicorn
 ### Build and Run Docker Image
 
 1.  **Build the Docker image**:
+
     ```bash
     docker build -t flask-todo-api .
     ```
 
 2.  **Run the Docker container**:
     You need to pass the environment variables for `SECRET_KEY` and `DB_URI`.
+
     ```bash
     docker run -p 5000:5000 \
                -e SECRET_KEY="your_strong_secret_key_here" \
@@ -240,8 +245,9 @@ gunicorn
                -e FLASK_ENV="production" \
                flask-todo-api
     ```
-    *   `-p 5000:5000`: Maps port 5000 of the container to port 5000 on your host.
-    *   `-e`: Used to pass environment variables to the container.
+
+    - `-p 5000:5000`: Maps port 5000 of the container to port 5000 on your host.
+    - `-e`: Used to pass environment variables to the container.
 
 ### Docker Compose (Optional, for multi-service deployments)
 
@@ -256,7 +262,7 @@ services:
   web:
     build: .
     ports:
-      - "5000:5000"
+      - '5000:5000'
     environment:
       FLASK_ENV: production
       SECRET_KEY: your_strong_secret_key_here
@@ -286,4 +292,7 @@ docker-compose up --build
 ```
 
 This guide provides a comprehensive path from local development to production-ready deployment for your Flask Todo API. Remember to prioritize security and database management best practices in production.
+
+```
+
 ```

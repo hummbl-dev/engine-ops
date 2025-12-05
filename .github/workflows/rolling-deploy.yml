@@ -43,7 +43,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -107,7 +107,7 @@ jobs:
     environment: staging
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -147,7 +147,7 @@ jobs:
           kubectl set image deployment/engine-ops \
             engine-ops=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.version || 'latest' }} \
             -n staging
-          
+
           kubectl annotate deployment/engine-ops \
             kubernetes.io/change-cause="Deploy ${{ inputs.version || github.sha }}" \
             -n staging --overwrite
@@ -164,7 +164,7 @@ jobs:
             -l app=engine-ops \
             -n staging \
             --timeout=2m
-          
+
           kubectl get pods -l app=engine-ops -n staging
 
       - name: Run smoke tests
@@ -209,7 +209,7 @@ jobs:
     environment: production
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -236,7 +236,7 @@ jobs:
         run: |
           # Record current deployment state
           kubectl get deployment engine-ops -n production -o yaml > deployment-backup.yaml
-          
+
           # Save current image
           CURRENT_IMAGE=$(kubectl get deployment engine-ops -n production -o jsonpath='{.spec.template.spec.containers[0].image}')
           echo "BACKUP_IMAGE=$CURRENT_IMAGE" >> $GITHUB_ENV
@@ -259,7 +259,7 @@ jobs:
             engine-ops=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.version }} \
             -n production \
             --record
-          
+
           kubectl annotate deployment/engine-ops \
             kubernetes.io/change-cause="Deploy ${{ inputs.version }}" \
             -n production --overwrite
@@ -278,10 +278,10 @@ jobs:
             -l app=engine-ops \
             -n production \
             --timeout=3m
-          
+
           # Check pod status
           kubectl get pods -l app=engine-ops -n production
-          
+
           # Verify no pods are in error state
           ERROR_PODS=$(kubectl get pods -l app=engine-ops -n production -o json | jq -r '.items[] | select(.status.phase != "Running") | .metadata.name')
           if [ -n "$ERROR_PODS" ]; then
@@ -336,7 +336,7 @@ jobs:
             
             sleep 5
           done
-          
+
           echo "✓ Deployment monitoring complete"
 
       - name: Rollback on failure
@@ -358,7 +358,7 @@ jobs:
     if: success()
     permissions:
       contents: write
-    
+
     steps:
       - name: Update deployment status
         run: |
@@ -375,12 +375,12 @@ jobs:
           generate_release_notes: true
           body: |
             ## Release ${{ inputs.version }}
-            
+
             Deployed to production on ${{ github.event.repository.updated_at }}
-            
+
             ### Changes
             - See commit history for detailed changes
-            
+
             ### Deployment
             - Strategy: Rolling Update
             - Environment: Production
@@ -395,7 +395,7 @@ jobs:
     permissions:
       contents: read
     if: always()
-    
+
     steps:
       - name: Deployment status
         run: |

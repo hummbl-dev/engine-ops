@@ -22,19 +22,19 @@ webhooks:
       service:
         name: engine-ops-webhook
         namespace: default
-        path: "/mutate"
+        path: '/mutate'
         port: 443
-      caBundle: "" # To be populated with base64 encoded CA cert
+      caBundle: '' # To be populated with base64 encoded CA cert
     rules:
-      - operations: ["CREATE", "UPDATE"]
-        apiGroups: [""]
-        apiVersions: ["v1"]
-        resources: ["pods"]
-      - operations: ["CREATE", "UPDATE"]
-        apiGroups: ["apps"]
-        apiVersions: ["v1"]
-        resources: ["deployments", "statefulsets", "daemonsets"]
-    admissionReviewVersions: ["v1", "v1beta1"]
+      - operations: ['CREATE', 'UPDATE']
+        apiGroups: ['']
+        apiVersions: ['v1']
+        resources: ['pods']
+      - operations: ['CREATE', 'UPDATE']
+        apiGroups: ['apps']
+        apiVersions: ['v1']
+        resources: ['deployments', 'statefulsets', 'daemonsets']
+    admissionReviewVersions: ['v1', 'v1beta1']
     sideEffects: None
     timeoutSeconds: 10
     failurePolicy: Ignore

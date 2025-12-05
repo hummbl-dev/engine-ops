@@ -3,6 +3,7 @@
 ## Executive Summary
 
 This plan establishes a systematic approach to ensure the Sovereign Council has:
+
 1. **At least one member from every continent** (excluding Antarctica)
 2. **Representation from each historical century/period**
 3. **A matrix function to track and maintain representation**
@@ -10,14 +11,16 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ## Current State Analysis
 
 ### Current Council (9 members)
+
 - **Asia (1):** Sun Tzu
-- **Africa (1):** Hypatia  
+- **Africa (1):** Hypatia
 - **Europe (7):** Plato, Aristotle, Marcus Aurelius, Machiavelli, Ada Lovelace, Marie Curie, Carl Jung
 - **North America (0):** MISSING
 - **South America (0):** MISSING
 - **Oceania (0):** MISSING
 
 ### Century Coverage
+
 - **Ancient (pre-500 CE):** 5 members ✓
 - **Medieval (500-1500):** 0 members ✗
 - **Renaissance (1500-1700):** 1 member ✓
@@ -28,22 +31,27 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ## Strategic Priorities
 
 ### Phase 1: Continental Coverage (Priority 1)
+
 **Goal:** At least one member from each continent
 
 **Missing Continents:**
+
 1. North America
 2. South America
 3. Oceania
 
 ### Phase 2: Temporal Coverage (Priority 2)
+
 **Goal:** At least one member from each century/period
 
 **Missing Centuries:**
+
 1. Medieval (500-1500)
 2. Enlightenment (1700-1800)
 3. Contemporary (1950+)
 
 ### Phase 3: Matrix Optimization (Priority 3)
+
 **Goal:** Fill gaps in the continent × century matrix for balanced representation
 
 ## Recommended Candidates
@@ -51,6 +59,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ### North America
 
 #### Option 1: Benjamin Franklin (1706-1790)
+
 - **Continent:** North America
 - **Century:** Enlightenment (1700-1800)
 - **Expertise:** Science, philosophy, diplomacy, invention
@@ -58,6 +67,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Practical wisdom, scientific inquiry, civic virtue
 
 #### Option 2: Thomas Jefferson (1743-1826)
+
 - **Continent:** North America
 - **Century:** Enlightenment (1700-1800)
 - **Expertise:** Political philosophy, architecture, education
@@ -65,6 +75,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Liberty, education, reason
 
 #### Option 3: Maya Angelou (1928-2014)
+
 - **Continent:** North America
 - **Century:** Contemporary (1950+)
 - **Expertise:** Literature, civil rights, resilience
@@ -76,6 +87,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ### South America
 
 #### Option 1: Simón Bolívar (1783-1830)
+
 - **Continent:** South America
 - **Century:** Modern (1800-1950)
 - **Expertise:** Political leadership, liberation, strategy
@@ -83,6 +95,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Liberation, unity, strategic vision
 
 #### Option 2: Gabriela Mistral (1889-1957)
+
 - **Continent:** South America (Chile)
 - **Century:** Modern (1800-1950)
 - **Expertise:** Literature, education, Nobel Prize winner
@@ -90,6 +103,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Education, compassion, cultural identity
 
 #### Option 3: Paulo Freire (1921-1997)
+
 - **Continent:** South America (Brazil)
 - **Century:** Contemporary (1950+)
 - **Expertise:** Education, critical pedagogy, social justice
@@ -101,6 +115,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ### Oceania
 
 #### Option 1: Te Whiti o Rongomai (1830-1907)
+
 - **Continent:** Oceania (New Zealand)
 - **Century:** Modern (1800-1950)
 - **Expertise:** Non-violent resistance, leadership, spirituality
@@ -108,13 +123,15 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Non-violent resistance, spiritual leadership
 
 #### Option 2: Dame Whina Cooper (1895-1994)
+
 - **Continent:** Oceania (New Zealand)
 - **Century:** Contemporary (1950+)
 - **Expertise:** Indigenous rights, activism, leadership
 - **Rationale:** Fills both Oceania AND Contemporary gaps
 - **Core Principles:** Indigenous rights, community leadership
 
-#### Option 3: Albert Einstein (1879-1955) - *Alternative*
+#### Option 3: Albert Einstein (1879-1955) - _Alternative_
+
 - **Continent:** Born in Europe, but could represent global thinking
 - **Century:** Modern (1800-1950)
 - **Expertise:** Physics, philosophy of science
@@ -125,6 +142,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ### Medieval Period (500-1500)
 
 #### Option 1: Ibn Rushd (Averroes) (1126-1198)
+
 - **Continent:** Africa (Morocco/Spain)
 - **Century:** Medieval (500-1500)
 - **Expertise:** Philosophy, medicine, law, astronomy
@@ -132,6 +150,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Reason, synthesis of knowledge, intellectual freedom
 
 #### Option 2: Hildegard of Bingen (1098-1179)
+
 - **Continent:** Europe (Germany)
 - **Century:** Medieval (500-1500)
 - **Expertise:** Mysticism, medicine, music, natural history
@@ -139,6 +158,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Holistic knowledge, visionary thinking
 
 #### Option 3: Maimonides (1135-1204)
+
 - **Continent:** Africa/Europe (Egypt/Spain)
 - **Century:** Medieval (500-1500)
 - **Expertise:** Philosophy, medicine, Jewish law
@@ -150,6 +170,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ### Enlightenment Period (1700-1800)
 
 #### Option 1: Immanuel Kant (1724-1804)
+
 - **Continent:** Europe (Germany)
 - **Century:** Enlightenment (1700-1800)
 - **Expertise:** Philosophy, ethics, epistemology
@@ -157,6 +178,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Categorical imperative, reason, autonomy
 
 #### Option 2: Mary Wollstonecraft (1759-1797)
+
 - **Continent:** Europe (England)
 - **Century:** Enlightenment (1700-1800)
 - **Expertise:** Philosophy, feminism, education
@@ -164,6 +186,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Women's rights, reason, education
 
 #### Option 3: Olympe de Gouges (1748-1793)
+
 - **Continent:** Europe (France)
 - **Century:** Enlightenment (1700-1800)
 - **Expertise:** Political philosophy, women's rights, abolitionism
@@ -175,6 +198,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ### Contemporary Period (1950+)
 
 #### Option 1: Ruth Bader Ginsburg (1933-2020)
+
 - **Continent:** North America (USA)
 - **Century:** Contemporary (1950+)
 - **Expertise:** Law, justice, gender equality
@@ -182,6 +206,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Justice, equality, persistence
 
 #### Option 2: Nelson Mandela (1918-2013)
+
 - **Continent:** Africa (South Africa)
 - **Century:** Contemporary (1950+)
 - **Expertise:** Leadership, reconciliation, justice
@@ -189,6 +214,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 - **Core Principles:** Reconciliation, justice, leadership
 
 #### Option 3: Noam Chomsky (1928-present)
+
 - **Continent:** North America (USA)
 - **Century:** Contemporary (1950+)
 - **Expertise:** Linguistics, philosophy, political analysis
@@ -200,6 +226,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 ## Implementation Plan
 
 ### Phase 1: Minimum Viable Representation (3 members)
+
 **Goal:** One member from each missing continent
 
 1. **Benjamin Franklin** (North America + Enlightenment)
@@ -209,6 +236,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 **Result:** All continents covered ✓
 
 ### Phase 2: Temporal Coverage (2 members)
+
 **Goal:** Fill missing centuries
 
 4. **Ibn Rushd (Averroes)** (Medieval)
@@ -217,6 +245,7 @@ This plan establishes a systematic approach to ensure the Sovereign Council has:
 **Result:** All centuries covered ✓
 
 ### Phase 3: Matrix Optimization (Optional)
+
 **Goal:** Balance representation across matrix
 
 6. **Nelson Mandela** (Contemporary + strengthens Africa)
@@ -239,12 +268,13 @@ The `council_matrix.py` module provides:
    - `print_report()` - Formatted report
 
 3. **Usage:**
+
    ```python
    from src.council_matrix import CouncilRepresentationMatrix, CouncilMemberProfile, Continent, Century
-   
+
    matrix = CouncilRepresentationMatrix()
    matrix.print_report()
-   
+
    # Add new member
    new_member = CouncilMemberProfile(
        "benjamin_franklin",
@@ -261,17 +291,20 @@ The `council_matrix.py` module provides:
 ## Success Metrics
 
 ### Phase 1 Success Criteria
+
 - [ ] At least 1 member from North America
 - [ ] At least 1 member from South America
 - [ ] At least 1 member from Oceania
 - [ ] Matrix function operational
 
 ### Phase 2 Success Criteria
+
 - [ ] At least 1 member from Medieval period
 - [ ] At least 1 member from Enlightenment period
 - [ ] At least 1 member from Contemporary period
 
 ### Phase 3 Success Criteria
+
 - [ ] Balanced representation across matrix
 - [ ] No single continent/century dominates (>40% of council)
 - [ ] Gender diversity maintained/improved
@@ -307,4 +340,3 @@ The `council_matrix.py` module provides:
 **Document Version:** 1.0  
 **Last Updated:** 2025-01-27  
 **Status:** Ready for Implementation
-

@@ -13,12 +13,12 @@ spec:
   type: LoadBalancer
   selector:
     app: engine-ops
-    version: blue  # Switch this to 'green' for blue-green deployment
+    version: blue # Switch this to 'green' for blue-green deployment
   ports:
-  - name: http
-    port: 80
-    targetPort: http
-    protocol: TCP
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
   sessionAffinity: None
 
 ---
@@ -34,12 +34,12 @@ spec:
   type: ClusterIP
   selector:
     app: engine-ops
-    version: green  # Switch this to 'blue' when blue is inactive
+    version: green # Switch this to 'blue' when blue is inactive
   ports:
-  - name: http
-    port: 80
-    targetPort: http
-    protocol: TCP
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
   sessionAffinity: None
 
 ---
@@ -57,10 +57,10 @@ spec:
     app: engine-ops
     version: blue
   ports:
-  - name: http
-    port: 80
-    targetPort: http
-    protocol: TCP
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
   sessionAffinity: None
 
 ---
@@ -78,8 +78,8 @@ spec:
     app: engine-ops
     version: green
   ports:
-  - name: http
-    port: 80
-    targetPort: http
-    protocol: TCP
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
   sessionAffinity: None

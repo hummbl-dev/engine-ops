@@ -36,64 +36,64 @@ import { metricsMiddleware } from '../core/observability/metrics.js';
  * Create and configure Express application
  */
 export function createApp(): Express {
-    const app = express();
+  const app = express();
 
-    // Security middleware
-    app.use(helmet());
-    app.use(cors());
+  // Security middleware
+  app.use(helmet());
+  app.use(cors());
 
-    // Body parsing
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+  // Body parsing
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-    // Rate limiting
-    const limiter = rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100, // Limit each IP to 100 requests per windowMs
-        message: 'Too many requests from this IP, please try again later.'
+  // Rate limiting
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.',
+  });
+  app.use('/api/', limiter);
+
+  // Request logging
+  app.use(requestLogger);
+
+  // Prometheus metrics
+  app.use(metricsMiddleware);
+
+  // API routes
+  app.use('/api/v1/optimize', optimizeRouter);
+  app.use('/api/v1/health', healthRouter);
+  app.use('/api/v1/metrics', metricsRouter);
+  app.use('/api/v1/cache', cacheRouter);
+  app.use('/api/v1/anomaly', anomalyRouter);
+  app.use('/api/v1/plugins', pluginsRouter);
+  app.use('/api/v1/agent-sessions', agentSessionsRouter);
+  app.use('/metrics', prometheusRouter);
+  app.use('/api-docs', swaggerRouter);
+  app.use('/cost', costRouter);
+
+  // Root endpoint
+  app.get('/', (_req, res) => {
+    res.json({
+      name: 'Engine-Ops API',
+      version: '0.3.0',
+      endpoints: {
+        optimize: 'POST /api/v1/optimize',
+        health: 'GET /api/v1/health',
+        metrics: 'GET /api/v1/metrics',
+        cache: 'GET /api/v1/cache/stats',
+        anomaly: 'GET /api/v1/anomaly/alerts',
+        plugins: 'GET /api/v1/plugins',
+        workloadData: 'GET /api/v1/plugins/workload-data/stats',
+        agentSessions: 'POST /api/v1/agent-sessions',
+        prometheus: 'GET /metrics',
+        docs: 'GET /api-docs',
+      },
     });
-    app.use('/api/', limiter);
+  });
 
-    // Request logging
-    app.use(requestLogger);
+  // Error handling (must be last)
+  app.use(errorHandler);
 
-    // Prometheus metrics
-    app.use(metricsMiddleware);
-
-    // API routes
-    app.use('/api/v1/optimize', optimizeRouter);
-    app.use('/api/v1/health', healthRouter);
-    app.use('/api/v1/metrics', metricsRouter);
-    app.use('/api/v1/cache', cacheRouter);
-    app.use('/api/v1/anomaly', anomalyRouter);
-    app.use('/api/v1/plugins', pluginsRouter);
-    app.use('/api/v1/agent-sessions', agentSessionsRouter);
-    app.use('/metrics', prometheusRouter);
-    app.use('/api-docs', swaggerRouter);
-    app.use('/cost', costRouter);
-
-    // Root endpoint
-    app.get('/', (_req, res) => {
-        res.json({
-            name: 'Engine-Ops API',
-            version: '0.3.0',
-            endpoints: {
-                optimize: 'POST /api/v1/optimize',
-                health: 'GET /api/v1/health',
-                metrics: 'GET /api/v1/metrics',
-                cache: 'GET /api/v1/cache/stats',
-                anomaly: 'GET /api/v1/anomaly/alerts',
-                plugins: 'GET /api/v1/plugins',
-                workloadData: 'GET /api/v1/plugins/workload-data/stats',
-                agentSessions: 'POST /api/v1/agent-sessions',
-                prometheus: 'GET /metrics',
-                docs: 'GET /api-docs'
-            }
-        });
-    });
-
-    // Error handling (must be last)
-    app.use(errorHandler);
-
-    return app;
+  return app;
 }

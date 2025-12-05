@@ -1,33 +1,33 @@
 {
-    "name": "engine-ops-extension",
-    "version": "0.1.0",
-    "description": "VS Code MCP Extension for HUMMBL Engine",
-    "main": "./dist/extension.js",
-    "scripts": {
-        "build": "node esbuild.js",
-        "watch": "node esbuild.js --watch"
-    },
-    "dependencies": {
-        "vscode-languageclient": "^9.0.1",
-        "@modelcontextprotocol/sdk": "^1.22.0"
-    },
-    "devDependencies": {
-        "esbuild": "^0.25.12",
-        "@types/vscode": "^1.85.0"
-    },
-    "engines": {
-        "vscode": "^1.85.0"
-    },
-    "activationEvents": [
-        "onStartupFinished"
-    ],
-    "contributes": {
-        "chatParticipants": [
-            {
-                "id": "hummbl.chat",
-                "name": "HUMMBL Chat",
-                "description": "Chat participant powered by the Engine"
-            }
-        ]
-    }
+  "name": "engine-ops-extension",
+  "version": "0.1.0",
+  "description": "VS Code MCP Extension for HUMMBL Engine",
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "node esbuild.js",
+    "watch": "node esbuild.js --watch"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "@modelcontextprotocol/sdk": "^1.22.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12",
+    "@types/vscode": "^1.85.0"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "chatParticipants": [
+      {
+        "id": "hummbl.chat",
+        "name": "HUMMBL Chat",
+        "description": "Chat participant powered by the Engine"
+      }
+    ]
+  }
 }

@@ -19,85 +19,85 @@ import { PluginMetadata, WorkloadDataPoint, IMLModel } from './interfaces.js';
  * ML-driven optimization plugin
  */
 export class MLOptimizationPlugin extends BaseOptimizationPlugin {
-    public readonly metadata: PluginMetadata = {
-        name: 'ml-optimization',
-        version: '1.0.0',
-        description: 'ML-driven optimization using custom models',
-        author: 'HUMMBL, LLC',
-        supportedTypes: ['ml-driven', 'resource', 'scheduling']
-    };
+  public readonly metadata: PluginMetadata = {
+    name: 'ml-optimization',
+    version: '1.0.0',
+    description: 'ML-driven optimization using custom models',
+    author: 'HUMMBL, LLC',
+    supportedTypes: ['ml-driven', 'resource', 'scheduling'],
+  };
 
-    private model?: IMLModel;
+  private model?: IMLModel;
 
-    /**
-     * Set ML model
-     */
-    public setModel(model: IMLModel): void {
-        this.model = model;
+  /**
+   * Set ML model
+   */
+  public setModel(model: IMLModel): void {
+    this.model = model;
+  }
+
+  public canHandle(request: OptimizationRequest): boolean {
+    // Can handle ml-driven type or if model is available
+    return request.type === 'ml-driven' || this.model !== undefined;
+  }
+
+  public async optimize(
+    request: OptimizationRequest,
+    historicalData?: WorkloadDataPoint[],
+  ): Promise<OptimizationResult> {
+    this.checkInitialized();
+
+    const startTime = Date.now();
+
+    try {
+      if (!this.model) {
+        throw new Error('No ML model configured');
+      }
+
+      // Train model if we have sufficient historical data
+      if (historicalData && historicalData.length >= 10) {
+        await this.model.train(historicalData);
+      }
+
+      // Make prediction
+      const prediction = await this.model.predict(request.data);
+
+      const durationMs = Date.now() - startTime;
+
+      return {
+        requestId: request.id,
+        success: true,
+        result: {
+          prediction,
+          modelId: this.model.modelId,
+          historicalDataSize: historicalData?.length || 0,
+        },
+        metrics: {
+          durationMs,
+          score: this.calculateScore(prediction),
+        },
+      };
+    } catch (error) {
+      const durationMs = Date.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      return {
+        requestId: request.id,
+        success: false,
+        error: errorMessage,
+        metrics: {
+          durationMs,
+          score: 0,
+        },
+      };
     }
+  }
 
-    public canHandle(request: OptimizationRequest): boolean {
-        // Can handle ml-driven type or if model is available
-        return request.type === 'ml-driven' || (this.model !== undefined);
+  private calculateScore(prediction: Record<string, unknown>): number {
+    // Simple scoring based on prediction confidence
+    if (typeof prediction.confidence === 'number') {
+      return prediction.confidence;
     }
-
-    public async optimize(
-        request: OptimizationRequest,
-        historicalData?: WorkloadDataPoint[]
-    ): Promise<OptimizationResult> {
-        this.checkInitialized();
-
-        const startTime = Date.now();
-
-        try {
-            if (!this.model) {
-                throw new Error('No ML model configured');
-            }
-
-            // Train model if we have sufficient historical data
-            if (historicalData && historicalData.length >= 10) {
-                await this.model.train(historicalData);
-            }
-
-            // Make prediction
-            const prediction = await this.model.predict(request.data);
-
-            const durationMs = Date.now() - startTime;
-
-            return {
-                requestId: request.id,
-                success: true,
-                result: {
-                    prediction,
-                    modelId: this.model.modelId,
-                    historicalDataSize: historicalData?.length || 0
-                },
-                metrics: {
-                    durationMs,
-                    score: this.calculateScore(prediction)
-                }
-            };
-        } catch (error) {
-            const durationMs = Date.now() - startTime;
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-            return {
-                requestId: request.id,
-                success: false,
-                error: errorMessage,
-                metrics: {
-                    durationMs,
-                    score: 0
-                }
-            };
-        }
-    }
-
-    private calculateScore(prediction: Record<string, unknown>): number {
-        // Simple scoring based on prediction confidence
-        if (typeof prediction.confidence === 'number') {
-            return prediction.confidence;
-        }
-        return 0.5; // Default score
-    }
+    return 0.5; // Default score
+  }
 }

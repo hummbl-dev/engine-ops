@@ -14,14 +14,14 @@ This document details applied scenarios using the D-T Framework. Each case demon
 
 ### 1. Initial State Vector (Diagnosis)
 
-| Dimension | Score (0.0-1.0) | Description |
-|-----------|-----------------|-------------|
-| **Temporal** | 0.9 (High) | Weekly sprints, rapid deployment, hotfixes |
-| **Structural** | 0.2 (Low) | Flat hierarchy, "spaghetti code," no documentation |
-| **Epistemic** | 0.3 (Low) | Deep B2C knowledge, zero B2B/Compliance knowledge |
-| **Relational** | 0.4 (Med) | Loose network of early adopters |
-| **Agency** | 0.8 (High) | Founders make all decisions instantly |
-| **Value** | 0.4 (Low) | High churn, low LTV |
+| Dimension      | Score (0.0-1.0) | Description                                        |
+| -------------- | --------------- | -------------------------------------------------- |
+| **Temporal**   | 0.9 (High)      | Weekly sprints, rapid deployment, hotfixes         |
+| **Structural** | 0.2 (Low)       | Flat hierarchy, "spaghetti code," no documentation |
+| **Epistemic**  | 0.3 (Low)       | Deep B2C knowledge, zero B2B/Compliance knowledge  |
+| **Relational** | 0.4 (Med)       | Loose network of early adopters                    |
+| **Agency**     | 0.8 (High)      | Founders make all decisions instantly              |
+| **Value**      | 0.4 (Low)       | High churn, low LTV                                |
 
 ---
 
@@ -139,7 +139,7 @@ graph TD
         T2_Slow --> T3_Scale[Phase Shift: Value]
         T3_Scale --> T3_Success((Success: Value = 0.92))
     end
-    
+
     style T1_Block fill:#ffcccc,stroke:#ff0000,stroke-width:3px
     style T3_Success fill:#ccffcc,stroke:#00ff00,stroke-width:3px
 ```

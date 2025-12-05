@@ -2,7 +2,7 @@
 
 **A Comparative Analysis of Cognitive Architectures**
 
-*Strategic Whitepaper / Decision Matrix*
+_Strategic Whitepaper / Decision Matrix_
 
 ---
 
@@ -18,16 +18,16 @@ The current market offers two distinct paths for integrating AI into workflows.
 
 ## II. The Comparison Matrix
 
-| Feature | Digital Feudalism (The Tenant) | Sovereign Intelligence (The Executive) |
-|---------|-------------------------------|---------------------------------------|
-| **Core Philosophy** | "Trust Us." Convenience is maximized by hiding complexity behind a proprietary curtain. | "Trust Yourself." Capability is maximized by exposing complexity through controllable abstractions. |
-| **Data Sovereignty** | **Extraction.** Your prompts and context often feed the vendor's training data (RLHF). You pay them to improve their product with your IP. | **Isolation.** Your data resides in your context. You decide if it leaves your local environment. Zero-retention agreements are the default. |
-| **Model Strategy** | **Vendor Lock-in.** You are forced to use the provider's model (e.g., only GPT-4), even if a competitor releases a better model tomorrow. | **Model Arbitrage.** You swap the "Brain" dynamically. Use Llama-3 for privacy, Claude Opus for reasoning, and GPT-4o for speed. |
-| **Decision Logic** | **The Black Box.** The AI provides an answer. You have no visibility into the retrieval process, the systemic prompt, or the safety filters used. | **The Glass Box.** The system shows its work: "I read these 3 files, consulted this Constitutional Rule, and chose this path." |
-| **Safety & Censorship** | **Paternalism.** "I cannot answer that." The vendor decides what is safe, often over-correcting and blocking legitimate professional queries. | **Constitutionalism.** "My configuration warns against this." You define the safety rails (e.g., "No PII," "No destructive commands") based on your context. |
-| **Cost Structure** | **Rent-Seeking.** Flat monthly subscription per seat. You pay for idle time. Costs scale linearly with headcount. | **Utility-Based.** Pay-per-token or invest in local hardware. You pay only for the compute you use. Costs scale with efficiency. |
-| **System Integration** | **Walled Garden.** Works perfectly inside their ecosystem (e.g., VS Code only, or Google Docs only). Breaks when you leave. | **Universal Protocol (MCP).** The intelligence server runs independently. It connects to your IDE, your terminal, and your browser simultaneously. |
-| **The Endgame** | **Dependency.** The more you use it, the harder it is to leave. You lose your workflow if the vendor changes terms. | **Mastery.** The more you use it, the richer your personal library of prompts and tools becomes. You own the IP of your workflow. |
+| Feature                 | Digital Feudalism (The Tenant)                                                                                                                    | Sovereign Intelligence (The Executive)                                                                                                                       |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Core Philosophy**     | "Trust Us." Convenience is maximized by hiding complexity behind a proprietary curtain.                                                           | "Trust Yourself." Capability is maximized by exposing complexity through controllable abstractions.                                                          |
+| **Data Sovereignty**    | **Extraction.** Your prompts and context often feed the vendor's training data (RLHF). You pay them to improve their product with your IP.        | **Isolation.** Your data resides in your context. You decide if it leaves your local environment. Zero-retention agreements are the default.                 |
+| **Model Strategy**      | **Vendor Lock-in.** You are forced to use the provider's model (e.g., only GPT-4), even if a competitor releases a better model tomorrow.         | **Model Arbitrage.** You swap the "Brain" dynamically. Use Llama-3 for privacy, Claude Opus for reasoning, and GPT-4o for speed.                             |
+| **Decision Logic**      | **The Black Box.** The AI provides an answer. You have no visibility into the retrieval process, the systemic prompt, or the safety filters used. | **The Glass Box.** The system shows its work: "I read these 3 files, consulted this Constitutional Rule, and chose this path."                               |
+| **Safety & Censorship** | **Paternalism.** "I cannot answer that." The vendor decides what is safe, often over-correcting and blocking legitimate professional queries.     | **Constitutionalism.** "My configuration warns against this." You define the safety rails (e.g., "No PII," "No destructive commands") based on your context. |
+| **Cost Structure**      | **Rent-Seeking.** Flat monthly subscription per seat. You pay for idle time. Costs scale linearly with headcount.                                 | **Utility-Based.** Pay-per-token or invest in local hardware. You pay only for the compute you use. Costs scale with efficiency.                             |
+| **System Integration**  | **Walled Garden.** Works perfectly inside their ecosystem (e.g., VS Code only, or Google Docs only). Breaks when you leave.                       | **Universal Protocol (MCP).** The intelligence server runs independently. It connects to your IDE, your terminal, and your browser simultaneously.           |
+| **The Endgame**         | **Dependency.** The more you use it, the harder it is to leave. You lose your workflow if the vendor changes terms.                               | **Mastery.** The more you use it, the richer your personal library of prompts and tools becomes. You own the IP of your workflow.                            |
 
 ---
 

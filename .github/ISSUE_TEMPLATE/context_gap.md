@@ -4,7 +4,6 @@ about: Report missing documentation or unclear context
 title: 'docs: '
 labels: context, docs
 assignees: ''
-
 ---
 
 **Context Gap Description**

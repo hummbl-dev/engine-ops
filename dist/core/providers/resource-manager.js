@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -11,190 +11,195 @@
  * Change Date: 2029-01-01
  * Change License: Apache License, Version 2.0
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.MultiCloudResourceManager = void 0;
 /**
  * Multi-cloud resource manager with geo-sharding and federated scheduling
  */
 class MultiCloudResourceManager {
-    providers = new Map();
-    registerProvider(provider) {
-        this.providers.set(provider.getProvider(), provider);
+  providers = new Map();
+  registerProvider(provider) {
+    this.providers.set(provider.getProvider(), provider);
+  }
+  getProviders() {
+    return Array.from(this.providers.values());
+  }
+  async listAllNodes(filters) {
+    const allNodes = [];
+    for (const provider of this.providers.values()) {
+      if (filters?.provider && provider.getProvider() !== filters.provider) {
+        continue;
+      }
+      const nodes = await provider.listNodes(filters?.region);
+      allNodes.push(...nodes);
     }
-    getProviders() {
-        return Array.from(this.providers.values());
+    return allNodes;
+  }
+  async scheduleWorkload(workload) {
+    const allNodes = await this.listAllNodes();
+    // Filter nodes based on workload constraints
+    const candidateNodes = this.filterNodesByConstraints(allNodes, workload);
+    if (candidateNodes.length === 0) {
+      return null;
     }
-    async listAllNodes(filters) {
-        const allNodes = [];
-        for (const provider of this.providers.values()) {
-            if (filters?.provider && provider.getProvider() !== filters.provider) {
-                continue;
-            }
-            const nodes = await provider.listNodes(filters?.region);
-            allNodes.push(...nodes);
+    // Score and rank nodes
+    const scoredNodes = this.scoreNodes(candidateNodes, workload);
+    // Sort by score (highest first)
+    scoredNodes.sort((a, b) => b.score - a.score);
+    // Try to deploy to the best node
+    for (const { node, score, reason } of scoredNodes) {
+      const provider = this.providers.get(node.provider);
+      if (!provider) continue;
+      const deployed = await provider.deployWorkload(node.id, workload);
+      if (deployed) {
+        return {
+          workloadId: workload.id,
+          node,
+          score,
+          reason,
+        };
+      }
+    }
+    return null;
+  }
+  async scheduleWorkloadsWithGeoSharding(workloads) {
+    const results = [];
+    // Group workloads by preferred region or use geo-distribution strategy
+    const workloadGroups = this.groupWorkloadsByGeo(workloads);
+    // Schedule each group
+    for (const workloadList of Object.values(workloadGroups)) {
+      for (const workload of workloadList) {
+        const result = await this.scheduleWorkload(workload);
+        if (result) {
+          results.push(result);
         }
-        return allNodes;
+      }
     }
-    async scheduleWorkload(workload) {
-        const allNodes = await this.listAllNodes();
-        // Filter nodes based on workload constraints
-        const candidateNodes = this.filterNodesByConstraints(allNodes, workload);
-        if (candidateNodes.length === 0) {
-            return null;
+    return results;
+  }
+  async getUtilization() {
+    const utilization = {};
+    for (const provider of this.providers.values()) {
+      const providerType = provider.getProvider();
+      const nodes = await provider.listNodes();
+      const total = { cpu: 0, memory: 0, storage: 0 };
+      const used = { cpu: 0, memory: 0, storage: 0 };
+      for (const node of nodes) {
+        total.cpu += node.capacity.cpu;
+        total.memory += node.capacity.memory;
+        total.storage = (total.storage || 0) + (node.capacity.storage || 0);
+        used.cpu += node.utilization.cpu;
+        used.memory += node.utilization.memory;
+        used.storage = (used.storage || 0) + (node.utilization.storage || 0);
+      }
+      utilization[providerType] = { total, used };
+    }
+    return utilization;
+  }
+  /**
+   * Filter nodes based on workload constraints
+   */
+  filterNodesByConstraints(nodes, workload) {
+    return nodes.filter((node) => {
+      // Check if node is available
+      if (node.status === 'unavailable') {
+        return false;
+      }
+      // Check resource capacity
+      const availableCpu = node.capacity.cpu - node.utilization.cpu;
+      const availableMemory = node.capacity.memory - node.utilization.memory;
+      if (availableCpu < workload.resources.cpu || availableMemory < workload.resources.memory) {
+        return false;
+      }
+      // Check provider preferences
+      if (workload.constraints?.providerPreferences) {
+        if (!workload.constraints.providerPreferences.includes(node.provider)) {
+          return false;
         }
-        // Score and rank nodes
-        const scoredNodes = this.scoreNodes(candidateNodes, workload);
-        // Sort by score (highest first)
-        scoredNodes.sort((a, b) => b.score - a.score);
-        // Try to deploy to the best node
-        for (const { node, score, reason } of scoredNodes) {
-            const provider = this.providers.get(node.provider);
-            if (!provider)
-                continue;
-            const deployed = await provider.deployWorkload(node.id, workload);
-            if (deployed) {
-                return {
-                    workloadId: workload.id,
-                    node,
-                    score,
-                    reason,
-                };
-            }
+      }
+      // Check region preferences
+      if (workload.preferredRegions && workload.preferredRegions.length > 0) {
+        if (!workload.preferredRegions.includes(node.region)) {
+          return false;
         }
-        return null;
-    }
-    async scheduleWorkloadsWithGeoSharding(workloads) {
-        const results = [];
-        // Group workloads by preferred region or use geo-distribution strategy
-        const workloadGroups = this.groupWorkloadsByGeo(workloads);
-        // Schedule each group
-        for (const workloadList of Object.values(workloadGroups)) {
-            for (const workload of workloadList) {
-                const result = await this.scheduleWorkload(workload);
-                if (result) {
-                    results.push(result);
-                }
-            }
+      }
+      // Check required labels
+      if (workload.requiredLabels) {
+        for (const [key, value] of Object.entries(workload.requiredLabels)) {
+          if (node.labels?.[key] !== value) {
+            return false;
+          }
         }
-        return results;
-    }
-    async getUtilization() {
-        const utilization = {};
-        for (const provider of this.providers.values()) {
-            const providerType = provider.getProvider();
-            const nodes = await provider.listNodes();
-            const total = { cpu: 0, memory: 0, storage: 0 };
-            const used = { cpu: 0, memory: 0, storage: 0 };
-            for (const node of nodes) {
-                total.cpu += node.capacity.cpu;
-                total.memory += node.capacity.memory;
-                total.storage = (total.storage || 0) + (node.capacity.storage || 0);
-                used.cpu += node.utilization.cpu;
-                used.memory += node.utilization.memory;
-                used.storage = (used.storage || 0) + (node.utilization.storage || 0);
-            }
-            utilization[providerType] = { total, used };
+      }
+      return true;
+    });
+  }
+  /**
+   * Score nodes for workload placement
+   */
+  scoreNodes(nodes, workload) {
+    return nodes.map((node) => {
+      let score = 0;
+      const reasons = [];
+      // Resource availability score (0-0.4)
+      const cpuAvailability = (node.capacity.cpu - node.utilization.cpu) / node.capacity.cpu;
+      const memoryAvailability =
+        (node.capacity.memory - node.utilization.memory) / node.capacity.memory;
+      const resourceScore = Math.min(cpuAvailability, memoryAvailability) * 0.4;
+      score += resourceScore;
+      // Load balancing score (0-0.3) - prefer less loaded nodes
+      const loadScore =
+        (1 -
+          Math.max(
+            node.utilization.cpu / node.capacity.cpu,
+            node.utilization.memory / node.capacity.memory,
+          )) *
+        0.3;
+      score += loadScore;
+      // Region preference score (0-0.2)
+      if (workload.preferredRegions?.includes(node.region)) {
+        score += 0.2;
+        reasons.push('preferred region');
+      }
+      // Provider preference score (0-0.1)
+      if (workload.constraints?.providerPreferences?.includes(node.provider)) {
+        score += 0.1;
+        reasons.push('preferred provider');
+      }
+      // Edge preference for latency-sensitive workloads (bonus)
+      if (workload.constraints?.maxLatencyMs && workload.constraints.maxLatencyMs < 50) {
+        if (node.provider === 'edge') {
+          score += 0.1;
+          reasons.push('edge for low latency');
         }
-        return utilization;
-    }
-    /**
-     * Filter nodes based on workload constraints
-     */
-    filterNodesByConstraints(nodes, workload) {
-        return nodes.filter(node => {
-            // Check if node is available
-            if (node.status === 'unavailable') {
-                return false;
-            }
-            // Check resource capacity
-            const availableCpu = node.capacity.cpu - node.utilization.cpu;
-            const availableMemory = node.capacity.memory - node.utilization.memory;
-            if (availableCpu < workload.resources.cpu || availableMemory < workload.resources.memory) {
-                return false;
-            }
-            // Check provider preferences
-            if (workload.constraints?.providerPreferences) {
-                if (!workload.constraints.providerPreferences.includes(node.provider)) {
-                    return false;
-                }
-            }
-            // Check region preferences
-            if (workload.preferredRegions && workload.preferredRegions.length > 0) {
-                if (!workload.preferredRegions.includes(node.region)) {
-                    return false;
-                }
-            }
-            // Check required labels
-            if (workload.requiredLabels) {
-                for (const [key, value] of Object.entries(workload.requiredLabels)) {
-                    if (node.labels?.[key] !== value) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        });
-    }
-    /**
-     * Score nodes for workload placement
-     */
-    scoreNodes(nodes, workload) {
-        return nodes.map(node => {
-            let score = 0;
-            const reasons = [];
-            // Resource availability score (0-0.4)
-            const cpuAvailability = (node.capacity.cpu - node.utilization.cpu) / node.capacity.cpu;
-            const memoryAvailability = (node.capacity.memory - node.utilization.memory) / node.capacity.memory;
-            const resourceScore = Math.min(cpuAvailability, memoryAvailability) * 0.4;
-            score += resourceScore;
-            // Load balancing score (0-0.3) - prefer less loaded nodes
-            const loadScore = (1 - Math.max(node.utilization.cpu / node.capacity.cpu, node.utilization.memory / node.capacity.memory)) * 0.3;
-            score += loadScore;
-            // Region preference score (0-0.2)
-            if (workload.preferredRegions?.includes(node.region)) {
-                score += 0.2;
-                reasons.push('preferred region');
-            }
-            // Provider preference score (0-0.1)
-            if (workload.constraints?.providerPreferences?.includes(node.provider)) {
-                score += 0.1;
-                reasons.push('preferred provider');
-            }
-            // Edge preference for latency-sensitive workloads (bonus)
-            if (workload.constraints?.maxLatencyMs && workload.constraints.maxLatencyMs < 50) {
-                if (node.provider === 'edge') {
-                    score += 0.1;
-                    reasons.push('edge for low latency');
-                }
-            }
-            const reason = reasons.length > 0 ? reasons.join(', ') : 'best available resources';
-            return { node, score, reason };
-        });
-    }
-    /**
-     * Group workloads by geographical region for geo-sharding
-     */
-    groupWorkloadsByGeo(workloads) {
-        const groups = {};
-        for (const workload of workloads) {
-            // Use preferred region if specified
-            if (workload.preferredRegions && workload.preferredRegions.length > 0) {
-                const region = workload.preferredRegions[0];
-                if (!groups[region]) {
-                    groups[region] = [];
-                }
-                groups[region].push(workload);
-            }
-            else {
-                // Default to a distributed approach
-                const defaultGroup = 'default';
-                if (!groups[defaultGroup]) {
-                    groups[defaultGroup] = [];
-                }
-                groups[defaultGroup].push(workload);
-            }
+      }
+      const reason = reasons.length > 0 ? reasons.join(', ') : 'best available resources';
+      return { node, score, reason };
+    });
+  }
+  /**
+   * Group workloads by geographical region for geo-sharding
+   */
+  groupWorkloadsByGeo(workloads) {
+    const groups = {};
+    for (const workload of workloads) {
+      // Use preferred region if specified
+      if (workload.preferredRegions && workload.preferredRegions.length > 0) {
+        const region = workload.preferredRegions[0];
+        if (!groups[region]) {
+          groups[region] = [];
         }
-        return groups;
+        groups[region].push(workload);
+      } else {
+        // Default to a distributed approach
+        const defaultGroup = 'default';
+        if (!groups[defaultGroup]) {
+          groups[defaultGroup] = [];
+        }
+        groups[defaultGroup].push(workload);
+      }
     }
+    return groups;
+  }
 }
 exports.MultiCloudResourceManager = MultiCloudResourceManager;

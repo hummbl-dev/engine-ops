@@ -30,33 +30,35 @@ Each agent session consists of:
 **POST** `/api/v1/agent-sessions`
 
 Request body:
+
 ```json
 {
   "sessionType": "simulation",
   "sessionId": "sim-ops-2025-001",
   "context": {
     "agents": ["DetectionAgent", "TriageAgent", "ResolutionAgent", "AuditAgent"],
-    "state": {"status": "init"},
+    "state": { "status": "init" },
     "policy": "ops_policy.json",
     "dataSource": "recent_ops_logs.json",
     "objective": "Simulate incident detection and resolution",
-    "additionalSettings": {"maxSteps": 10, "enableAudit": true}
+    "additionalSettings": { "maxSteps": 10, "enableAudit": true }
   }
 }
 ```
 
 Response (201 Created):
+
 ```json
 {
   "sessionType": "simulation",
   "sessionId": "sim-ops-2025-001",
   "context": {
     "agents": ["DetectionAgent", "TriageAgent", "ResolutionAgent", "AuditAgent"],
-    "state": {"status": "init"},
+    "state": { "status": "init" },
     "policy": "ops_policy.json",
     "dataSource": "recent_ops_logs.json",
     "objective": "Simulate incident detection and resolution",
-    "additionalSettings": {"maxSteps": 10, "enableAudit": true}
+    "additionalSettings": { "maxSteps": 10, "enableAudit": true }
   },
   "state": "init",
   "createdAt": "2025-11-21T23:45:00.000Z",
@@ -69,6 +71,7 @@ Response (201 Created):
 **GET** `/api/v1/agent-sessions/:sessionId`
 
 Response (200 OK):
+
 ```json
 {
   "sessionType": "metrics",
@@ -88,10 +91,12 @@ Response (200 OK):
 **GET** `/api/v1/agent-sessions`
 
 Query parameters:
+
 - `sessionType` (optional): Filter by session type
 - `state` (optional): Filter by state
 
 Response (200 OK):
+
 ```json
 {
   "count": 3,
@@ -119,6 +124,7 @@ Response (200 OK):
 **GET** `/api/v1/agent-sessions/stats`
 
 Response (200 OK):
+
 ```json
 {
   "total": 10,
@@ -142,6 +148,7 @@ Response (200 OK):
 **PATCH** `/api/v1/agent-sessions/:sessionId`
 
 Request body:
+
 ```json
 {
   "state": "completed",
@@ -154,6 +161,7 @@ Request body:
 ```
 
 Response (200 OK):
+
 ```json
 {
   "sessionType": "metrics",
@@ -298,5 +306,6 @@ Common error responses:
 ## License
 
 Agent Sessions are part of the Engine-Ops platform:
+
 - Core implementation: Business Source License 1.1 (converts to Apache 2.0 on 2029-01-01)
 - Public API: Apache License 2.0

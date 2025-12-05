@@ -17,36 +17,36 @@
 import { OptimizationEngine } from '../core/index.js';
 
 async function main(): Promise<void> {
-    console.log('Starting Core Engine Verification...');
+  console.log('Starting Core Engine Verification...');
 
-    const engine = new OptimizationEngine({
-        verbose: true
-    });
+  const engine = new OptimizationEngine({
+    verbose: true,
+  });
 
-    await engine.init();
+  await engine.init();
 
-    const result = await engine.optimize({
-        id: 'test-req-1',
-        type: 'resource',
-        data: {
-            cpu: 80,
-            memory: 1024
-        }
-    });
+  const result = await engine.optimize({
+    id: 'test-req-1',
+    type: 'resource',
+    data: {
+      cpu: 80,
+      memory: 1024,
+    },
+  });
 
-    console.log('Optimization Result:', JSON.stringify(result, null, 2));
+  console.log('Optimization Result:', JSON.stringify(result, null, 2));
 
-    if (result.success && result.requestId === 'test-req-1') {
-        console.log('Verification PASSED');
-    } else {
-        console.error('Verification FAILED');
-        process.exit(1);
-    }
+  if (result.success && result.requestId === 'test-req-1') {
+    console.log('Verification PASSED');
+  } else {
+    console.error('Verification FAILED');
+    process.exit(1);
+  }
 
-    await engine.shutdown();
+  await engine.shutdown();
 }
 
-main().catch(err => {
-    console.error('Verification Error:', err);
-    process.exit(1);
+main().catch((err) => {
+  console.error('Verification Error:', err);
+  process.exit(1);
 });

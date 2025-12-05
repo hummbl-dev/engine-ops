@@ -18,41 +18,41 @@ import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from './auth.js';
 
 export enum Permission {
-    READ = 'read',
-    WRITE = 'write',
-    ADMIN = 'admin'
+  READ = 'read',
+  WRITE = 'write',
+  ADMIN = 'admin',
 }
 
 const rolePermissions: Record<string, Permission[]> = {
-    admin: [Permission.READ, Permission.WRITE, Permission.ADMIN],
-    user: [Permission.READ, Permission.WRITE],
-    readonly: [Permission.READ]
+  admin: [Permission.READ, Permission.WRITE, Permission.ADMIN],
+  user: [Permission.READ, Permission.WRITE],
+  readonly: [Permission.READ],
 };
 
 /**
  * RBAC middleware - check if user has required permission
  */
 export function requirePermission(permission: Permission) {
-    return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-        if (!req.user) {
-            res.status(401).json({ error: 'Authentication required' });
-            return;
-        }
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({ error: 'Authentication required' });
+      return;
+    }
 
-        const userPermissions = rolePermissions[req.user.role] || [];
+    const userPermissions = rolePermissions[req.user.role] || [];
 
-        if (!userPermissions.includes(permission)) {
-            res.status(403).json({ error: 'Insufficient permissions' });
-            return;
-        }
+    if (!userPermissions.includes(permission)) {
+      res.status(403).json({ error: 'Insufficient permissions' });
+      return;
+    }
 
-        next();
-    };
+    next();
+  };
 }
 
 /**
  * Admin-only middleware
  */
 export function requireAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
-    requirePermission(Permission.ADMIN)(req, res, next);
+  requirePermission(Permission.ADMIN)(req, res, next);
 }

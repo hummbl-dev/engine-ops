@@ -24,7 +24,6 @@ This guide helps both technical and non-technical users get started with Engine-
    ```
 
 3. **Review Documentation**
-
    - [Technical Overview](docs/engine-ops-overview-technical.md)
    - [Copilot Instructions](.github/copilot-instructions.md)
 

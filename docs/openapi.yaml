@@ -4,14 +4,14 @@ info:
   description: |
     Enterprise-grade optimization engine for Kubernetes resource optimization, 
     cost analytics, and intelligent workload scheduling.
-    
+
     ## Features
     - Real-time optimization with WebSocket updates
     - Advanced algorithms (Genetic, Simulated Annealing, Bin Packing)
     - Prometheus metrics and OpenTelemetry tracing
     - Multi-language SDKs (Python, Go)
     - Production-ready with RBAC and authentication
-    
+
   version: 0.3.0
   contact:
     name: HUMMBL, LLC

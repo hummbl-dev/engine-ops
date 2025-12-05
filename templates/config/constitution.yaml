@@ -3,53 +3,53 @@
 # PHILOSOPHY: "Trust, but Verify."
 
 meta:
-  project_name: "Sovereign_Alpha"
-  risk_level: "medium" # low | medium | high
+  project_name: 'Sovereign_Alpha'
+  risk_level: 'medium' # low | medium | high
 
 # 1. GLOBAL DIRECTIVES (The "Personality" of the Constraints)
 directives:
-  - id: "non_prescriptive"
-    description: "Never give orders. Always provide options."
+  - id: 'non_prescriptive'
+    description: 'Never give orders. Always provide options.'
     instruction: "If a user asks 'What should I do?', provide 3 distinct strategic options with trade-offs."
-  
-  - id: "privacy_first"
-    description: "Prevent PII leakage."
-    pattern: "(?i)(api_key|password|secret|sk-[a-zA-Z0-9]{20,})"
-    action: "redact_and_warn"
+
+  - id: 'privacy_first'
+    description: 'Prevent PII leakage.'
+    pattern: '(?i)(api_key|password|secret|sk-[a-zA-Z0-9]{20,})'
+    action: 'redact_and_warn'
 
 # 2. TIERED AGENCY (Escalation Protocols)
 # Defines when the AI stops and asks for permission.
 permissions:
   read_only:
-    allowed: ["*.md", "*.py", "*.rs", "*.json"]
-    blocked: [".env", "id_rsa", "*.pem"]
-    
+    allowed: ['*.md', '*.py', '*.rs', '*.json']
+    blocked: ['.env', 'id_rsa', '*.pem']
+
   write_access:
     # AI can write to these without asking
-    tier_1_autonomous: 
-      - "tests/*.py"
-      - "docs/*.md"
+    tier_1_autonomous:
+      - 'tests/*.py'
+      - 'docs/*.md'
     # AI must ask for confirmation (Y/N)
     tier_2_supervised:
-      - "src/core/*.py"
-      - "migrations/*.sql"
+      - 'src/core/*.py'
+      - 'migrations/*.sql'
     # AI is FORBIDDEN
     tier_3_forbidden:
-      - "config/constitution.yaml" # AI cannot rewrite its own laws
-      - ".github/workflows/*"
+      - 'config/constitution.yaml' # AI cannot rewrite its own laws
+      - '.github/workflows/*'
 
 # 3. MODEL ROUTING (Arbitrage Strategy)
 # Defines which "Brain" is used for which task.
 routing:
   complex_reasoning:
-    provider: "anthropic"
-    model: "claude-3-opus"
-  
+    provider: 'anthropic'
+    model: 'claude-3-opus'
+
   fast_chat:
-    provider: "openai"
-    model: "gpt-4o"
-    
+    provider: 'openai'
+    model: 'gpt-4o'
+
   local_privacy:
-    provider: "ollama"
-    model: "llama3:instruct"
-    trigger_keywords: ["private", "secret", "internal_only"]
+    provider: 'ollama'
+    model: 'llama3:instruct'
+    trigger_keywords: ['private', 'secret', 'internal_only']

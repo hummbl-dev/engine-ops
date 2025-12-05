@@ -19,6 +19,7 @@ SYNC_INTERVAL_SECONDS = 300  # 5 minutes
 EXPORT_ENDPOINT = "http://federated-sync-service/export"
 IMPORT_ENDPOINT = "http://federated-sync-service/import"
 
+
 class FederatedMemorySync:
     """Service that periodically exports local embeddings and imports aggregated
     embeddings from other instances.
@@ -66,16 +67,9 @@ class FederatedMemorySync:
         # Placeholder: fetch embeddings from local store
         # embeddings = self.client.get_all_embeddings()
         embeddings = [
-            {
-                "vector": [0.1, 0.2, 0.3],
-                "metadata_hash": "a1b2c3d4",
-                "timestamp": int(time.time())
-            }
+            {"vector": [0.1, 0.2, 0.3], "metadata_hash": "a1b2c3d4", "timestamp": int(time.time())}
         ]
-        payload = {
-            "instance_id": self.instance_id,
-            "embeddings": embeddings
-        }
+        payload = {"instance_id": self.instance_id, "embeddings": embeddings}
         # In a real implementation this would be an HTTP POST
         print(f"[FederatedMemorySync] Exporting {len(embeddings)} embeddings to {EXPORT_ENDPOINT}")
         # requests.post(EXPORT_ENDPOINT, json=payload)
@@ -100,13 +94,16 @@ class FederatedMemorySync:
         # self.client.upsert_embeddings(aggregated)
         print(f"[FederatedMemorySync] Imported {len(aggregated)} aggregated embeddings.")
 
+
 # -------------------------------------------------------------------------
 # Helper to instantiate the service based on environment variables
 # -------------------------------------------------------------------------
 def get_federated_sync_service() -> FederatedMemorySync:
     import os
+
     instance_id = os.getenv("POD_NAME", "instance-unknown")
     return FederatedMemorySync(instance_id)
+
 
 # -------------------------------------------------------------------------
 # If run as a script, start the service (useful for local testing)

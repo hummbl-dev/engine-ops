@@ -31,14 +31,17 @@ import os
 try:
     import chromadb
     from chromadb.config import Settings
+
     CHROMA_AVAILABLE = True
 except ImportError:
     chromadb = None
     CHROMA_AVAILABLE = False
 
+
 @dataclass
 class MemoryEntry:
     """Represents a single memory unit."""
+
     content: str
     metadata: Dict[str, Any] = field(default_factory=dict)
     embedding: Optional[List[float]] = None
@@ -46,28 +49,32 @@ class MemoryEntry:
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     score: float = 0.0  # Relevance score for retrieval
 
+
 class MemoryStore(ABC):
     """Abstract base class for memory stores."""
-    
+
     @abstractmethod
     def add(self, content: str, metadata: Optional[Dict[str, Any]] = None) -> str:
         """Add a new memory entry."""
         pass
-    
+
     @abstractmethod
     def search(self, query: str, limit: int = 5) -> List[MemoryEntry]:
         """Search for relevant memories."""
         pass
-    
+
     @abstractmethod
     def clear(self) -> None:
         """Clear all memories."""
         pass
 
+
 class ChromaDBStore(MemoryStore):
     """Memory store implementation using ChromaDB."""
-    
-    def __init__(self, collection_name: str = "agent_memory", persist_directory: str = "./chroma_db"):
+
+    def __init__(
+        self, collection_name: str = "agent_memory", persist_directory: str = "./chroma_db"
+    ):
         if not CHROMA_AVAILABLE:
             print("WARNING: chromadb not installed. Memory disabled.")
             self.enabled = False
@@ -80,51 +87,41 @@ class ChromaDBStore(MemoryStore):
         except Exception as e:
             print(f"WARNING: Failed to initialize ChromaDB: {e}. Memory disabled.")
             self.enabled = False
-            
+
     def add(self, content: str, metadata: Optional[Dict[str, Any]] = None) -> str:
         if not self.enabled:
             return ""
-            
+
         memory_id = str(uuid.uuid4())
         timestamp = datetime.now(timezone.utc).isoformat()
-        
+
         meta = metadata or {}
         meta["timestamp"] = timestamp
-        
-        self.collection.add(
-            documents=[content],
-            metadatas=[meta],
-            ids=[memory_id]
-        )
+
+        self.collection.add(documents=[content], metadatas=[meta], ids=[memory_id])
         return memory_id
-        
+
     def search(self, query: str, limit: int = 5) -> List[MemoryEntry]:
         if not self.enabled:
             return []
-            
-        results = self.collection.query(
-            query_texts=[query],
-            n_results=limit
-        )
-        
+
+        results = self.collection.query(query_texts=[query], n_results=limit)
+
         memories = []
         if results["ids"]:
             ids = results["ids"][0]
             documents = results["documents"][0]
             metadatas = results["metadatas"][0]
             distances = results["distances"][0] if "distances" in results else [0.0] * len(ids)
-            
+
             for i, doc in enumerate(documents):
                 # Convert distance to similarity score (approximate)
                 score = 1.0 / (1.0 + distances[i]) if i < len(distances) else 0.0
-                
-                memories.append(MemoryEntry(
-                    id=ids[i],
-                    content=doc,
-                    metadata=metadatas[i],
-                    score=score
-                ))
-                
+
+                memories.append(
+                    MemoryEntry(id=ids[i], content=doc, metadata=metadatas[i], score=score)
+                )
+
         return memories
 
     def clear(self) -> None:
@@ -137,8 +134,10 @@ class ChromaDBStore(MemoryStore):
         except Exception as e:
             print(f"Error clearing memory: {e}")
 
+
 # Global memory store
 _global_memory: Optional[MemoryStore] = None
+
 
 def get_memory_store() -> MemoryStore:
     """Get the global memory store instance."""

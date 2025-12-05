@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.cacheRouter = void 0;
-const express_1 = require("express");
-const api_js_1 = require("../api.js");
+const express_1 = require('express');
+const api_js_1 = require('../api.js');
 exports.cacheRouter = (0, express_1.Router)();
 const engine = new api_js_1.EngineOps({ verbose: false });
 /**
@@ -25,14 +25,13 @@ const engine = new api_js_1.EngineOps({ verbose: false });
  * Get cache statistics
  */
 exports.cacheRouter.get('/stats', async (_req, res) => {
-    try {
-        const stats = engine.getCacheStats();
-        res.status(200).json(stats);
-    }
-    catch (error) {
-        res.status(500).json({
-            error: 'Failed to get cache stats',
-            message: error instanceof Error ? error.message : 'Unknown error'
-        });
-    }
+  try {
+    const stats = engine.getCacheStats();
+    res.status(200).json(stats);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to get cache stats',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
 });

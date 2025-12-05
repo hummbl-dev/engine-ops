@@ -22,21 +22,27 @@ export const SessionTypeSchema = z.enum(['metrics', 'policy', 'simulation', 'aud
  * Initial context and parameters for an agent session
  */
 export const SessionContextSchema = z.object({
-    agents: z.array(z.string()).optional().describe('List of agent names participating in the session'),
-    state: z.record(z.string(), z.unknown()).optional().describe('Initial or desired state'),
-    policy: z.string().optional().describe('Reference to policy file or rules'),
-    dataSource: z.string().optional().describe('Logs, configs, input files, or other data sources'),
-    objective: z.string().optional().describe('Desired outcome or actions'),
-    additionalSettings: z.record(z.string(), z.unknown()).optional().describe('Additional settings like rate limits, resource quotas, topology, explainability'),
+  agents: z
+    .array(z.string())
+    .optional()
+    .describe('List of agent names participating in the session'),
+  state: z.record(z.string(), z.unknown()).optional().describe('Initial or desired state'),
+  policy: z.string().optional().describe('Reference to policy file or rules'),
+  dataSource: z.string().optional().describe('Logs, configs, input files, or other data sources'),
+  objective: z.string().optional().describe('Desired outcome or actions'),
+  additionalSettings: z
+    .record(z.string(), z.unknown())
+    .optional()
+    .describe('Additional settings like rate limits, resource quotas, topology, explainability'),
 });
 
 /**
  * Agent session creation request
  */
 export const AgentSessionRequestSchema = z.object({
-    sessionType: SessionTypeSchema.describe('Type of session to create'),
-    sessionId: z.string().min(1).describe('Unique identifier for the session'),
-    context: SessionContextSchema.optional().describe('Initial context and parameters'),
+  sessionType: SessionTypeSchema.describe('Type of session to create'),
+  sessionId: z.string().min(1).describe('Unique identifier for the session'),
+  context: SessionContextSchema.optional().describe('Initial context and parameters'),
 });
 
 /**
@@ -48,14 +54,14 @@ export const SessionStateSchema = z.enum(['init', 'running', 'paused', 'complete
  * Agent session response
  */
 export const AgentSessionSchema = z.object({
-    sessionType: SessionTypeSchema,
-    sessionId: z.string(),
-    context: SessionContextSchema.optional(),
-    state: SessionStateSchema,
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
-    result: z.record(z.string(), z.unknown()).optional(),
-    error: z.string().optional(),
+  sessionType: SessionTypeSchema,
+  sessionId: z.string(),
+  context: SessionContextSchema.optional(),
+  state: SessionStateSchema,
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  result: z.record(z.string(), z.unknown()).optional(),
+  error: z.string().optional(),
 });
 
 // Export types

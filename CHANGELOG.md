@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.0] - 2025-11-21
 
 ### Added
+
 - **Production Hardening**: Enterprise-grade reliability, security, and observability
 - **Prometheus Metrics**: `/metrics` endpoint with counters, histograms, gauges
   - Request count, duration, cache hits/misses, active connections
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `docs/ARCHITECTURE.md` - System architecture and diagrams
 
 ### Dependencies
+
 - Added prom-client for Prometheus metrics
 - Added OpenTelemetry for distributed tracing
 - Added jsonwebtoken and bcrypt for authentication
@@ -38,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2025-11-21
 
 ### Added
+
 - **REST API Server**: Express.js server with 5 endpoints
   - `POST /api/v1/optimize` - Submit optimization requests
   - `GET /api/v1/health` - Health check
@@ -73,12 +76,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - API integration tests
 
 ### Changed
+
 - Updated package description to reflect new features
 - Enhanced keywords for better discoverability
 
 ## [0.1.1] - 2025-11-20
 
 ### Fixed
+
 - Corrected Zod dependency version to `^3.23.8`
 - Fixed TypeScript compilation errors
 - Updated contact email to `hummbldev@gmail.com`
@@ -86,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-11-20
 
 ### Added
+
 - **Core Engine**: OptimizationEngine with lifecycle management
 - **Algorithms**:
   - Bin Packing (First Fit Decreasing)
@@ -105,6 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **License Management**: Automated header application (BSL 1.1 / Apache 2.0)
 
 ### Initial Release
+
 - First public release of Engine-Ops platform
 - TypeScript-based optimization engine
 - npm package published as `hummbl-engine-ops`

@@ -25,47 +25,47 @@ export const swaggerRouter = Router();
 // Load OpenAPI spec - try multiple locations
 let openApiPath = path.join(__dirname, '../../docs/openapi.yaml');
 if (!fs.existsSync(openApiPath)) {
-    // Try from project root when running from dist
-    openApiPath = path.join(process.cwd(), 'docs/openapi.yaml');
+  // Try from project root when running from dist
+  openApiPath = path.join(process.cwd(), 'docs/openapi.yaml');
 }
 
 let openApiSpec: unknown = null;
 if (fs.existsSync(openApiPath)) {
-    openApiSpec = yaml.load(fs.readFileSync(openApiPath, 'utf8')) as unknown;
+  openApiSpec = yaml.load(fs.readFileSync(openApiPath, 'utf8')) as unknown;
 } else {
-    console.warn('OpenAPI spec not found, Swagger UI will not be available');
+  console.warn('OpenAPI spec not found, Swagger UI will not be available');
 }
 
 // Swagger UI options
 const swaggerOptions = {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'Engine-Ops API Documentation'
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Engine-Ops API Documentation',
 };
 
 // Serve Swagger UI only if spec is loaded
 if (openApiSpec) {
-    swaggerRouter.use('/', swaggerUi.serve);
-    swaggerRouter.get('/', swaggerUi.setup(openApiSpec, swaggerOptions));
+  swaggerRouter.use('/', swaggerUi.serve);
+  swaggerRouter.get('/', swaggerUi.setup(openApiSpec, swaggerOptions));
 } else {
-    swaggerRouter.get('/', (_req: Request, res: Response) => {
-        res.status(503).json({ error: 'API documentation is not available' });
-    });
+  swaggerRouter.get('/', (_req: Request, res: Response) => {
+    res.status(503).json({ error: 'API documentation is not available' });
+  });
 }
 
 // Serve raw OpenAPI spec
 swaggerRouter.get('/openapi.json', (_req: Request, res: Response) => {
-    if (openApiSpec) {
-        res.json(openApiSpec);
-    } else {
-        res.status(503).json({ error: 'API documentation is not available' });
-    }
+  if (openApiSpec) {
+    res.json(openApiSpec);
+  } else {
+    res.status(503).json({ error: 'API documentation is not available' });
+  }
 });
 
 swaggerRouter.get('/openapi.yaml', (_req: Request, res: Response) => {
-    if (openApiSpec && fs.existsSync(openApiPath)) {
-        res.type('text/yaml');
-        res.send(fs.readFileSync(openApiPath, 'utf8'));
-    } else {
-        res.status(503).json({ error: 'API documentation is not available' });
-    }
+  if (openApiSpec && fs.existsSync(openApiPath)) {
+    res.type('text/yaml');
+    res.send(fs.readFileSync(openApiPath, 'utf8'));
+  } else {
+    res.status(503).json({ error: 'API documentation is not available' });
+  }
 });

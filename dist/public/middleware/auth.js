@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.authenticate = authenticate;
 exports.generateToken = generateToken;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const jsonwebtoken_1 = __importDefault(require('jsonwebtoken'));
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const API_KEYS = new Set(process.env.API_KEYS?.split(',') || ['demo-api-key']);
 /**
@@ -28,33 +30,32 @@ const API_KEYS = new Set(process.env.API_KEYS?.split(',') || ['demo-api-key']);
  * Supports both API keys and JWT tokens
  */
 function authenticate(req, res, next) {
-    const apiKey = req.headers['x-api-key'];
-    const authHeader = req.headers.authorization;
-    // Check API key
-    if (apiKey && API_KEYS.has(apiKey)) {
-        req.user = { id: 'api-key-user', role: 'user' };
-        next();
-        return;
+  const apiKey = req.headers['x-api-key'];
+  const authHeader = req.headers.authorization;
+  // Check API key
+  if (apiKey && API_KEYS.has(apiKey)) {
+    req.user = { id: 'api-key-user', role: 'user' };
+    next();
+    return;
+  }
+  // Check JWT token
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    try {
+      const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+      req.user = decoded;
+      next();
+      return;
+    } catch {
+      res.status(401).json({ error: 'Invalid token' });
+      return;
     }
-    // Check JWT token
-    if (authHeader?.startsWith('Bearer ')) {
-        const token = authHeader.substring(7);
-        try {
-            const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
-            req.user = decoded;
-            next();
-            return;
-        }
-        catch {
-            res.status(401).json({ error: 'Invalid token' });
-            return;
-        }
-    }
-    res.status(401).json({ error: 'Authentication required' });
+  }
+  res.status(401).json({ error: 'Authentication required' });
 }
 /**
  * Generate JWT token
  */
 function generateToken(userId, role = 'user') {
-    return jsonwebtoken_1.default.sign({ id: userId, role }, JWT_SECRET, { expiresIn: '24h' });
+  return jsonwebtoken_1.default.sign({ id: userId, role }, JWT_SECRET, { expiresIn: '24h' });
 }

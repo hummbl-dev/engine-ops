@@ -1,0 +1,26 @@
+# Helm templates contain Go templating syntax that Prettier cannot parse
+infra/helm/engine-ops/templates/*.yaml
+infra/helm/engine-ops/templates/*.yml
+infra/helm/monitoring/templates/*.yaml
+infra/helm/monitoring/templates/*.yml
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+
+# Generated files
+docs/api/
+
+# Database files
+chroma_db/
+test_db/
+
+# Logs and temporary files
+*.log
+.pytest_cache/

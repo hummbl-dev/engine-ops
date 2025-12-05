@@ -7,12 +7,12 @@
 // const k8sApi = kc.makeApiClient(CustomObjectsApi);
 
 async function startOperator(): Promise<void> {
-    console.log('Engine-Ops Operator starting...');
-    // Watch for custom resources and invoke reconciler
-    // Placeholder: actual watch implementation in watcher.ts
+  console.log('Engine-Ops Operator starting...');
+  // Watch for custom resources and invoke reconciler
+  // Placeholder: actual watch implementation in watcher.ts
 }
 
-startOperator().catch(err => {
-    console.error('Operator failed to start:', err);
-    process.exit(1);
+startOperator().catch((err) => {
+  console.error('Operator failed to start:', err);
+  process.exit(1);
 });

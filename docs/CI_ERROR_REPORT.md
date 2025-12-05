@@ -111,4 +111,4 @@ The workflow already uploads `safety-report.json`, but the step may fail silentl
 
 ---
 
-*Prepared by Antigravity – your AI coding assistant.*
+_Prepared by Antigravity – your AI coding assistant._

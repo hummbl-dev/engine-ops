@@ -16,14 +16,14 @@ package main
 import (
     "fmt"
     "log"
-    
+
     engineops "github.com/hummbl-dev/engine-ops/sdks/go"
 )
 
 func main() {
     // Create client
     client := engineops.NewClient("http://localhost:3000")
-    
+
     // Submit optimization request
     req := &engineops.OptimizationRequest{
         ID:   "my-request-1",
@@ -39,12 +39,12 @@ func main() {
             },
         },
     }
-    
+
     result, err := client.Optimize(req)
     if err != nil {
         log.Fatal(err)
     }
-    
+
     fmt.Printf("Success: %v\n", result.Success)
     fmt.Printf("Result: %v\n", result.Result)
 }
@@ -53,15 +53,19 @@ func main() {
 ## API Methods
 
 ### `Optimize(req *OptimizationRequest) (*OptimizationResult, error)`
+
 Submit an optimization request.
 
 ### `Health() (map[string]interface{}, error)`
+
 Check API health status.
 
 ### `Metrics() (map[string]interface{}, error)`
+
 Get performance metrics.
 
 ### `CacheStats() (map[string]interface{}, error)`
+
 Get cache statistics.
 
 ## License

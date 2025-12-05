@@ -1,8 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.costRouter = void 0;
-const express_1 = require("express");
-const index_js_1 = require("../../core/analytics/index.js");
+const express_1 = require('express');
+const index_js_1 = require('../../core/analytics/index.js');
 exports.costRouter = (0, express_1.Router)();
 const calculator = new index_js_1.CostCalculator();
 const recommendationEngine = new index_js_1.RecommendationEngine(calculator);
@@ -32,14 +32,13 @@ const recommendationEngine = new index_js_1.RecommendationEngine(calculator);
  *         description: Cost estimate
  */
 exports.costRouter.post('/estimate', (req, res) => {
-    try {
-        const usage = req.body;
-        const estimate = calculator.calculateCost(usage);
-        res.json(estimate);
-    }
-    catch {
-        res.status(400).json({ error: 'Invalid request' });
-    }
+  try {
+    const usage = req.body;
+    const estimate = calculator.calculateCost(usage);
+    res.json(estimate);
+  } catch {
+    res.status(400).json({ error: 'Invalid request' });
+  }
 });
 /**
  * @openapi
@@ -65,12 +64,11 @@ exports.costRouter.post('/estimate', (req, res) => {
  *         description: List of recommendations
  */
 exports.costRouter.post('/recommendations', (req, res) => {
-    try {
-        const { resourceId, usage, utilization } = req.body;
-        const recommendations = recommendationEngine.analyze(resourceId, usage, utilization);
-        res.json(recommendations);
-    }
-    catch {
-        res.status(400).json({ error: 'Invalid request' });
-    }
+  try {
+    const { resourceId, usage, utilization } = req.body;
+    const recommendations = recommendationEngine.analyze(resourceId, usage, utilization);
+    res.json(recommendations);
+  } catch {
+    res.status(400).json({ error: 'Invalid request' });
+  }
 });

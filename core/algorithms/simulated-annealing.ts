@@ -12,79 +12,79 @@
  */
 
 export interface SimulatedAnnealingConfig {
-    initialTemperature: number;
-    coolingRate: number;
-    minTemperature: number;
-    maxIterations: number;
+  initialTemperature: number;
+  coolingRate: number;
+  minTemperature: number;
+  maxIterations: number;
 }
 
 export interface Solution<T> {
-    state: T;
-    energy: number;
+  state: T;
+  energy: number;
 }
 
 /**
  * Simulated Annealing for optimization
  */
 export class SimulatedAnnealing<T> {
-    private config: SimulatedAnnealingConfig;
+  private config: SimulatedAnnealingConfig;
 
-    constructor(config: Partial<SimulatedAnnealingConfig> = {}) {
-        this.config = {
-            initialTemperature: config.initialTemperature ?? 1000,
-            coolingRate: config.coolingRate ?? 0.95,
-            minTemperature: config.minTemperature ?? 0.1,
-            maxIterations: config.maxIterations ?? 1000
+  constructor(config: Partial<SimulatedAnnealingConfig> = {}) {
+    this.config = {
+      initialTemperature: config.initialTemperature ?? 1000,
+      coolingRate: config.coolingRate ?? 0.95,
+      minTemperature: config.minTemperature ?? 0.1,
+      maxIterations: config.maxIterations ?? 1000,
+    };
+  }
+
+  /**
+   * Run simulated annealing
+   */
+  public optimize(
+    initialState: T,
+    energyFunction: (state: T) => number,
+    generateNeighbor: (state: T) => T,
+  ): Solution<T> {
+    let currentSolution: Solution<T> = {
+      state: initialState,
+      energy: energyFunction(initialState),
+    };
+
+    let bestSolution: Solution<T> = { ...currentSolution };
+    let temperature = this.config.initialTemperature;
+    let iteration = 0;
+
+    while (temperature > this.config.minTemperature && iteration < this.config.maxIterations) {
+      // Generate neighbor
+      const neighborState = generateNeighbor(currentSolution.state);
+      const neighborEnergy = energyFunction(neighborState);
+
+      // Calculate energy difference
+      const deltaE = neighborEnergy - currentSolution.energy;
+
+      // Accept or reject neighbor
+      if (deltaE < 0 || Math.random() < this.acceptanceProbability(deltaE, temperature)) {
+        currentSolution = {
+          state: neighborState,
+          energy: neighborEnergy,
         };
-    }
 
-    /**
-     * Run simulated annealing
-     */
-    public optimize(
-        initialState: T,
-        energyFunction: (state: T) => number,
-        generateNeighbor: (state: T) => T
-    ): Solution<T> {
-        let currentSolution: Solution<T> = {
-            state: initialState,
-            energy: energyFunction(initialState)
-        };
-
-        let bestSolution: Solution<T> = { ...currentSolution };
-        let temperature = this.config.initialTemperature;
-        let iteration = 0;
-
-        while (temperature > this.config.minTemperature && iteration < this.config.maxIterations) {
-            // Generate neighbor
-            const neighborState = generateNeighbor(currentSolution.state);
-            const neighborEnergy = energyFunction(neighborState);
-
-            // Calculate energy difference
-            const deltaE = neighborEnergy - currentSolution.energy;
-
-            // Accept or reject neighbor
-            if (deltaE < 0 || Math.random() < this.acceptanceProbability(deltaE, temperature)) {
-                currentSolution = {
-                    state: neighborState,
-                    energy: neighborEnergy
-                };
-
-                // Update best solution
-                if (currentSolution.energy < bestSolution.energy) {
-                    bestSolution = { ...currentSolution };
-                }
-            }
-
-            // Cool down
-            temperature *= this.config.coolingRate;
-            iteration++;
+        // Update best solution
+        if (currentSolution.energy < bestSolution.energy) {
+          bestSolution = { ...currentSolution };
         }
+      }
 
-        return bestSolution;
+      // Cool down
+      temperature *= this.config.coolingRate;
+      iteration++;
     }
 
-    private acceptanceProbability(deltaE: number, temperature: number): number {
-        return Math.exp(-deltaE / temperature);
-    }
+    return bestSolution;
+  }
+
+  private acceptanceProbability(deltaE: number, temperature: number): number {
+    return Math.exp(-deltaE / temperature);
+  }
 }

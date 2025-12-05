@@ -31,6 +31,7 @@ import uuid
 @dataclass
 class IdentityContext:
     """Identity information for the agent or user initiating the workflow."""
+
     agent_id: str
     user_id: Optional[str] = None
     organization_id: Optional[str] = None
@@ -41,6 +42,7 @@ class IdentityContext:
 @dataclass
 class StateContext:
     """Current state of the workflow or agent."""
+
     current_state: str = "initialized"
     previous_state: Optional[str] = None
     state_history: List[Dict[str, Any]] = field(default_factory=list)
@@ -50,6 +52,7 @@ class StateContext:
 @dataclass
 class SessionContext:
     """Session-level tracking information."""
+
     session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     last_updated: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
@@ -60,6 +63,7 @@ class SessionContext:
 @dataclass
 class IntentContext:
     """Captures the intent and goals of the workflow."""
+
     primary_intent: str
     sub_intents: List[str] = field(default_factory=list)
     goals: List[str] = field(default_factory=list)
@@ -70,6 +74,7 @@ class IntentContext:
 @dataclass
 class PolicyContext:
     """Policy and compliance requirements."""
+
     applicable_policies: List[str] = field(default_factory=list)
     compliance_requirements: List[str] = field(default_factory=list)
     escalation_rules: Dict[str, Any] = field(default_factory=dict)
@@ -80,6 +85,7 @@ class PolicyContext:
 @dataclass
 class TelemetryContext:
     """Telemetry and observability tracking."""
+
     trace_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     span_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     parent_span_id: Optional[str] = None
@@ -90,6 +96,7 @@ class TelemetryContext:
 @dataclass
 class KnowledgeContext:
     """Knowledge base and learned information."""
+
     facts: Dict[str, Any] = field(default_factory=dict)
     learned_patterns: List[str] = field(default_factory=list)
     recommendations: List[str] = field(default_factory=list)
@@ -99,6 +106,7 @@ class KnowledgeContext:
 @dataclass
 class DependenciesContext:
     """Dependencies and relationships to other systems."""
+
     upstream_services: List[str] = field(default_factory=list)
     downstream_services: List[str] = field(default_factory=list)
     external_systems: Dict[str, str] = field(default_factory=dict)
@@ -108,6 +116,7 @@ class DependenciesContext:
 @dataclass
 class AnnotationContext:
     """Annotations and tags for classification."""
+
     tags: List[str] = field(default_factory=list)
     labels: Dict[str, str] = field(default_factory=dict)
     categories: List[str] = field(default_factory=list)
@@ -117,6 +126,7 @@ class AnnotationContext:
 @dataclass
 class SecurityContext:
     """Security-related context information."""
+
     encryption_required: bool = False
     data_classification: str = "internal"  # public, internal, confidential, restricted
     access_level: str = "standard"
@@ -127,6 +137,7 @@ class SecurityContext:
 @dataclass
 class ResourceContext:
     """Resource allocation and constraints."""
+
     allocated_memory_mb: Optional[int] = None
     allocated_cpu_cores: Optional[float] = None
     max_execution_time_seconds: Optional[int] = None
@@ -137,6 +148,7 @@ class ResourceContext:
 @dataclass
 class TemporalContext:
     """Temporal information and scheduling."""
+
     start_time: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     deadline: Optional[datetime] = None
     estimated_duration_seconds: Optional[int] = None
@@ -147,6 +159,7 @@ class TemporalContext:
 @dataclass
 class PayloadContext:
     """Actual data payload being processed."""
+
     input_data: Dict[str, Any] = field(default_factory=dict)
     output_data: Dict[str, Any] = field(default_factory=dict)
     intermediate_results: List[Dict[str, Any]] = field(default_factory=list)
@@ -157,6 +170,7 @@ class PayloadContext:
 @dataclass
 class RelationshipContext:
     """Relationships between entities in the workflow."""
+
     parent_context_id: Optional[str] = None
     child_context_ids: List[str] = field(default_factory=list)
     related_workflows: List[str] = field(default_factory=list)
@@ -166,6 +180,7 @@ class RelationshipContext:
 @dataclass
 class TopologyContext:
     """Infrastructure and deployment topology."""
+
     region: Optional[str] = None
     availability_zone: Optional[str] = None
     cluster_id: Optional[str] = None
@@ -178,10 +193,11 @@ class TopologyContext:
 class AgentContext:
     """
     Comprehensive context object for agent operations.
-    
+
     Aggregates all major context types for complete operational visibility
     and traceability across agent workflows.
     """
+
     identity: IdentityContext
     state: StateContext = field(default_factory=StateContext)
     session: SessionContext = field(default_factory=SessionContext)
@@ -197,52 +213,58 @@ class AgentContext:
     payload: PayloadContext = field(default_factory=PayloadContext)
     relationship: RelationshipContext = field(default_factory=RelationshipContext)
     topology: TopologyContext = field(default_factory=TopologyContext)
-    
+
     def update_state(self, new_state: str, metadata: Optional[Dict[str, Any]] = None) -> None:
         """Update the current state and track history."""
-        self.state.state_history.append({
-            "from_state": self.state.current_state,
-            "to_state": new_state,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "metadata": metadata or {}
-        })
+        self.state.state_history.append(
+            {
+                "from_state": self.state.current_state,
+                "to_state": new_state,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "metadata": metadata or {},
+            }
+        )
         self.state.previous_state = self.state.current_state
         self.state.current_state = new_state
         self.session.last_updated = datetime.now(timezone.utc)
-    
+
     def add_telemetry_event(self, event_type: str, event_data: Dict[str, Any]) -> None:
         """Add a telemetry event for tracking."""
-        self.telemetry.events.append({
-            "type": event_type,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "data": event_data
-        })
-    
+        self.telemetry.events.append(
+            {
+                "type": event_type,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "data": event_data,
+            }
+        )
+
     def add_knowledge_fact(self, key: str, value: Any, confidence: float = 1.0) -> None:
         """Add a knowledge fact with confidence score."""
         self.knowledge.facts[key] = value
         self.knowledge.confidence_scores[key] = confidence
-    
+
     def clone_for_child(self) -> "AgentContext":
         """Create a child context that inherits from this context."""
         from copy import deepcopy
+
         child_ctx = deepcopy(self)
-        
+
         # Generate new IDs for child
         child_ctx.session.session_id = str(uuid.uuid4())
         child_ctx.telemetry.span_id = str(uuid.uuid4())
         child_ctx.telemetry.parent_span_id = self.telemetry.span_id
-        
+
         # Update relationships
         child_ctx.relationship.parent_context_id = self.session.session_id
-        
+
         # Clear child-specific data
         child_ctx.payload.output_data = {}
         child_ctx.payload.intermediate_results = []
-        
+
         return child_ctx
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert context to dictionary representation."""
         from dataclasses import asdict
+
         return asdict(self)

@@ -7,20 +7,20 @@ region: Eastern South America
 century: 20
 lattice_attributes:
   role:
-  - Educator
-  - Philosopher
+    - Educator
+    - Philosopher
   school_of_thought: Critical Pedagogy
   language_group: Romance (Portuguese)
   religion_of_origin: Catholic
   gender: Male
   economic_context: Developing Economy (Brazil)
   field_of_study:
-  - Education
-  - Philosophy
-  - Social Justice
+    - Education
+    - Philosophy
+    - Social Justice
   nationality: Brazilian
   notable_works:
-  - Pedagogy of the Oppressed
+    - Pedagogy of the Oppressed
   metadata:
     context: Adult literacy, social justice education
 era_context: 20th century Brazil; military dictatorship; widespread illiteracy; need
@@ -38,20 +38,20 @@ core_philosophy: 'Education is not preparation for life; education is life itsel
 
   '
 key_ideas:
-- Education is life itself
-- Oppressed as their own example
-- Authentic humanity
-- Reading word and world
-- Hope anchored in practice
+  - Education is life itself
+  - Oppressed as their own example
+  - Authentic humanity
+  - Reading word and world
+  - Hope anchored in practice
 relationships:
   influences:
-  - Critical pedagogy
-  - Adult education
-  - Social justice education
-  - Liberation theology
+    - Critical pedagogy
+    - Adult education
+    - Social justice education
+    - Liberation theology
   influenced_by:
-  - Marxist thought
-  - Existentialism
-  - Liberation theology
+    - Marxist thought
+    - Existentialism
+    - Liberation theology
   persona_influences: []
   persona_influenced_by: []

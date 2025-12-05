@@ -7,19 +7,19 @@ region: Northern Europe
 century: 19
 lattice_attributes:
   role:
-  - Mathematician
-  - Computer Scientist
+    - Mathematician
+    - Computer Scientist
   school_of_thought: Computational Thinking
   language_group: Germanic (English)
   religion_of_origin: Anglican
   gender: Female
   economic_context: Industrial Revolution
   field_of_study:
-  - Mathematics
-  - Computing
-  - Logic
+    - Mathematics
+    - Computing
+    - Logic
   notable_works:
-  - Notes on the Analytical Engine
+    - Notes on the Analytical Engine
   metadata:
     father: Lord Byron
     collaborator: Charles Babbage
@@ -39,19 +39,19 @@ core_philosophy: 'The imagination and the analytical mind must work in harmony.
 
   '
 key_ideas:
-- Imagination and analysis in harmony
-- Machines extend human thought
-- Mathematics as universal language
-- Computing beyond calculation
-- Poetry and science unified
+  - Imagination and analysis in harmony
+  - Machines extend human thought
+  - Mathematics as universal language
+  - Computing beyond calculation
+  - Poetry and science unified
 relationships:
   influences:
-  - Computer science
-  - Programming theory
-  - Women in STEM
+    - Computer science
+    - Programming theory
+    - Women in STEM
   influenced_by:
-  - Charles Babbage
-  - Lord Byron (father)
-  - Mathematical tradition
+    - Charles Babbage
+    - Lord Byron (father)
+    - Mathematical tradition
   persona_influences: []
   persona_influenced_by: []

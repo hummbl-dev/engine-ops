@@ -57,7 +57,9 @@ class ArchitectAgent(Agent):
             impl_code = impl_code.split("```python")[1].split("```", 1)[0].strip()
 
         # Policy evaluation (returns List[PolicyEvaluation])
-        policy_evals = self.policy_engine.evaluate({"action": "code_generation", "content": impl_code})
+        policy_evals = self.policy_engine.evaluate(
+            {"action": "code_generation", "content": impl_code}
+        )
 
         # Block if any DENY actions
         if any(ev.action == PolicyAction.DENY for ev in policy_evals):
@@ -104,7 +106,7 @@ class ArchitectAgent(Agent):
                 ["python", "-m", "pytest", test_path, "-q"],
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
             output = (result.stdout or "") + (result.stderr or "")
             passed = output.count(" PASSED")
@@ -115,7 +117,7 @@ class ArchitectAgent(Agent):
                 "failed": failed,
                 "errors": errors,
                 "exit_code": result.returncode,
-                "output": output[:1000]
+                "output": output[:1000],
             }
         except subprocess.TimeoutExpired:
             return {"error": "timeout"}
@@ -124,12 +126,22 @@ class ArchitectAgent(Agent):
 
     def write_code(self, file_path: str, content: str) -> Dict[str, Any]:
         """Write code to sandbox with policy evaluation."""
-        policy_evals = self.policy_engine.evaluate({"action": "file_write", "path": file_path, "content": content})
+        policy_evals = self.policy_engine.evaluate(
+            {"action": "file_write", "path": file_path, "content": content}
+        )
         if any(ev.action == PolicyAction.DENY for ev in policy_evals):
-            return {"success": False, "error": "blocked_by_policy", "violations": [ev.reason for ev in policy_evals if ev.action == PolicyAction.DENY]}
+            return {
+                "success": False,
+                "error": "blocked_by_policy",
+                "violations": [ev.reason for ev in policy_evals if ev.action == PolicyAction.DENY],
+            }
         try:
             path = self.sandbox.write_file(file_path, content)
-            return {"success": True, "path": path, "warnings": [ev.reason for ev in policy_evals if ev.action == PolicyAction.LOG]}
+            return {
+                "success": True,
+                "path": path,
+                "warnings": [ev.reason for ev in policy_evals if ev.action == PolicyAction.LOG],
+            }
         except Exception as e:
             return {"success": False, "error": str(e)}
 

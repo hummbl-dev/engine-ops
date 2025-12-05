@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -11,138 +11,132 @@
  * Change Date: 2029-01-01
  * Change License: Apache License, Version 2.0
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.LRUCache = void 0;
 /**
  * LRU (Least Recently Used) Cache implementation
  * Provides O(1) get and set operations with automatic eviction
  */
 class LRUCache {
-    cache;
-    maxSize;
-    ttlMs;
-    enableStats;
-    stats;
-    constructor(config = {}) {
-        this.maxSize = config.maxSize ?? 100;
-        this.ttlMs = config.ttlMs ?? 300000; // 5 minutes default
-        this.enableStats = config.enableStats ?? true;
-        this.cache = new Map();
-        this.stats = {
-            hits: 0,
-            misses: 0,
-            size: 0,
-            evictions: 0
-        };
+  cache;
+  maxSize;
+  ttlMs;
+  enableStats;
+  stats;
+  constructor(config = {}) {
+    this.maxSize = config.maxSize ?? 100;
+    this.ttlMs = config.ttlMs ?? 300000; // 5 minutes default
+    this.enableStats = config.enableStats ?? true;
+    this.cache = new Map();
+    this.stats = {
+      hits: 0,
+      misses: 0,
+      size: 0,
+      evictions: 0,
+    };
+  }
+  /**
+   * Get value from cache
+   */
+  get(key) {
+    const entry = this.cache.get(key);
+    if (!entry) {
+      if (this.enableStats) this.stats.misses++;
+      return undefined;
     }
-    /**
-     * Get value from cache
-     */
-    get(key) {
-        const entry = this.cache.get(key);
-        if (!entry) {
-            if (this.enableStats)
-                this.stats.misses++;
-            return undefined;
-        }
-        // Check TTL
-        if (Date.now() - entry.timestamp > this.ttlMs) {
-            this.cache.delete(key);
-            if (this.enableStats) {
-                this.stats.misses++;
-                this.stats.size = this.cache.size;
-            }
-            return undefined;
-        }
-        // Update access time and hit count
-        entry.timestamp = Date.now();
-        entry.hits++;
-        // Move to end (most recently used)
-        this.cache.delete(key);
-        this.cache.set(key, entry);
-        if (this.enableStats)
-            this.stats.hits++;
-        return entry.value;
+    // Check TTL
+    if (Date.now() - entry.timestamp > this.ttlMs) {
+      this.cache.delete(key);
+      if (this.enableStats) {
+        this.stats.misses++;
+        this.stats.size = this.cache.size;
+      }
+      return undefined;
     }
-    /**
-     * Set value in cache
-     */
-    set(key, value) {
-        // Remove if exists (to update position)
-        if (this.cache.has(key)) {
-            this.cache.delete(key);
-        }
-        // Evict oldest if at capacity
-        if (this.cache.size >= this.maxSize) {
-            const firstKey = this.cache.keys().next().value;
-            if (firstKey !== undefined) {
-                this.cache.delete(firstKey);
-                if (this.enableStats)
-                    this.stats.evictions++;
-            }
-        }
-        // Add new entry
-        this.cache.set(key, {
-            value,
-            timestamp: Date.now(),
-            hits: 0
-        });
-        if (this.enableStats)
-            this.stats.size = this.cache.size;
+    // Update access time and hit count
+    entry.timestamp = Date.now();
+    entry.hits++;
+    // Move to end (most recently used)
+    this.cache.delete(key);
+    this.cache.set(key, entry);
+    if (this.enableStats) this.stats.hits++;
+    return entry.value;
+  }
+  /**
+   * Set value in cache
+   */
+  set(key, value) {
+    // Remove if exists (to update position)
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
     }
-    /**
-     * Check if key exists in cache
-     */
-    has(key) {
-        const entry = this.cache.get(key);
-        if (!entry)
-            return false;
-        // Check TTL
-        if (Date.now() - entry.timestamp > this.ttlMs) {
-            this.cache.delete(key);
-            if (this.enableStats)
-                this.stats.size = this.cache.size;
-            return false;
-        }
-        return true;
+    // Evict oldest if at capacity
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+        if (this.enableStats) this.stats.evictions++;
+      }
     }
-    /**
-     * Delete key from cache
-     */
-    delete(key) {
-        const result = this.cache.delete(key);
-        if (result && this.enableStats) {
-            this.stats.size = this.cache.size;
-        }
-        return result;
+    // Add new entry
+    this.cache.set(key, {
+      value,
+      timestamp: Date.now(),
+      hits: 0,
+    });
+    if (this.enableStats) this.stats.size = this.cache.size;
+  }
+  /**
+   * Check if key exists in cache
+   */
+  has(key) {
+    const entry = this.cache.get(key);
+    if (!entry) return false;
+    // Check TTL
+    if (Date.now() - entry.timestamp > this.ttlMs) {
+      this.cache.delete(key);
+      if (this.enableStats) this.stats.size = this.cache.size;
+      return false;
     }
-    /**
-     * Clear all entries
-     */
-    clear() {
-        this.cache.clear();
-        if (this.enableStats) {
-            this.stats.size = 0;
-        }
+    return true;
+  }
+  /**
+   * Delete key from cache
+   */
+  delete(key) {
+    const result = this.cache.delete(key);
+    if (result && this.enableStats) {
+      this.stats.size = this.cache.size;
     }
-    /**
-     * Get cache statistics
-     */
-    getStats() {
-        return { ...this.stats };
+    return result;
+  }
+  /**
+   * Clear all entries
+   */
+  clear() {
+    this.cache.clear();
+    if (this.enableStats) {
+      this.stats.size = 0;
     }
-    /**
-     * Get current cache size
-     */
-    size() {
-        return this.cache.size;
-    }
-    /**
-     * Get cache hit rate
-     */
-    getHitRate() {
-        const total = this.stats.hits + this.stats.misses;
-        return total === 0 ? 0 : this.stats.hits / total;
-    }
+  }
+  /**
+   * Get cache statistics
+   */
+  getStats() {
+    return { ...this.stats };
+  }
+  /**
+   * Get current cache size
+   */
+  size() {
+    return this.cache.size;
+  }
+  /**
+   * Get cache hit rate
+   */
+  getHitRate() {
+    const total = this.stats.hits + this.stats.misses;
+    return total === 0 ? 0 : this.stats.hits / total;
+  }
 }
 exports.LRUCache = LRUCache;

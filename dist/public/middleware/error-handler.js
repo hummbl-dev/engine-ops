@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.errorHandler = errorHandler;
 /**
  * Global error handling middleware
  */
 function errorHandler(err, _req, res, _next) {
-    console.error('Error:', err);
-    res.status(500).json({
-        error: 'Internal server error',
-        message: err.message,
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-    });
+  console.error('Error:', err);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: err.message,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
 }

@@ -12,23 +12,23 @@
  */
 
 interface NodeStatus {
-    id: string;
-    cpuLoad: number; // 0-100
-    memoryLoad: number; // 0-100
+  id: string;
+  cpuLoad: number; // 0-100
+  memoryLoad: number; // 0-100
 }
 
 interface Task {
-    id: string;
-    cpuRequired: number;
-    memoryRequired: number;
+  id: string;
+  cpuRequired: number;
+  memoryRequired: number;
 }
 
 interface SchedulingResult {
-    nodeId: string;
-    estimatedLoadAfter: {
-        cpu: number;
-        memory: number;
-    };
+  nodeId: string;
+  estimatedLoadAfter: {
+    cpu: number;
+    memory: number;
+  };
 }
 
 /**
@@ -36,33 +36,33 @@ interface SchedulingResult {
  * Selects the node with the lowest current load (considering both CPU and Memory).
  */
 export class LeastLoadedScheduler {
-    public schedule(task: Task, nodes: NodeStatus[]): SchedulingResult | null {
-        if (nodes.length === 0) {
-            return null;
-        }
-
-        // Sort nodes by combined load (ascending)
-        const sortedNodes = [...nodes].sort((a, b) => {
-            const loadA = a.cpuLoad + a.memoryLoad;
-            const loadB = b.cpuLoad + b.memoryLoad;
-            return loadA - loadB;
-        });
-
-        // Pick the least loaded node
-        const bestNode = sortedNodes[0];
-
-        // Calculate estimated load after assignment
-        // Note: This is a simplified estimation. In a real system, we'd need node capacity.
-        // Assuming load is percentage and task requirement is also percentage-like for this simple version.
-        const estimatedCpu = Math.min(100, bestNode.cpuLoad + task.cpuRequired);
-        const estimatedMemory = Math.min(100, bestNode.memoryLoad + task.memoryRequired);
-
-        return {
-            nodeId: bestNode.id,
-            estimatedLoadAfter: {
-                cpu: estimatedCpu,
-                memory: estimatedMemory
-            }
-        };
+  public schedule(task: Task, nodes: NodeStatus[]): SchedulingResult | null {
+    if (nodes.length === 0) {
+      return null;
     }
+
+    // Sort nodes by combined load (ascending)
+    const sortedNodes = [...nodes].sort((a, b) => {
+      const loadA = a.cpuLoad + a.memoryLoad;
+      const loadB = b.cpuLoad + b.memoryLoad;
+      return loadA - loadB;
+    });
+
+    // Pick the least loaded node
+    const bestNode = sortedNodes[0];
+
+    // Calculate estimated load after assignment
+    // Note: This is a simplified estimation. In a real system, we'd need node capacity.
+    // Assuming load is percentage and task requirement is also percentage-like for this simple version.
+    const estimatedCpu = Math.min(100, bestNode.cpuLoad + task.cpuRequired);
+    const estimatedMemory = Math.min(100, bestNode.memoryLoad + task.memoryRequired);
+
+    return {
+      nodeId: bestNode.id,
+      estimatedLoadAfter: {
+        cpu: estimatedCpu,
+        memory: estimatedMemory,
+      },
+    };
+  }
 }

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,41 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.Permission = void 0;
 exports.requirePermission = requirePermission;
 exports.requireAdmin = requireAdmin;
 var Permission;
 (function (Permission) {
-    Permission["READ"] = "read";
-    Permission["WRITE"] = "write";
-    Permission["ADMIN"] = "admin";
+  Permission['READ'] = 'read';
+  Permission['WRITE'] = 'write';
+  Permission['ADMIN'] = 'admin';
 })(Permission || (exports.Permission = Permission = {}));
 const rolePermissions = {
-    admin: [Permission.READ, Permission.WRITE, Permission.ADMIN],
-    user: [Permission.READ, Permission.WRITE],
-    readonly: [Permission.READ]
+  admin: [Permission.READ, Permission.WRITE, Permission.ADMIN],
+  user: [Permission.READ, Permission.WRITE],
+  readonly: [Permission.READ],
 };
 /**
  * RBAC middleware - check if user has required permission
  */
 function requirePermission(permission) {
-    return (req, res, next) => {
-        if (!req.user) {
-            res.status(401).json({ error: 'Authentication required' });
-            return;
-        }
-        const userPermissions = rolePermissions[req.user.role] || [];
-        if (!userPermissions.includes(permission)) {
-            res.status(403).json({ error: 'Insufficient permissions' });
-            return;
-        }
-        next();
-    };
+  return (req, res, next) => {
+    if (!req.user) {
+      res.status(401).json({ error: 'Authentication required' });
+      return;
+    }
+    const userPermissions = rolePermissions[req.user.role] || [];
+    if (!userPermissions.includes(permission)) {
+      res.status(403).json({ error: 'Insufficient permissions' });
+      return;
+    }
+    next();
+  };
 }
 /**
  * Admin-only middleware
  */
 function requireAdmin(req, res, next) {
-    requirePermission(Permission.ADMIN)(req, res, next);
+  requirePermission(Permission.ADMIN)(req, res, next);
 }

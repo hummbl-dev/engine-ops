@@ -23,43 +23,43 @@ const PORT = process.env.PORT || 3000;
 const engine = new EngineOps({ verbose: true });
 
 async function startServer(): Promise<void> {
-    try {
-        // Initialize engine
-        await engine.init();
-        console.log('✓ Engine initialized');
+  try {
+    // Initialize engine
+    await engine.init();
+    console.log('✓ Engine initialized');
 
-        // Create Express app
-        const app = createApp();
+    // Create Express app
+    const app = createApp();
 
-        // Start server
-        const server = app.listen(PORT, () => {
-            console.log(`✓ Server running on port ${PORT}`);
-            console.log(`✓ API available at http://localhost:${PORT}/api/v1`);
-            console.log(`✓ Health check: http://localhost:${PORT}/api/v1/health`);
-        });
+    // Start server
+    const server = app.listen(PORT, () => {
+      console.log(`✓ Server running on port ${PORT}`);
+      console.log(`✓ API available at http://localhost:${PORT}/api/v1`);
+      console.log(`✓ Health check: http://localhost:${PORT}/api/v1/health`);
+    });
 
-        // Graceful shutdown
-        process.on('SIGTERM', async () => {
-            console.log('SIGTERM received, shutting down gracefully...');
-            server.close(async () => {
-                await engine.shutdown();
-                console.log('Server closed');
-                process.exit(0);
-            });
-        });
+    // Graceful shutdown
+    process.on('SIGTERM', async () => {
+      console.log('SIGTERM received, shutting down gracefully...');
+      server.close(async () => {
+        await engine.shutdown();
+        console.log('Server closed');
+        process.exit(0);
+      });
+    });
 
-        process.on('SIGINT', async () => {
-            console.log('SIGINT received, shutting down gracefully...');
-            server.close(async () => {
-                await engine.shutdown();
-                console.log('Server closed');
-                process.exit(0);
-            });
-        });
-    } catch (error) {
-        console.error('Failed to start server:', error);
-        process.exit(1);
-    }
+    process.on('SIGINT', async () => {
+      console.log('SIGINT received, shutting down gracefully...');
+      server.close(async () => {
+        await engine.shutdown();
+        console.log('Server closed');
+        process.exit(0);
+      });
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
 }
 
 startServer();

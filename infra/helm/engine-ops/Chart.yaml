@@ -3,4 +3,4 @@ name: engine-ops
 description: A Helm chart for Engine Ops with Blue-Green deployment support
 type: application
 version: 0.1.0
-appVersion: "0.3.0"
+appVersion: '0.3.0'

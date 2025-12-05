@@ -1,5 +1,5 @@
-name: "Multi-Step Orchestration Demo"
-description: "Complete development pipeline: generate code → tests → docs → validation"
+name: 'Multi-Step Orchestration Demo'
+description: 'Complete development pipeline: generate code → tests → docs → validation'
 
 steps:
   # Step 1: Generate the main application code
@@ -7,7 +7,7 @@ steps:
     provider: gemini
     prompt: |
       Generate a complete Flask REST API for a Task Management system.
-      
+
       Requirements:
       - Flask app with error handling
       - Endpoints: GET /tasks, POST /tasks, GET /tasks/<id>, PUT /tasks/<id>, DELETE /tasks/<id>
@@ -16,12 +16,12 @@ steps:
       - Input validation
       - Proper HTTP status codes
       - CORS enabled
-      
+
       Return ONLY the Python code, NO markdown, NO explanations.
-      
+
   - id: save_api
     action: write
-    filename: "orchestration_demo/app.py"
+    filename: 'orchestration_demo/app.py'
     input_from: generate_api
 
   # Step 2: Generate comprehensive tests based on the API
@@ -29,9 +29,9 @@ steps:
     provider: gemini
     prompt: |
       Based on this Flask API code, generate comprehensive pytest tests:
-      
+
       ${generate_api.payload}
-      
+
       Requirements:
       - Test all endpoints (GET, POST, PUT, DELETE)
       - Test error cases (404, 400, etc.)
@@ -39,22 +39,22 @@ steps:
       - Use pytest fixtures for test client
       - Include test for CORS headers
       - Minimum 10 test cases
-      
+
       Return ONLY the Python test code, NO markdown, NO explanations.
-      
+
   - id: save_tests
     action: write
-    filename: "orchestration_demo/test_app.py"
+    filename: 'orchestration_demo/test_app.py'
     input_from: generate_tests
 
-  # Step 3: Generate API documentation based on the code  
+  # Step 3: Generate API documentation based on the code
   - id: generate_docs
     provider: gemini
     prompt: |
       Based on this Flask API code, generate a comprehensive README.md:
-      
+
       ${generate_api.payload}
-      
+
       Include:
       - Project title and description
       - Installation instructions
@@ -62,12 +62,12 @@ steps:
       - Example curl commands for each endpoint
       - How to run tests
       - Dependencies list
-      
+
       Return ONLY the markdown, NO code blocks for the API itself.
-      
+
   - id: save_docs
     action: write
-    filename: "orchestration_demo/README.md"
+    filename: 'orchestration_demo/README.md'
     input_from: generate_docs
 
   # Step 4: Generate a requirements.txt based on the code
@@ -75,20 +75,20 @@ steps:
     provider: gemini
     prompt: |
       Based on this Flask API code, generate a requirements.txt file:
-      
+
       ${generate_api.payload}
-      
+
       Include:
       - Flask and its version
       - Flask-CORS
       - pytest and pytest-flask for testing
       - Any other dependencies needed
-      
+
       Return ONLY the requirements.txt content, NO explanations.
-      
+
   - id: save_requirements
     action: write
-    filename: "orchestration_demo/requirements.txt"
+    filename: 'orchestration_demo/requirements.txt'
     input_from: generate_requirements
 
   # Step 5: Generate a code review/validation report
@@ -96,21 +96,21 @@ steps:
     provider: gemini
     prompt: |
       Review this Flask API code for quality, security, and best practices:
-      
+
       ${generate_api.payload}
-      
+
       Provide:
       - Code quality assessment (1-10)
       - Security concerns (if any)
       - Best practices compliance
       - Suggested improvements
       - Overall readiness for production
-      
+
       Format as a structured code review report in markdown.
-      
+
   - id: save_review
     action: write
-    filename: "orchestration_demo/CODE_REVIEW.md"
+    filename: 'orchestration_demo/CODE_REVIEW.md'
     input_from: generate_review
 
   # Step 6: Generate a deployment guide based on everything
@@ -118,10 +118,10 @@ steps:
     provider: gemini
     prompt: |
       Based on this Flask API and its tests, create a deployment guide:
-      
+
       API Code:
       ${generate_api.payload}
-      
+
       Create a deployment guide (markdown) that includes:
       - Local development setup
       - Running the application
@@ -129,10 +129,10 @@ steps:
       - Environment variables needed
       - Production deployment considerations (WSGI server, reverse proxy)
       - Docker deployment (if applicable)
-      
+
       Return ONLY the markdown content.
-      
+
   - id: save_deployment
     action: write
-    filename: "orchestration_demo/DEPLOYMENT.md"
+    filename: 'orchestration_demo/DEPLOYMENT.md'
     input_from: generate_deployment

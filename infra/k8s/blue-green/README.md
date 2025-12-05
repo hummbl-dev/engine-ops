@@ -34,7 +34,7 @@ Blue-green deployment is a release pattern that reduces downtime and risk by run
 ## Files
 
 - **deployment-blue.yaml** - Blue environment deployment
-- **deployment-green.yaml** - Green environment deployment  
+- **deployment-green.yaml** - Green environment deployment
 - **service-blue-green.yaml** - Services for routing traffic
   - `engine-ops-active` - LoadBalancer pointing to active environment
   - `engine-ops-preview` - ClusterIP for testing inactive environment
@@ -368,12 +368,12 @@ Integrate with CI/CD:
 - name: Deploy to Green
   run: |
     ./infra/scripts/blue-green-deploy.sh ${{ github.sha }}
-    
+
 - name: Run Integration Tests
   run: |
     kubectl port-forward service/engine-ops-preview 8080:80 &
     npm run test:integration
-    
+
 - name: Switch Traffic
   run: |
     # Auto-switch if tests pass
@@ -394,22 +394,24 @@ done
 
 ## Comparison with Rolling Updates
 
-| Feature | Blue-Green | Rolling Update |
-|---------|-----------|----------------|
-| Downtime | Zero | Near-zero |
-| Resources | 2x during deployment | 1.5x during deployment |
-| Rollback | Instant | Gradual |
-| Testing | Full production test | Progressive testing |
-| Complexity | Higher | Lower |
-| Risk | Lower | Higher |
+| Feature    | Blue-Green           | Rolling Update         |
+| ---------- | -------------------- | ---------------------- |
+| Downtime   | Zero                 | Near-zero              |
+| Resources  | 2x during deployment | 1.5x during deployment |
+| Rollback   | Instant              | Gradual                |
+| Testing    | Full production test | Progressive testing    |
+| Complexity | Higher               | Lower                  |
+| Risk       | Lower                | Higher                 |
 
 Use Blue-Green when:
+
 - Zero downtime is critical
 - Instant rollback is required
 - You can afford 2x resources temporarily
 - Testing in production is needed
 
 Use Rolling Update when:
+
 - Resources are constrained
 - Gradual rollout is acceptable
 - Simpler setup is preferred

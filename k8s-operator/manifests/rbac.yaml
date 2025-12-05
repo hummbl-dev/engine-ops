@@ -10,15 +10,15 @@ metadata:
   name: engine-ops-operator-role
   namespace: default
 rules:
-  - apiGroups: [""]
-    resources: ["pods", "pods/log", "services"]
-    verbs: ["get", "list", "watch", "patch", "update"]
-  - apiGroups: ["apps"]
-    resources: ["deployments", "replicasets"]
-    verbs: ["get", "list", "watch", "patch", "update"]
-  - apiGroups: ["engineops.hummbl.dev"]
-    resources: ["optimizations", "optimizations/status"]
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ['']
+    resources: ['pods', 'pods/log', 'services']
+    verbs: ['get', 'list', 'watch', 'patch', 'update']
+  - apiGroups: ['apps']
+    resources: ['deployments', 'replicasets']
+    verbs: ['get', 'list', 'watch', 'patch', 'update']
+  - apiGroups: ['engineops.hummbl.dev']
+    resources: ['optimizations', 'optimizations/status']
+    verbs: ['get', 'list', 'watch', 'create', 'update', 'patch', 'delete']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

@@ -3,14 +3,16 @@
 ## Current System Architecture
 
 ### Current Implementation
+
 - **Storage:** Simple Python Enum + Dictionary mapping
 - **Location:** `engine/src/adapter.py`
 - **Structure:**
+
   ```python
   class CouncilMember(str, Enum):
       sun_tzu = "sun_tzu"
       # ... 12 more members
-  
+
   PERSONA_INSTRUCTIONS = {
       CouncilMember.sun_tzu: """You are Sun Tzu..."""
       # Simple string templates
@@ -40,38 +42,38 @@
 ### Schema Structure
 
 ```yaml
-persona_id: "eur_19c_nietzsche_f"
-persona_type: "Historical"
-name: "Friedrich Nietzsche"
+persona_id: 'eur_19c_nietzsche_f'
+persona_type: 'Historical'
+name: 'Friedrich Nietzsche'
 version: 1.0
 
 # Primary Matrix (Core Index)
-continent: "Europe"
-region: "Western Europe"
+continent: 'Europe'
+region: 'Western Europe'
 century: 19
 
 # Nested Lattice (Scalable)
 lattice_attributes:
-  role: "Philosopher"
-  school_of_thought: "Existentialism"
-  language_group: "Germanic"
-  religion_of_origin: "Lutheran"
-  gender: "Male"
-  economic_context: "Industrial Capitalism"
+  role: 'Philosopher'
+  school_of_thought: 'Existentialism'
+  language_group: 'Germanic'
+  religion_of_origin: 'Lutheran'
+  gender: 'Male'
+  economic_context: 'Industrial Capitalism'
 
 # Persona Engine (LLM Data)
-era_context: "Late 19th-century Germany..."
-tone_voice: "Fiery, aphoristic, critical"
+era_context: 'Late 19th-century Germany...'
+tone_voice: 'Fiery, aphoristic, critical'
 core_philosophy: |
   Believes in the "will to power"...
 key_ideas:
-  - "Will to Power"
-  - "Übermensch"
+  - 'Will to Power'
+  - 'Übermensch'
 
 # System Dynamics (Relationships)
 relationships:
-  influences: ["Schopenhauer", "Wagner"]
-  influenced_by: ["eur_17c_spinoza_b"]
+  influences: ['Schopenhauer', 'Wagner']
+  influenced_by: ['eur_17c_spinoza_b']
 ```
 
 ## Integration Analysis
@@ -86,17 +88,20 @@ relationships:
 ### 🔄 Migration Path
 
 **Phase 1: Add Schema Support (Non-Breaking)**
+
 - Create `PersonaSchema` dataclass/Pydantic model
 - Load personas from YAML/JSON files
 - Keep enum for backward compatibility
 - Generate persona instructions from schema
 
 **Phase 2: Enhance Matrix**
+
 - Update `CouncilMemberProfile` to use schema
 - Add relationship tracking
 - Enable lattice attribute queries
 
 **Phase 3: Advanced Features**
+
 - Relationship graph visualization
 - Dynamic persona selection based on attributes
 - Multi-persona consultations ("What would X and Y say together?")
@@ -104,22 +109,26 @@ relationships:
 ## Implementation Recommendation
 
 ### Option A: Hybrid Approach (Recommended)
+
 - Keep enum for API stability
 - Add YAML/JSON persona files with full schema
 - Generate `PERSONA_INSTRUCTIONS` from schema
 - Use schema for matrix and queries
 
 **Benefits:**
+
 - No breaking changes
 - Gradual migration
 - Best of both worlds
 
 ### Option B: Full Migration
+
 - Replace enum with schema-based system
 - Update all API endpoints
 - Requires more testing
 
 **Benefits:**
+
 - Cleaner architecture
 - More powerful
 - More work upfront
@@ -127,6 +136,7 @@ relationships:
 ## Example: Migrated Persona
 
 ### Current (adapter.py)
+
 ```python
 CouncilMember.sun_tzu: """You are Sun Tzu, the ancient Chinese military strategist...
 Core Principles:
@@ -136,27 +146,28 @@ Core Principles:
 ```
 
 ### Proposed (personas/sun_tzu.yaml)
+
 ```yaml
-persona_id: "asia_5bc_sun_tzu"
-persona_type: "Historical"
-name: "Sun Tzu"
+persona_id: 'asia_5bc_sun_tzu'
+persona_type: 'Historical'
+name: 'Sun Tzu'
 version: 1.0
 
-continent: "Asia"
-region: "East Asia"
-century: -5  # 5th century BCE
+continent: 'Asia'
+region: 'East Asia'
+century: -5 # 5th century BCE
 
 lattice_attributes:
-  role: "Military Strategist"
-  school_of_thought: "Chinese Military Philosophy"
-  language_group: "Sinitic"
-  religion_of_origin: "Taoist/Confucian"
-  gender: "Male"
-  economic_context: "Warring States Period"
+  role: 'Military Strategist'
+  school_of_thought: 'Chinese Military Philosophy'
+  language_group: 'Sinitic'
+  religion_of_origin: 'Taoist/Confucian'
+  gender: 'Male'
+  economic_context: 'Warring States Period'
 
-era_context: "Ancient China during the Warring States period; constant warfare between states; need for strategic advantage."
+era_context: 'Ancient China during the Warring States period; constant warfare between states; need for strategic advantage.'
 
-tone_voice: "Concise, strategic, enigmatic, practical, authoritative"
+tone_voice: 'Concise, strategic, enigmatic, practical, authoritative'
 
 core_philosophy: |
   Believes in the supreme art of war is to subdue the enemy without fighting.
@@ -164,17 +175,18 @@ core_philosophy: |
   Know yourself and know your enemy, and you will never be defeated.
 
 key_ideas:
-  - "Know yourself and know your enemy"
-  - "Supreme art of war is to subdue without fighting"
-  - "All warfare is based on deception"
-  - "Terrain, timing, and surprise"
+  - 'Know yourself and know your enemy'
+  - 'Supreme art of war is to subdue without fighting'
+  - 'All warfare is based on deception'
+  - 'Terrain, timing, and surprise'
 
 relationships:
-  influences: ["Chinese military strategy", "Business strategy"]
-  influenced_by: ["Taoist philosophy", "Confucian ethics"]
+  influences: ['Chinese military strategy', 'Business strategy']
+  influenced_by: ['Taoist philosophy', 'Confucian ethics']
 ```
 
 ### Generated Prompt (from schema)
+
 ```python
 def generate_persona_prompt(persona: PersonaSchema, topic: str) -> str:
     return f"""You are {persona.name}, {persona.era_context}
@@ -196,11 +208,13 @@ Remember: Do not use prescriptive language like "you must" or "solution" - prese
 ## Benefits for Our System
 
 ### 1. Better LLM Responses
+
 - `tone_voice` ensures consistent style
 - `era_context` adds historical accuracy
 - `key_ideas` focuses responses
 
 ### 2. Advanced Queries
+
 ```python
 # Find all philosophers from 19th century Europe
 matrix.query(
@@ -215,11 +229,13 @@ influences = machiavelli.relationships.influenced_by
 ```
 
 ### 3. Relationship Graph
+
 - Visualize intellectual lineages
 - "Who would agree/disagree?" queries
 - Multi-persona consultations
 
 ### 4. Scalability
+
 - Add `political_stance` to some personas without breaking others
 - Add `field_of_study` without schema changes
 - Version personas independently
@@ -237,10 +253,10 @@ influences = machiavelli.relationships.influenced_by
 **The proposed schema is excellent and fits our system well.**
 
 **Recommendation:** Implement Option A (Hybrid Approach)
+
 - Maintains backward compatibility
 - Enables future growth
 - Improves LLM responses immediately
 - Sets foundation for advanced features
 
 **Priority:** High - This will significantly enhance the council's capabilities.
-

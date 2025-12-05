@@ -13,6 +13,7 @@ VS Code chat has multiple participants (Copilot, extensions, etc.). You need to 
 5. Then type your question: `Ask machiavelli about leadership`
 
 **Full example:**
+
 ```
 @hummbl Ask machiavelli about leadership
 ```
@@ -38,17 +39,21 @@ VS Code chat has multiple participants (Copilot, extensions, etc.). You need to 
 Once you've selected `@hummbl`, try these:
 
 ### Explicit Member Selection
+
 ```
 @hummbl Ask machiavelli about leadership
 ```
 
 ### Implicit Routing (Extension will pick the member)
+
 ```
 @hummbl I'm feeling overwhelmed by chaos. What should I do?
 ```
+
 (Should route to Marcus Aurelius)
 
 ### Default (Sun Tzu)
+
 ```
 @hummbl What's the best strategy for a difficult project?
 ```
@@ -60,14 +65,17 @@ Once you've selected `@hummbl`, try these:
 ### Issue: `@hummbl` doesn't appear
 
 **Check 1: Extension is loaded**
+
 - Open Output panel (`Cmd+Shift+U`)
 - Select "Log (Extension Host)" from dropdown
 - Look for "HUMMBL" or extension activation messages
 
 **Check 2: Reload VS Code**
+
 - `Cmd+Shift+P` → "Developer: Reload Window"
 
 **Check 3: Extension is built**
+
 ```bash
 cd extension
 npm run build
@@ -80,11 +88,13 @@ npm run build
 ### Issue: Extension selected but no response
 
 **Check 1: Engine is running**
+
 ```bash
 curl http://127.0.0.1:8080/
 ```
 
 **Check 2: Check Developer Console**
+
 - `Cmd+Shift+P` → "Developer: Toggle Developer Tools"
 - Console tab → Look for `[HUMMBL Extension]` errors
 
@@ -107,4 +117,3 @@ curl http://127.0.0.1:8080/
 ---
 
 **Remember:** Always start with `@hummbl` to use the extension!
-

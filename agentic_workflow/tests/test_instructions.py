@@ -22,19 +22,20 @@ from ..instructions import get_instructions, SystemPrompt
 from ..agents.detection_agent import DetectionAgent
 from ..agents.triage_agent import TriageAgent
 
+
 class TestInstructions:
     """Tests for instruction system."""
-    
+
     def test_get_instructions(self):
         """Test retrieving instructions by ID."""
         instructions = get_instructions("detection_agent")
         assert instructions.name == "Sovereign Detector"
         assert "Anomaly Detection Specialist" in instructions.role
-        
+
         # Test default
         default = get_instructions("unknown_agent")
         assert default.name == "Generic Agent"
-    
+
     def test_system_prompt_formatting(self):
         """Test formatting of system prompt."""
         prompt = SystemPrompt(
@@ -43,11 +44,11 @@ class TestInstructions:
             mission="To test things.",
             capabilities=["Run tests", "Report results"],
             constraints=["Do not fail"],
-            tone="Cheery"
+            tone="Cheery",
         )
-        
+
         formatted = prompt.to_prompt_string()
-        
+
         assert "Name: Test Bot" in formatted
         assert "Role: Tester" in formatted
         assert "# MISSION" in formatted
@@ -57,15 +58,16 @@ class TestInstructions:
         assert "# TONE" in formatted
         assert "Cheery" in formatted
 
+
 class TestAgentIntegration:
     """Test integration of instructions into agents."""
-    
+
     def test_agent_has_instructions(self):
         """Test that agents load their instructions."""
         agent = DetectionAgent()
         assert agent.instructions.name == "Sovereign Detector"
         assert "Mission: Analyze input data" in f"Mission: {agent.instructions.mission}"
-        
+
     def test_agent_system_prompt(self):
         """Test retrieving system prompt from agent."""
         agent = TriageAgent()

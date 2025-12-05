@@ -18,35 +18,35 @@ import { Counter, Histogram, Gauge, register } from 'prom-client';
 
 // Request counter
 export const requestCounter = new Counter({
-    name: 'engine_ops_requests_total',
-    help: 'Total number of optimization requests',
-    labelNames: ['type', 'status']
+  name: 'engine_ops_requests_total',
+  help: 'Total number of optimization requests',
+  labelNames: ['type', 'status'],
 });
 
 // Request duration histogram
 export const requestDuration = new Histogram({
-    name: 'engine_ops_request_duration_ms',
-    help: 'Request duration in milliseconds',
-    labelNames: ['type'],
-    buckets: [10, 50, 100, 200, 500, 1000, 2000, 5000]
+  name: 'engine_ops_request_duration_ms',
+  help: 'Request duration in milliseconds',
+  labelNames: ['type'],
+  buckets: [10, 50, 100, 200, 500, 1000, 2000, 5000],
 });
 
 // Cache hit counter
 export const cacheHits = new Counter({
-    name: 'engine_ops_cache_hits_total',
-    help: 'Total number of cache hits'
+  name: 'engine_ops_cache_hits_total',
+  help: 'Total number of cache hits',
 });
 
 // Cache miss counter
 export const cacheMisses = new Counter({
-    name: 'engine_ops_cache_misses_total',
-    help: 'Total number of cache misses'
+  name: 'engine_ops_cache_misses_total',
+  help: 'Total number of cache misses',
 });
 
 // Active connections gauge
 export const activeConnections = new Gauge({
-    name: 'engine_ops_active_connections',
-    help: 'Number of active WebSocket connections'
+  name: 'engine_ops_active_connections',
+  help: 'Number of active WebSocket connections',
 });
 
 // Export registry for custom metrics

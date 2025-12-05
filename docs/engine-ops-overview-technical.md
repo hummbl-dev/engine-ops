@@ -104,75 +104,75 @@ Engine-Ops uses a rich `AgentContext` object with 15 context types. Each type en
 
 1. **IdentityContext** – Who is executing the workflow (Agent ID, User ID, Organization ID, roles)
 
-    Example:
+   Example:
 
-    ```json
-    { "agent_id": "detector-1", "role": "anomaly-detection" }
-    ```
+   ```json
+   { "agent_id": "detector-1", "role": "anomaly-detection" }
+   ```
 
 2. **StateContext** – Current and previous workflow state, transition history
 
-    Example:
+   Example:
 
-    ```json
-    { "state": "triage", "history": ["detected", "triage"] }
-    ```
+   ```json
+   { "state": "triage", "history": ["detected", "triage"] }
+   ```
 
 3. **SessionContext** – Session-level tracking (session ID, creation time, TTL)
 
-    Example:
+   Example:
 
-    ```json
-    { "session_id": "abc123", "ttl": 3600 }
-    ```
+   ```json
+   { "session_id": "abc123", "ttl": 3600 }
+   ```
 
 4. **IntentContext** – Goals, objectives, priority levels
 
-    Example:
+   Example:
 
-    ```json
-    { "intent": "resolve-incident", "priority": "high" }
-    ```
+   ```json
+   { "intent": "resolve-incident", "priority": "high" }
+   ```
 
 5. **PolicyContext** – Compliance, applicable policies, escalation rules
 
-    Example:
+   Example:
 
-    ```json
-    { "policy": "access-control", "escalation": "critical" }
-    ```
+   ```json
+   { "policy": "access-control", "escalation": "critical" }
+   ```
 
 6. **TelemetryContext** – Observability (trace IDs, metrics, events)
 
-    Example:
+   Example:
 
-    ```json
-    { "trace_id": "xyz789", "metrics": {"latency": 120} }
-    ```
+   ```json
+   { "trace_id": "xyz789", "metrics": { "latency": 120 } }
+   ```
 
 7. **KnowledgeContext** – Learned facts, recommendations, confidence scores
 
-    Example:
+   Example:
 
-    ```json
-    { "facts": ["CPU spike"], "confidence": 0.95 }
-    ```
+   ```json
+   { "facts": ["CPU spike"], "confidence": 0.95 }
+   ```
 
 8. **DependenciesContext** – System relationships, upstream/downstream services
 
-    Example:
+   Example:
 
-    ```json
-    { "upstream": "db", "downstream": "api" }
-    ```
+   ```json
+   { "upstream": "db", "downstream": "api" }
+   ```
 
 9. **AnnotationContext** – Tags, labels, human-readable notes
 
-    Example:
+   Example:
 
-    ```json
-    { "tags": ["urgent", "security"], "notes": "Reviewed by SRE" }
-    ```
+   ```json
+   { "tags": ["urgent", "security"], "notes": "Reviewed by SRE" }
+   ```
 
 10. **SecurityContext** – Encryption, data classification, sensitive field tracking
 
@@ -187,7 +187,7 @@ Engine-Ops uses a rich `AgentContext` object with 15 context types. Each type en
     Example:
 
     ```json
-    { "cpu": 2, "memory": "4GB", "cost": 0.10 }
+    { "cpu": 2, "memory": "4GB", "cost": 0.1 }
     ```
 
 12. **TemporalContext** – Time management (start time, deadline, duration)
@@ -444,23 +444,23 @@ This section will be expanded with scripts, checklists, and troubleshooting scen
 Engine-Ops agents should follow this recommended sequence to ensure context-aware, policy-compliant, and traceable operations:
 
 1. **Intent Formation**
-    - Define operational goals, priorities, and constraints using `IntentContext`.
+   - Define operational goals, priorities, and constraints using `IntentContext`.
 2. **Intent Discovery & Validation**
-    - Propagate context to relevant agents.
-    - Validate and refine intent through agent collaboration and context enrichment.
+   - Propagate context to relevant agents.
+   - Validate and refine intent through agent collaboration and context enrichment.
 3. **Context Propagation**
-    - Ensure all agents receive the full, updated `AgentContext` (including intent, state, policy, etc.).
+   - Ensure all agents receive the full, updated `AgentContext` (including intent, state, policy, etc.).
 4. **Policy Enforcement**
-    - Validate context and intended actions against runtime policies.
-    - Handle escalation and approvals as needed.
+   - Validate context and intended actions against runtime policies.
+   - Handle escalation and approvals as needed.
 5. **Prompt/Code Authoring**
-    - Generate or select prompts, code, or actions based on the validated intent and context.
+   - Generate or select prompts, code, or actions based on the validated intent and context.
 6. **Agent Action & Execution**
-    - Agents process the context and execute their assigned tasks.
+   - Agents process the context and execute their assigned tasks.
 7. **Telemetry & Audit Logging**
-    - Log all lifecycle events, decisions, and actions for observability and compliance.
+   - Log all lifecycle events, decisions, and actions for observability and compliance.
 8. **Result Aggregation & Feedback**
-    - Aggregate results, update context, and provide feedback for further intent refinement or next steps.
+   - Aggregate results, update context, and provide feedback for further intent refinement or next steps.
 
 This order ensures all agent actions are context-driven, policy-compliant, and fully auditable.
 
@@ -469,33 +469,33 @@ This order ensures all agent actions are context-driven, policy-compliant, and f
 Engine-Ops is designed to support a range of advanced, context-driven automation and optimization scenarios. Key use cases include:
 
 1. **Automated Incident Detection and Resolution**
-    - DetectionAgent identifies anomalies in telemetry data.
-    - TriageAgent prioritizes incidents and assigns resolution paths.
-    - ResolutionAgent executes remediation steps, supports rollback, and tracks success.
-    - AuditAgent logs all actions for compliance and reporting.
+   - DetectionAgent identifies anomalies in telemetry data.
+   - TriageAgent prioritizes incidents and assigns resolution paths.
+   - ResolutionAgent executes remediation steps, supports rollback, and tracks success.
+   - AuditAgent logs all actions for compliance and reporting.
 
 2. **Policy-Driven Access Control and Compliance**
-    - Agents validate all actions against runtime policies (e.g., access control, escalation).
-    - Sensitive operations trigger approval workflows and audit logging.
-    - Full traceability for regulatory compliance (SOC2, GDPR, etc.).
+   - Agents validate all actions against runtime policies (e.g., access control, escalation).
+   - Sensitive operations trigger approval workflows and audit logging.
+   - Full traceability for regulatory compliance (SOC2, GDPR, etc.).
 
 3. **Multi-Cloud and Hybrid Workflow Orchestration**
-    - Deploy agents across local and cloud environments.
-    - Use context propagation to coordinate distributed workflows and resource management.
-    - Integrate with cloud-native services (Kubernetes, IAM, monitoring).
+   - Deploy agents across local and cloud environments.
+   - Use context propagation to coordinate distributed workflows and resource management.
+   - Integrate with cloud-native services (Kubernetes, IAM, monitoring).
 
 4. **ML-Driven Optimization and Prediction**
-    - Register custom ML plugins to analyze workload patterns and make optimization recommendations.
-    - Collect training data, run predictions, and automate resource allocation.
-    - Integrate Python and TypeScript ML models for advanced scenarios.
+   - Register custom ML plugins to analyze workload patterns and make optimization recommendations.
+   - Collect training data, run predictions, and automate resource allocation.
+   - Integrate Python and TypeScript ML models for advanced scenarios.
 
 5. **Zero-Downtime Deployments and Blue-Green Releases**
-    - Use infrastructure automation (Helm, Terraform, Kubernetes) to deploy updates without service interruption.
-    - Agents coordinate traffic switching, health checks, and rollback procedures.
+   - Use infrastructure automation (Helm, Terraform, Kubernetes) to deploy updates without service interruption.
+   - Agents coordinate traffic switching, health checks, and rollback procedures.
 
 6. **Context-Aware Prompt Engineering and Automation**
-    - Author prompts and automation scripts that adapt to real-time context and intent.
-    - Use context types (IntentContext, StateContext, etc.) to drive dynamic agent behavior.
+   - Author prompts and automation scripts that adapt to real-time context and intent.
+   - Use context types (IntentContext, StateContext, etc.) to drive dynamic agent behavior.
 
 These use cases exemplify the power and flexibility of Engine-Ops for technical teams building robust, scalable, and compliant automation solutions.
 
@@ -504,28 +504,28 @@ These use cases exemplify the power and flexibility of Engine-Ops for technical 
 Engine-Ops empowers non-technical users to gradually build automation and operational skills. Key use cases include:
 
 1. **Automated System Health Monitoring**
-    - Use built-in agents to monitor system status and receive alerts for issues.
-    - Learn how context and telemetry help agents make decisions.
+   - Use built-in agents to monitor system status and receive alerts for issues.
+   - Learn how context and telemetry help agents make decisions.
 
 2. **Simple Workflow Automation**
-    - Trigger basic tasks (e.g., backup, report generation) using pre-built workflows.
-    - Explore how agents collaborate and share context.
+   - Trigger basic tasks (e.g., backup, report generation) using pre-built workflows.
+   - Explore how agents collaborate and share context.
 
 3. **Policy Awareness and Compliance**
-    - Understand how policies enforce safe operations and compliance.
-    - Experiment with changing policy rules and seeing their effects.
+   - Understand how policies enforce safe operations and compliance.
+   - Experiment with changing policy rules and seeing their effects.
 
 4. **Interactive Troubleshooting and Audit Trails**
-    - Use audit logs to trace actions and learn how agents resolve problems.
-    - Practice reviewing telemetry and context to diagnose issues.
+   - Use audit logs to trace actions and learn how agents resolve problems.
+   - Practice reviewing telemetry and context to diagnose issues.
 
 5. **Prompt-Based Automation**
-    - Author simple prompts to automate repetitive tasks.
-    - See how intent and context shape agent responses.
+   - Author simple prompts to automate repetitive tasks.
+   - See how intent and context shape agent responses.
 
 6. **Gradual Customization and Extension**
-    - Start with modifying existing workflows and prompts.
-    - Progress to creating new agents or plugins as skills grow.
+   - Start with modifying existing workflows and prompts.
+   - Progress to creating new agents or plugins as skills grow.
 
 These use cases help non-technical users gain confidence, understand core concepts, and transition toward technical automation and workflow engineering with Engine-Ops.
 
@@ -576,6 +576,7 @@ Expand Engine-Ops documentation and community resources for technical and non-te
 ## Implementation Details (Draft)
 
 ### Onboarding Wizard & Visual Guide
+
 - **Tech stack:** React (dashboard), TypeScript, Python backend for environment checks.
 - **Flow:**
   1. User launches wizard from dashboard or CLI.
@@ -585,12 +586,14 @@ Expand Engine-Ops documentation and community resources for technical and non-te
   5. Success: user lands on dashboard with quickstart templates and links to docs.
 
 ### Managed Service & No-Code Automation
+
 - **SaaS hosting:** Kubernetes-managed, auto-scaling, RBAC, encrypted secrets.
 - **No-code builder:** React/TypeScript drag-and-drop UI, YAML/JSON export for workflows.
 - **Policy editor:** Visual rules engine, maps to `policy.py` and TypeScript interfaces.
 - **Integration:** OAuth2 for third-party services, secure credential storage.
 
 ### Troubleshooting & FAQ
+
 - **Validation scripts:** Python/Node.js scripts for environment checks, dependency validation, and log collection.
 - **Diagnostic commands:**
   - `engine-ops doctor` (CLI): runs checks, outputs report.
@@ -598,6 +601,7 @@ Expand Engine-Ops documentation and community resources for technical and non-te
 - **Checklists:** Markdown templates for common issues, cloud setup, and agent/plugin registration.
 
 ### Integration Marketplace
+
 - **Catalog:** JSON/YAML manifest of integrations, auto-discovered by dashboard.
 - **Enablement:** UI triggers setup scripts, validates permissions, and updates config files.
 - **Extensibility:** Plugin interface in `core/plugins/` and Python ML plugin examples.

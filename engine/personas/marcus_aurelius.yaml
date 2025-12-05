@@ -13,16 +13,16 @@ lattice_attributes:
   gender: Male
   economic_context: Roman Empire (Pax Romana)
   field_of_study:
-  - Ethics
-  - Philosophy
+    - Ethics
+    - Philosophy
   notable_works:
-  - Meditations
+    - Meditations
   metadata:
     dynasty: Nerva-Antonine
 era_context: Roman Empire during the Pax Romana; last of the Five Good Emperors; constant
   warfare on frontiers; personal struggles with duty and philosophy.
 tone_voice: Reflective, measured, introspective, practical, stoic, self-examining
-core_philosophy: 'You have power over your mind, not outside events.
+core_philosophy: "You have power over your mind, not outside events.
 
   The impediment to action advances action. What stands in the way becomes the way.
 
@@ -30,25 +30,25 @@ core_philosophy: 'You have power over your mind, not outside events.
 
   Act with virtue regardless of circumstances.
 
-  External things are not the problem; it''s your judgment of them.
+  External things are not the problem; it's your judgment of them.
 
-  '
+  "
 key_ideas:
-- Power over mind, not events
-- Obstacles become the way
-- Focus on what you control
-- Act with virtue always
-- Judgment shapes reality
+  - Power over mind, not events
+  - Obstacles become the way
+  - Focus on what you control
+  - Act with virtue always
+  - Judgment shapes reality
 relationships:
   influences:
-  - Stoic philosophy
-  - Modern cognitive behavioral therapy
-  - Leadership philosophy
+    - Stoic philosophy
+    - Modern cognitive behavioral therapy
+    - Leadership philosophy
   influenced_by:
-  - Epictetus
-  - Seneca
-  - Stoic tradition
+    - Epictetus
+    - Seneca
+    - Stoic tradition
   persona_influences: []
   persona_influenced_by:
-  - eur_4bc_plato
-  - eur_4bc_aristotle
+    - eur_4bc_plato
+    - eur_4bc_aristotle

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,35 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = exports.activeConnections = exports.cacheMisses = exports.cacheHits = exports.requestDuration = exports.requestCounter = void 0;
-const prom_client_1 = require("prom-client");
-Object.defineProperty(exports, "register", { enumerable: true, get: function () { return prom_client_1.register; } });
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.register =
+  exports.activeConnections =
+  exports.cacheMisses =
+  exports.cacheHits =
+  exports.requestDuration =
+  exports.requestCounter =
+    void 0;
+const prom_client_1 = require('prom-client');
+Object.defineProperty(exports, 'register', {
+  enumerable: true,
+  get: function () {
+    return prom_client_1.register;
+  },
+});
 // Request counter
 exports.requestCounter = new prom_client_1.Counter({
-    name: 'engine_ops_requests_total',
-    help: 'Total number of optimization requests',
-    labelNames: ['type', 'status']
+  name: 'engine_ops_requests_total',
+  help: 'Total number of optimization requests',
+  labelNames: ['type', 'status'],
 });
 // Request duration histogram
 exports.requestDuration = new prom_client_1.Histogram({
-    name: 'engine_ops_request_duration_ms',
-    help: 'Request duration in milliseconds',
-    labelNames: ['type'],
-    buckets: [10, 50, 100, 200, 500, 1000, 2000, 5000]
+  name: 'engine_ops_request_duration_ms',
+  help: 'Request duration in milliseconds',
+  labelNames: ['type'],
+  buckets: [10, 50, 100, 200, 500, 1000, 2000, 5000],
 });
 // Cache hit counter
 exports.cacheHits = new prom_client_1.Counter({
-    name: 'engine_ops_cache_hits_total',
-    help: 'Total number of cache hits'
+  name: 'engine_ops_cache_hits_total',
+  help: 'Total number of cache hits',
 });
 // Cache miss counter
 exports.cacheMisses = new prom_client_1.Counter({
-    name: 'engine_ops_cache_misses_total',
-    help: 'Total number of cache misses'
+  name: 'engine_ops_cache_misses_total',
+  help: 'Total number of cache misses',
 });
 // Active connections gauge
 exports.activeConnections = new prom_client_1.Gauge({
-    name: 'engine_ops_active_connections',
-    help: 'Number of active WebSocket connections'
+  name: 'engine_ops_active_connections',
+  help: 'Number of active WebSocket connections',
 });

@@ -1,13 +1,11 @@
 {
-    "compilerOptions": {
-        "module": "Node16",
-        "target": "ES2022",
-        "outDir": "dist",
-        "rootDir": "src",
-        "strict": true,
-        "moduleResolution": "Node16"
-    },
-    "exclude": [
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "module": "Node16",
+    "target": "ES2022",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "moduleResolution": "Node16"
+  },
+  "exclude": ["node_modules"]
 }

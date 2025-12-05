@@ -8,21 +8,21 @@ image:
   repository: ghcr.io/hummbl-dev/engine-ops
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: ''
 
 # Blue-Green Configuration
 # activeVersion: "blue" or "green" - controls which deployment receives traffic
-activeVersion: "blue"
+activeVersion: 'blue'
 
 # Deployment versions
 blue:
   enabled: true
-  version: "v0.3.0"
+  version: 'v0.3.0'
   replicas: 1
 
 green:
   enabled: false
-  version: "v0.3.1"
+  version: 'v0.3.1'
   replicas: 1
 
 serviceAccount:
@@ -32,7 +32,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: ''
 
 service:
   type: ClusterIP

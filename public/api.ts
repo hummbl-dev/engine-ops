@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { OptimizationEngine, EngineConfig, OptimizationRequest, OptimizationResult } from '../core/index.js';
+import {
+  OptimizationEngine,
+  EngineConfig,
+  OptimizationRequest,
+  OptimizationResult,
+} from '../core/index.js';
 import { AnomalyDetector } from '../core/anomaly/detector.js';
 import { CacheStats } from '../core/caching/lru-cache.js';
 import { PluginRegistry } from '../core/plugins/registry.js';
@@ -22,7 +27,7 @@ import { WorkloadCollector } from '../core/plugins/workload-collector.js';
 
 /**
  * EngineOps: The public facade for the Engine Optimization Platform.
- * 
+ *
  * This class provides a stable, high-level interface for interacting with the
  * core optimization engine. It handles initialization, request validation (via Core),
  * and resource management.
@@ -44,7 +49,7 @@ export class EngineOps {
 
   /**
    * Submit an optimization request.
-   * 
+   *
    * @param request The optimization request containing type and data.
    * @returns The optimization result.
    */

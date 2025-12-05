@@ -43,11 +43,11 @@ spec:
               readOnly: true
           env:
             - name: PORT
-              value: "8443"
+              value: '8443'
             - name: TLS_CERT_PATH
-              value: "/etc/webhook/certs/tls.crt"
+              value: '/etc/webhook/certs/tls.crt'
             - name: TLS_KEY_PATH
-              value: "/etc/webhook/certs/tls.key"
+              value: '/etc/webhook/certs/tls.key'
           livenessProbe:
             httpGet:
               path: /health

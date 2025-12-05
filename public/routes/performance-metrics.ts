@@ -24,11 +24,11 @@ export const metricsRouter = Router();
  * Get performance metrics
  */
 metricsRouter.get('/', (_req: Request, res: Response) => {
-    const aggregated = metricsCollector.getAggregated();
-    const recent = metricsCollector.getRecent(10);
+  const aggregated = metricsCollector.getAggregated();
+  const recent = metricsCollector.getRecent(10);
 
-    res.status(200).json({
-        aggregated,
-        recent
-    });
+  res.status(200).json({
+    aggregated,
+    recent,
+  });
 });

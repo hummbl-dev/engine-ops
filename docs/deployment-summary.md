@@ -11,6 +11,7 @@ This document summarizes the zero-downtime deployment capabilities implemented f
 **Location**: `infra/k8s/blue-green/`, `infra/scripts/blue-green-deploy.sh`
 
 **Features**:
+
 - Two identical production environments (blue and green)
 - Instant traffic switching between environments
 - Preview service for testing inactive environment
@@ -18,17 +19,20 @@ This document summarizes the zero-downtime deployment capabilities implemented f
 - Quick rollback capability (< 10 seconds)
 
 **Usage**:
+
 ```bash
 ./infra/scripts/blue-green-deploy.sh v0.3.0
 ```
 
 **Pros**:
+
 - Zero downtime
 - Instant rollback
 - Full production testing before switch
 - Minimal risk
 
 **Cons**:
+
 - Requires 2x resources during deployment
 - More complex setup
 
@@ -37,6 +41,7 @@ This document summarizes the zero-downtime deployment capabilities implemented f
 **Location**: `infra/k8s/deployment.yaml`
 
 **Features**:
+
 - Gradual pod replacement (maxSurge: 1, maxUnavailable: 0)
 - Startup probe (60s grace period)
 - Liveness and readiness probes
@@ -45,18 +50,21 @@ This document summarizes the zero-downtime deployment capabilities implemented f
 - Revision history (10 versions)
 
 **Usage**:
+
 ```bash
 kubectl set image deployment/engine-ops engine-ops=engine-ops:v0.3.0
 kubectl rollout status deployment/engine-ops
 ```
 
 **Pros**:
+
 - Resource efficient
 - Simple to set up
 - Built into Kubernetes
 - Progressive rollout
 
 **Cons**:
+
 - Slower than blue-green
 - Mixed versions during rollout
 - Gradual rollback
@@ -66,6 +74,7 @@ kubectl rollout status deployment/engine-ops
 **Location**: `core/migrations/`, `schemas/migrations/`, `infra/scripts/migrate.ts`
 
 **Features**:
+
 - Transactional migration system
 - Up/down migration functions
 - SHA-256 checksum validation
@@ -74,6 +83,7 @@ kubectl rollout status deployment/engine-ops
 - Validation functions
 
 **Usage**:
+
 ```bash
 # Apply migrations
 npm run migrate
@@ -86,20 +96,21 @@ npm run migrate:rollback
 ```
 
 **Example Migration**:
+
 ```typescript
 export const migration001: Migration = {
-    version: '001',
-    name: 'add-versioning',
-    async up() {
-        // Apply migration
-    },
-    async down() {
-        // Rollback migration
-    },
-    async validateUp() {
-        // Verify success
-        return true;
-    }
+  version: '001',
+  name: 'add-versioning',
+  async up() {
+    // Apply migration
+  },
+  async down() {
+    // Rollback migration
+  },
+  async validateUp() {
+    // Verify success
+    return true;
+  },
 };
 ```
 
@@ -108,6 +119,7 @@ export const migration001: Migration = {
 **Location**: `public/middleware/api-version.ts`
 
 **Features**:
+
 - Multi-version support (v1, v2)
 - Version detection (URL path, header, query param)
 - Automatic request/response transformation
@@ -115,21 +127,19 @@ export const migration001: Migration = {
 - Type-safe implementation
 
 **Usage**:
+
 ```typescript
-import { 
-    apiVersionMiddleware,
-    deprecationWarningMiddleware 
-} from './middleware/api-version';
+import { apiVersionMiddleware, deprecationWarningMiddleware } from './middleware/api-version';
 
 app.use('/api', apiVersionMiddleware);
-app.use('/api/v1', deprecationWarningMiddleware(
-    ApiVersion.V1,
-    'Please migrate to v2',
-    '2025-12-31'
-));
+app.use(
+  '/api/v1',
+  deprecationWarningMiddleware(ApiVersion.V1, 'Please migrate to v2', '2025-12-31'),
+);
 ```
 
 **Client Examples**:
+
 ```bash
 # Via URL path
 curl https://api.example.com/api/v1/optimize
@@ -146,6 +156,7 @@ curl https://api.example.com/api/optimize?api_version=v1
 **Location**: `infra/helm/engine-ops/`
 
 **Features**:
+
 - Configurable deployment strategy
 - Blue-green deployment support
 - Health probe configuration
@@ -155,6 +166,7 @@ curl https://api.example.com/api/optimize?api_version=v1
 - Prometheus annotations
 
 **Usage**:
+
 ```bash
 # Standard rolling update deployment
 helm install engine-ops ./infra/helm/engine-ops
@@ -174,6 +186,7 @@ helm install engine-ops-blue ./infra/helm/engine-ops \
 **Location**: `.github/workflows/`
 
 **Features**:
+
 - Automated blue-green deployments
 - Automated rolling updates
 - Integration testing
@@ -183,10 +196,12 @@ helm install engine-ops-blue ./infra/helm/engine-ops \
 - Secure GITHUB_TOKEN permissions
 
 **Workflows**:
+
 1. **blue-green-deploy.yml** - Full blue-green deployment with tests
 2. **rolling-deploy.yml** - Rolling update with staging/production
 
 **Usage**:
+
 ```bash
 # Trigger via GitHub UI
 # Or via gh CLI
@@ -197,27 +212,29 @@ gh workflow run blue-green-deploy.yml \
 
 ## Deployment Strategies Comparison
 
-| Feature | Blue-Green | Rolling Update |
-|---------|-----------|----------------|
-| Downtime | Zero | Near-zero |
-| Resources | 2x during deploy | 1.5x during deploy |
-| Rollback Speed | < 10 seconds | 1-3 minutes |
-| Testing | Full production test | Progressive testing |
-| Complexity | Higher | Lower |
-| Risk | Lower | Higher |
-| Cost | Higher | Lower |
+| Feature        | Blue-Green           | Rolling Update      |
+| -------------- | -------------------- | ------------------- |
+| Downtime       | Zero                 | Near-zero           |
+| Resources      | 2x during deploy     | 1.5x during deploy  |
+| Rollback Speed | < 10 seconds         | 1-3 minutes         |
+| Testing        | Full production test | Progressive testing |
+| Complexity     | Higher               | Lower               |
+| Risk           | Lower                | Higher              |
+| Cost           | Higher               | Lower               |
 
 ## Best Practices
 
 ### 1. Choose the Right Strategy
 
 **Use Blue-Green when**:
+
 - Zero downtime is critical
 - Instant rollback is required
 - You can afford 2x resources
 - Full production testing is needed
 
 **Use Rolling Updates when**:
+
 - Resources are constrained
 - Gradual rollout is acceptable
 - Simpler setup is preferred
@@ -225,12 +242,14 @@ gh workflow run blue-green-deploy.yml \
 ### 2. Database Migrations
 
 **Always**:
+
 - Make migrations backward compatible
 - Test migrations in non-production first
 - Keep old and new schemas compatible during transition
 - Use multi-step migrations for breaking changes
 
 **Never**:
+
 - Remove columns immediately
 - Rename fields without transition period
 - Make breaking schema changes without version support
@@ -238,12 +257,14 @@ gh workflow run blue-green-deploy.yml \
 ### 3. API Versioning
 
 **Always**:
+
 - Support at least 2 versions simultaneously
 - Provide clear deprecation timelines
 - Document migration paths
 - Use semantic versioning
 
 **Best Approach**:
+
 1. Release v2 alongside v1
 2. Announce v1 deprecation (6-12 months notice)
 3. Monitor v1 usage
@@ -252,6 +273,7 @@ gh workflow run blue-green-deploy.yml \
 ### 4. Monitoring
 
 **Monitor these metrics**:
+
 - Pod ready/not ready count
 - Request error rates
 - Response times
@@ -260,6 +282,7 @@ gh workflow run blue-green-deploy.yml \
 - Health check status
 
 **Tools**:
+
 ```bash
 # Watch pods
 kubectl get pods -l app=engine-ops -w
@@ -275,6 +298,7 @@ curl http://localhost:8080/metrics
 ### 5. Rollback Plan
 
 **Always have a rollback plan**:
+
 1. Keep previous version running (blue-green)
 2. Maintain revision history (rolling updates)
 3. Test rollback procedure in staging
@@ -284,18 +308,23 @@ curl http://localhost:8080/metrics
 ## Testing
 
 ### Unit Tests
+
 - 61 tests total
 - All passing
 - Coverage for migrations and API versioning
 
 ### Integration Tests
+
 Run integration tests before deployment:
+
 ```bash
 npm run test:integration
 ```
 
 ### Smoke Tests
+
 Automated smoke tests in deployment scripts:
+
 - Health endpoint check
 - Metrics endpoint check
 - API functionality test
@@ -303,12 +332,14 @@ Automated smoke tests in deployment scripts:
 ## Security
 
 ### Features
+
 - SHA-256 checksums for migration integrity
 - Type-safe TypeScript implementation
 - Explicit GitHub Actions permissions
 - CodeQL security scanning (0 alerts)
 
 ### Regular Checks
+
 ```bash
 # Run security audit
 npm audit
@@ -320,6 +351,7 @@ npm audit
 ## Documentation
 
 ### Available Guides
+
 1. **Zero-Downtime Deployments** (`docs/zero-downtime-deployments.md`)
    - Complete guide to all strategies
    - 15KB+ comprehensive documentation
@@ -339,6 +371,7 @@ npm audit
 ## Quick Reference Commands
 
 ### Blue-Green Deployment
+
 ```bash
 # Deploy new version
 ./infra/scripts/blue-green-deploy.sh v0.3.0
@@ -348,6 +381,7 @@ npm audit
 ```
 
 ### Rolling Update
+
 ```bash
 # Deploy
 kubectl set image deployment/engine-ops engine-ops=engine-ops:v0.3.0
@@ -357,6 +391,7 @@ kubectl rollout undo deployment/engine-ops
 ```
 
 ### Migrations
+
 ```bash
 # Apply migrations
 npm run migrate
@@ -369,6 +404,7 @@ npm run migrate:rollback
 ```
 
 ### Helm
+
 ```bash
 # Install
 helm install engine-ops ./infra/helm/engine-ops
@@ -386,23 +422,27 @@ helm rollback engine-ops
 ### Common Issues
 
 **Pods not starting**:
+
 ```bash
 kubectl describe pod <pod-name>
 kubectl logs <pod-name>
 ```
 
 **Health checks failing**:
+
 ```bash
 kubectl exec <pod-name> -- curl localhost:3000/health/ready
 ```
 
 **Traffic not routing**:
+
 ```bash
 kubectl get endpoints engine-ops
 kubectl describe service engine-ops
 ```
 
 **Migration failures**:
+
 ```bash
 npm run migrate:status
 npm run migrate verify
@@ -419,6 +459,7 @@ npm run migrate verify
 ## Support
 
 For issues or questions:
+
 - GitHub Issues: https://github.com/hummbl-dev/engine-ops/issues
 - Documentation: https://github.com/hummbl-dev/engine-ops/tree/main/docs
 

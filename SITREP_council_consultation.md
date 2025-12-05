@@ -1,4 +1,5 @@
 # SITREP: Council Consultation on Deployment Strategy
+
 **Date:** 2025-01-27  
 **Operation:** Consult Council API - Deployment Strategy Query  
 **Status:** ✅ COMPLETE
@@ -6,11 +7,13 @@
 ---
 
 ## Mission Objective
+
 Consult the HUMMBL council (specifically "General") regarding deployment strategy recommendations for the engine-ops project.
 
 ## Actions Taken
 
 ### 1. Initial Investigation
+
 - **Action:** Searched for deployment strategy documentation and council consultation tools
 - **Findings:**
   - Located comprehensive deployment documentation:
@@ -21,6 +24,7 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
   - Found Python FastAPI engine at `engine/src/main.py`
 
 ### 2. Engine Infrastructure Discovery
+
 - **Action:** Analyzed the council consultation system architecture
 - **Findings:**
   - MCP server (`extension/src/server/index.ts`) provides `consult_council` tool
@@ -29,6 +33,7 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
   - Default endpoint: `http://localhost:8080`
 
 ### 3. Engine Activation
+
 - **Action:** Started the Python FastAPI engine server
 - **Steps:**
   1. Verified dependencies in `engine/requirements.txt`
@@ -37,6 +42,7 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
   4. Confirmed server health
 
 ### 4. Council Consultation
+
 - **Action:** Executed council consultation API call
 - **Request:**
   ```json
@@ -48,6 +54,7 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
 - **Endpoint:** `POST http://127.0.0.1:8080/consult`
 
 ### 5. Response Received
+
 - **Status:** ✅ Success
 - **Response:**
   ```json
@@ -64,6 +71,7 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
 ### Deployment Strategy Options Available
 
 #### Option A: Speed (Blue-Green Deployment)
+
 - **Characteristics:**
   - Zero downtime
   - Instant rollback (< 10 seconds)
@@ -72,6 +80,7 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
 - **Best for:** Major releases, high-risk changes
 
 #### Option B: Endurance (Rolling Updates)
+
 - **Characteristics:**
   - Resource efficient (1.5x during deployment)
   - Gradual rollout
@@ -80,6 +89,7 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
 - **Best for:** Minor updates, patches
 
 ### Current Implementation Status
+
 - ✅ Blue-Green deployment: Fully implemented
   - Scripts: `infra/scripts/blue-green-deploy.sh`
   - K8s manifests: `infra/k8s/blue-green/`
@@ -98,10 +108,12 @@ Consult the HUMMBL council (specifically "General") regarding deployment strateg
 ## Strategic Interpretation
 
 The General's advice frames the deployment decision as a trade-off between:
+
 - **Speed (Blue-Green):** Fast execution, instant rollback, higher resource cost
 - **Endurance (Rolling):** Steady, resource-efficient, gradual rollout
 
 **Recommendation:** Choose based on deployment context:
+
 - Critical production releases → Blue-Green (Option A)
 - Routine updates → Rolling Updates (Option B)
 
@@ -110,6 +122,7 @@ The General's advice frames the deployment decision as a trade-off between:
 ## System Status
 
 ### Engine-Ops Deployment Infrastructure
+
 - **Status:** Production Ready ✅
 - **Documentation:** Comprehensive (15KB+ guides)
 - **Test Coverage:** 104+ tests passing
@@ -117,6 +130,7 @@ The General's advice frames the deployment decision as a trade-off between:
 - **Rollback Capabilities:** Both strategies supported
 
 ### Council API
+
 - **Status:** Operational ✅
 - **Endpoint:** `http://127.0.0.1:8080/consult`
 - **Server:** Python FastAPI (uvicorn)
@@ -141,4 +155,3 @@ The General's advice frames the deployment decision as a trade-off between:
 ---
 
 **End of SITREP**
-

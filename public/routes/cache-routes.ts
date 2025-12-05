@@ -26,13 +26,13 @@ const engine = new EngineOps({ verbose: false });
  * Get cache statistics
  */
 cacheRouter.get('/stats', async (_req: Request, res: Response) => {
-    try {
-        const stats = engine.getCacheStats();
-        res.status(200).json(stats);
-    } catch (error) {
-        res.status(500).json({
-            error: 'Failed to get cache stats',
-            message: error instanceof Error ? error.message : 'Unknown error'
-        });
-    }
+  try {
+    const stats = engine.getCacheStats();
+    res.status(200).json(stats);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to get cache stats',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
 });

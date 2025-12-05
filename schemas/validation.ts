@@ -14,47 +14,47 @@
 import { z } from 'zod';
 
 export const EngineConfigSchema = z.object({
-    maxConcurrentTasks: z.number().int().positive().optional().default(5),
-    timeoutMs: z.number().int().positive().optional().default(30000),
-    verbose: z.boolean().optional().default(false),
-    enablePlugins: z.boolean().optional().default(false),
-    enableWorkloadCollection: z.boolean().optional().default(false),
+  maxConcurrentTasks: z.number().int().positive().optional().default(5),
+  timeoutMs: z.number().int().positive().optional().default(30000),
+  verbose: z.boolean().optional().default(false),
+  enablePlugins: z.boolean().optional().default(false),
+  enableWorkloadCollection: z.boolean().optional().default(false),
 });
 
 export const OptimizationRequestSchema = z.object({
-    id: z.string().min(1),
-    type: z.enum(['resource', 'scheduling', 'performance', 'ml-driven'] as const),
-    data: z.record(z.string(), z.unknown()),
-    constraints: z.record(z.string(), z.unknown()).optional(),
+  id: z.string().min(1),
+  type: z.enum(['resource', 'scheduling', 'performance', 'ml-driven'] as const),
+  data: z.record(z.string(), z.unknown()),
+  constraints: z.record(z.string(), z.unknown()).optional(),
 });
 
 // Multi-cloud provider schemas
 export const CloudProviderSchema = z.enum(['aws', 'gcp', 'azure', 'edge']);
 
 export const ResourceCapacitySchema = z.object({
-    cpu: z.number().positive(),
-    memory: z.number().positive(),
-    storage: z.number().positive().optional(),
-    gpu: z.number().int().nonnegative().optional(),
+  cpu: z.number().positive(),
+  memory: z.number().positive(),
+  storage: z.number().positive().optional(),
+  gpu: z.number().int().nonnegative().optional(),
 });
 
 export const WorkloadConstraintsSchema = z.object({
-    maxLatencyMs: z.number().positive().optional(),
-    dataResidency: z.array(z.string()).optional(),
-    providerPreferences: z.array(CloudProviderSchema).optional(),
+  maxLatencyMs: z.number().positive().optional(),
+  dataResidency: z.array(z.string()).optional(),
+  providerPreferences: z.array(CloudProviderSchema).optional(),
 });
 
 export const WorkloadSchema = z.object({
-    id: z.string().min(1),
-    resources: ResourceCapacitySchema,
-    preferredRegions: z.array(z.string()).optional(),
-    requiredLabels: z.record(z.string(), z.string()).optional(),
-    constraints: WorkloadConstraintsSchema.optional(),
+  id: z.string().min(1),
+  resources: ResourceCapacitySchema,
+  preferredRegions: z.array(z.string()).optional(),
+  requiredLabels: z.record(z.string(), z.string()).optional(),
+  constraints: WorkloadConstraintsSchema.optional(),
 });
 
 export const MultiCloudSchedulingRequestSchema = z.object({
-    workloads: z.array(WorkloadSchema).min(1),
-    enableGeoSharding: z.boolean().optional().default(true),
+  workloads: z.array(WorkloadSchema).min(1),
+  enableGeoSharding: z.boolean().optional().default(true),
 });
 
 export type EngineConfig = z.infer<typeof EngineConfigSchema>;

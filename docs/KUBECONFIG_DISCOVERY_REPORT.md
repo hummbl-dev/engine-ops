@@ -16,22 +16,26 @@ You don't currently have kubeconfig files set up, but you **do have AWS CLI conf
 ## What I Found
 
 ### ✅ Available Tools
+
 - **AWS CLI:** ✅ Installed and configured
   - Account: `941131937779`
   - User ID: `AIDA5WH6VW7ZYIF3BC52N`
   - Status: Authenticated
 
 ### ❌ Missing Tools
+
 - **kubectl:** Not installed
 - **Azure CLI:** Not installed
 - **Google Cloud SDK:** Not installed
 
 ### 📁 File System
+
 - **~/.kube/ directory:** Exists but empty
 - **KUBECONFIG environment variable:** Not set
 - **No kubeconfig files found** in common locations
 
 ### ☁️ Cloud Resources
+
 - **EKS Clusters:** None found in your AWS account
 - **AKS Clusters:** Cannot check (Azure CLI not installed)
 - **GKE Clusters:** Cannot check (GCP SDK not installed)
@@ -47,6 +51,7 @@ You have **two options**:
 If you need to set up Kubernetes clusters for deployment:
 
 **For AWS (EKS):**
+
 ```bash
 # Install kubectl first
 brew install kubectl
@@ -63,6 +68,7 @@ aws eks update-kubeconfig --name engine-ops-staging --region us-east-1
 ```
 
 **For Other Providers:**
+
 - **Azure AKS:** Install Azure CLI and create cluster
 - **Google GKE:** Install GCP SDK and create cluster
 - **Local (Minikube/Kind):** For development/testing
@@ -84,6 +90,7 @@ If you already have Kubernetes clusters but kubeconfig files are stored elsewher
 ### Immediate Actions
 
 1. **Install kubectl** (required for Kubernetes operations):
+
    ```bash
    brew install kubectl
    ```
@@ -101,18 +108,20 @@ If you already have Kubernetes clusters but kubeconfig files are stored elsewher
 ### Once You Have Kubeconfig Files
 
 1. **Save them locally:**
+
    ```bash
    # Create directory
    mkdir -p ~/.kube
-   
+
    # Save staging config
    cp staging-kubeconfig.yaml ~/.kube/config-staging
-   
+
    # Save production config
    cp production-kubeconfig.yaml ~/.kube/config-production
    ```
 
 2. **Use the helper script to prepare for GitHub:**
+
    ```bash
    ./scripts/prepare-github-secrets.sh \
      ~/.kube/config-staging \
@@ -151,6 +160,7 @@ If you don't need Kubernetes deployments right now, you can:
 3. **Set up Kubernetes later** when you're ready
 
 The workflow will remain disabled until you:
+
 - Configure the secrets
 - Create the environments
 - Remove `if: false` from the build job
@@ -160,6 +170,7 @@ The workflow will remain disabled until you:
 ## Help Available
 
 Once you have kubeconfig files, I can help you:
+
 - ✅ Validate them
 - ✅ Encode them to base64
 - ✅ Prepare them for GitHub secrets
@@ -170,4 +181,3 @@ Once you have kubeconfig files, I can help you:
 ---
 
 **Last Updated:** 2025-01-27
-

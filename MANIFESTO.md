@@ -32,8 +32,8 @@ We claim this sovereignty through three architectural pillars:
 
 We reject the "Black Box." By strictly separating "The Brain" (The Engine) from "The Tool" (The Interface), we ensure that your core logic, your persona libraries, and your business rules exist independently of any single text editor or platform.
 
-* **Vendor Agnostic:** You control the supply chain of intelligence. Swap providers (Gemini, OpenAI, Anthropic, Local LLaMA) at will. No lock-in. No rent-seeking.
-* **Persona Ownership:** Your "Council" of digital advisors—whether modeled on Sun Tzu or a Senior Engineer—answer only to you.
+- **Vendor Agnostic:** You control the supply chain of intelligence. Swap providers (Gemini, OpenAI, Anthropic, Local LLaMA) at will. No lock-in. No rent-seeking.
+- **Persona Ownership:** Your "Council" of digital advisors—whether modeled on Sun Tzu or a Senior Engineer—answer only to you.
 
 ### 2. The Universal Protocol (Radical Interoperability)
 
@@ -47,11 +47,11 @@ By standardizing how tools speak to models, we ensure that your Sovereign Intell
 
 **Speed without safety is recklessness. Guidance without agency is tyranny.**
 
-Sovereign Intelligence is not "uncontrolled" intelligence; it is *self-governed* intelligence. We implement a "Constitutional Auditor"—a layer of code that enforces *your* values over the model's output:
+Sovereign Intelligence is not "uncontrolled" intelligence; it is _self-governed_ intelligence. We implement a "Constitutional Auditor"—a layer of code that enforces _your_ values over the model's output:
 
-* **Non-Prescriptive:** We forbid the machine from issuing "You must" commands. The machine proposes; the human disposes.
-* **Strategic Options:** We provide choices (e.g., "Speed vs. Robustness"), forcing the human to remain the strategic decision-maker.
-* **Transparent Logic:** You define the definition of "good advice." The system enforces your standards, not a corporation's safety rail.
+- **Non-Prescriptive:** We forbid the machine from issuing "You must" commands. The machine proposes; the human disposes.
+- **Strategic Options:** We provide choices (e.g., "Speed vs. Robustness"), forcing the human to remain the strategic decision-maker.
+- **Transparent Logic:** You define the definition of "good advice." The system enforces your standards, not a corporation's safety rail.
 
 ## III. The Sovereign Oath
 

@@ -13,11 +13,11 @@ lattice_attributes:
   gender: Male
   economic_context: Classical Athens
   field_of_study:
-  - Metaphysics
-  - Ethics
-  - Political Philosophy
+    - Metaphysics
+    - Ethics
+    - Political Philosophy
   notable_works:
-  - The Republic
+    - The Republic
   metadata:
     teacher: Socrates
     academy: Platonic Academy
@@ -36,21 +36,21 @@ core_philosophy: 'The unexamined life is not worth living.
 
   '
 key_ideas:
-- Unexamined life not worth living
-- Theory of Forms
-- Philosopher-king
-- Reality vs. Forms
-- Education as soul-turning
+  - Unexamined life not worth living
+  - Theory of Forms
+  - Philosopher-king
+  - Reality vs. Forms
+  - Education as soul-turning
 relationships:
   influences:
-  - Western philosophy
-  - Neoplatonism
-  - Christian theology
-  - Political theory
+    - Western philosophy
+    - Neoplatonism
+    - Christian theology
+    - Political theory
   influenced_by:
-  - Socrates
-  - Pythagoreanism
-  - Heraclitus
+    - Socrates
+    - Pythagoreanism
+    - Heraclitus
   persona_influences:
-  - eur_4bc_aristotle
+    - eur_4bc_aristotle
   persona_influenced_by: []

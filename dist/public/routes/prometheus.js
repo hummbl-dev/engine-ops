@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,21 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.prometheusRouter = void 0;
-const express_1 = require("express");
-const metrics_js_1 = require("../../core/observability/metrics.js");
+const express_1 = require('express');
+const metrics_js_1 = require('../../core/observability/metrics.js');
 exports.prometheusRouter = (0, express_1.Router)();
 /**
  * GET /metrics
  * Prometheus metrics endpoint
  */
 exports.prometheusRouter.get('/', async (_req, res) => {
-    try {
-        res.set('Content-Type', metrics_js_1.register.contentType);
-        res.end(await metrics_js_1.register.metrics());
-    }
-    catch (error) {
-        res.status(500).end(error);
-    }
+  try {
+    res.set('Content-Type', metrics_js_1.register.contentType);
+    res.end(await metrics_js_1.register.metrics());
+  } catch (error) {
+    res.status(500).end(error);
+  }
 });

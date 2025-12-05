@@ -27,14 +27,14 @@ helm install engine-ops ./infra/helm/engine-ops -f custom-values.yaml
 
 ### Basic Configuration
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `replicaCount` | Number of replicas | `2` |
-| `image.repository` | Image repository | `engine-ops` |
-| `image.tag` | Image tag | `latest` |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
-| `service.type` | Service type | `LoadBalancer` |
-| `service.port` | Service port | `80` |
+| Parameter          | Description        | Default        |
+| ------------------ | ------------------ | -------------- |
+| `replicaCount`     | Number of replicas | `2`            |
+| `image.repository` | Image repository   | `engine-ops`   |
+| `image.tag`        | Image tag          | `latest`       |
+| `image.pullPolicy` | Image pull policy  | `IfNotPresent` |
+| `service.type`     | Service type       | `LoadBalancer` |
+| `service.port`     | Service port       | `80`           |
 
 ### Rolling Update Strategy
 
@@ -63,19 +63,20 @@ kubectl rollout status deployment/engine-ops
 To enable blue-green deployments, create a values file:
 
 **values-blue-green.yaml**:
+
 ```yaml
 blueGreen:
   enabled: true
-  activeVersion: "blue"
-  inactiveVersion: "green"
-  deploymentType: "blue-green"
-
+  activeVersion: 'blue'
+  inactiveVersion: 'green'
+  deploymentType: 'blue-green'
 # You'll need to manage two separate releases
 ```
 
 #### Blue-Green Workflow
 
 1. **Install Blue Environment**:
+
 ```bash
 helm install engine-ops-blue ./infra/helm/engine-ops \
   -f values-blue-green.yaml \
@@ -84,6 +85,7 @@ helm install engine-ops-blue ./infra/helm/engine-ops \
 ```
 
 2. **Install Green Environment**:
+
 ```bash
 helm install engine-ops-green ./infra/helm/engine-ops \
   -f values-blue-green.yaml \
@@ -92,6 +94,7 @@ helm install engine-ops-green ./infra/helm/engine-ops \
 ```
 
 3. **Switch Traffic** (update active service):
+
 ```bash
 # Update active service to point to green
 kubectl patch service engine-ops \
@@ -99,6 +102,7 @@ kubectl patch service engine-ops \
 ```
 
 4. **Rollback if Needed**:
+
 ```bash
 # Switch back to blue
 kubectl patch service engine-ops \
@@ -164,18 +168,18 @@ Enable ingress for external access:
 ```yaml
 ingress:
   enabled: true
-  className: "nginx"
+  className: 'nginx'
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: 'letsencrypt-prod'
   hosts:
     - host: engine-ops.example.com
       paths:
         - path: /
           pathType: Prefix
   tls:
-   - secretName: engine-ops-tls
-     hosts:
-       - engine-ops.example.com
+    - secretName: engine-ops-tls
+      hosts:
+        - engine-ops.example.com
 ```
 
 Install with ingress:
@@ -294,9 +298,9 @@ The chart includes Prometheus annotations:
 
 ```yaml
 podAnnotations:
-  prometheus.io/scrape: "true"
-  prometheus.io/port: "3000"
-  prometheus.io/path: "/metrics"
+  prometheus.io/scrape: 'true'
+  prometheus.io/port: '3000'
+  prometheus.io/path: '/metrics'
 ```
 
 Access metrics:
@@ -316,15 +320,15 @@ Distribute pods across nodes:
 affinity:
   podAntiAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
-    - weight: 100
-      podAffinityTerm:
-        labelSelector:
-          matchExpressions:
-          - key: app.kubernetes.io/name
-            operator: In
-            values:
-            - engine-ops
-        topologyKey: kubernetes.io/hostname
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - engine-ops
+          topologyKey: kubernetes.io/hostname
 ```
 
 ### Node Selector
@@ -342,10 +346,10 @@ Allow pods on tainted nodes:
 
 ```yaml
 tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "engine-ops"
-  effect: "NoSchedule"
+  - key: 'dedicated'
+    operator: 'Equal'
+    value: 'engine-ops'
+    effect: 'NoSchedule'
 ```
 
 ### Security Context
@@ -362,7 +366,7 @@ securityContext:
   allowPrivilegeEscalation: false
   capabilities:
     drop:
-    - ALL
+      - ALL
   readOnlyRootFilesystem: true
 ```
 
@@ -501,6 +505,7 @@ For changes to the chart:
 ## Support
 
 For issues and questions:
+
 - GitHub Issues: https://github.com/hummbl-dev/engine-ops/issues
 - Documentation: https://github.com/hummbl-dev/engine-ops/tree/main/docs
 

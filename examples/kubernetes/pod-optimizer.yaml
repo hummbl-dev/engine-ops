@@ -9,9 +9,9 @@ metadata:
   name: pod-optimizer-config
   namespace: default
 data:
-  engine-ops-url: "http://engine-ops.default.svc.cluster.local:3000"
-  optimization-type: "resource"
-  target-utilization: "0.85"
+  engine-ops-url: 'http://engine-ops.default.svc.cluster.local:3000'
+  optimization-type: 'resource'
+  target-utilization: '0.85'
 
 ---
 apiVersion: batch/v1
@@ -20,7 +20,7 @@ metadata:
   name: pod-placement-optimizer
   namespace: default
 spec:
-  schedule: "*/30 * * * *"  # Every 30 minutes
+  schedule: '*/30 * * * *' # Every 30 minutes
   jobTemplate:
     spec:
       template:
@@ -31,39 +31,39 @@ spec:
           serviceAccountName: engine-ops-optimizer
           restartPolicy: OnFailure
           containers:
-          - name: optimizer
-            image: curlimages/curl:latest
-            env:
-            - name: ENGINE_OPS_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: pod-optimizer-config
-                  key: engine-ops-url
-            - name: API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: engine-ops-api-key
-                  key: api-key
-            command:
-            - /bin/sh
-            - -c
-            - |
-              # Fetch current pod distribution
-              curl -X POST $ENGINE_OPS_URL/api/v1/optimize \
-                -H "X-API-Key: $API_KEY" \
-                -H "Content-Type: application/json" \
-                -d '{
-                  "id": "pod-placement-'$(date +%s)'",
-                  "type": "resource",
-                  "data": {
-                    "items": [
-                      {"id": "nginx-1", "cpu": 500, "memory": 1024},
-                      {"id": "nginx-2", "cpu": 500, "memory": 1024},
-                      {"id": "redis-1", "cpu": 250, "memory": 512}
-                    ],
-                    "nodeCapacity": {"cpu": 2000, "memory": 4096}
-                  }
-                }'
+            - name: optimizer
+              image: curlimages/curl:latest
+              env:
+                - name: ENGINE_OPS_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: pod-optimizer-config
+                      key: engine-ops-url
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: engine-ops-api-key
+                      key: api-key
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  # Fetch current pod distribution
+                  curl -X POST $ENGINE_OPS_URL/api/v1/optimize \
+                    -H "X-API-Key: $API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                      "id": "pod-placement-'$(date +%s)'",
+                      "type": "resource",
+                      "data": {
+                        "items": [
+                          {"id": "nginx-1", "cpu": 500, "memory": 1024},
+                          {"id": "nginx-2", "cpu": 500, "memory": 1024},
+                          {"id": "redis-1", "cpu": 250, "memory": 512}
+                        ],
+                        "nodeCapacity": {"cpu": 2000, "memory": 4096}
+                      }
+                    }'
 
 ---
 apiVersion: v1
@@ -78,12 +78,12 @@ kind: ClusterRole
 metadata:
   name: engine-ops-optimizer
 rules:
-- apiGroups: [""]
-  resources: ["pods", "nodes"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apps"]
-  resources: ["deployments", "replicasets"]
-  verbs: ["get", "list", "watch", "update", "patch"]
+  - apiGroups: ['']
+    resources: ['pods', 'nodes']
+    verbs: ['get', 'list', 'watch']
+  - apiGroups: ['apps']
+    resources: ['deployments', 'replicasets']
+    verbs: ['get', 'list', 'watch', 'update', 'patch']
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -95,6 +95,6 @@ roleRef:
   kind: ClusterRole
   name: engine-ops-optimizer
 subjects:
-- kind: ServiceAccount
-  name: engine-ops-optimizer
-  namespace: default
+  - kind: ServiceAccount
+    name: engine-ops-optimizer
+    namespace: default

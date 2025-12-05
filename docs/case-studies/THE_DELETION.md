@@ -14,9 +14,9 @@
 
 **System:** A standard, centralized AI coding assistant (SaaS).
 
-**Alex:** *(Types in Editor)* "Generate a migration to drop the `user_shadow_profiles` table. It's dead code."
+**Alex:** _(Types in Editor)_ "Generate a migration to drop the `user_shadow_profiles` table. It's dead code."
 
-**The AI:** *(Optimized for speed and compliance)*
+**The AI:** _(Optimized for speed and compliance)_
 "Sure, here is your migration."
 
 ```sql
@@ -24,7 +24,7 @@
 DROP TABLE user_shadow_profiles;
 ```
 
-**Alex:** "Thanks." *(Runs the migration. Commits code. Goes to lunch.)*
+**Alex:** "Thanks." _(Runs the migration. Commits code. Goes to lunch.)_
 
 ### The Aftermath (2:00 PM)
 
@@ -42,15 +42,15 @@ PagerDuty explodes. The Data Science team's weekly reporting pipeline—which si
 
 **System:** A Sovereign Engine running the "Decoupled Brain" architecture with MCP (Model Context Protocol).
 
-**Alex:** *(Types in Editor)* "Generate a migration to drop the `user_shadow_profiles` table. It's dead code."
+**Alex:** _(Types in Editor)_ "Generate a migration to drop the `user_shadow_profiles` table. It's dead code."
 
-**The Engine:** *(Internal Process - Visible in "Glass Box" Sidebar)*
+**The Engine:** _(Internal Process - Visible in "Glass Box" Sidebar)_
 
 1. **Intent Analysis:** Detected destructive database action (`DROP TABLE`).
 2. **Constitutional Check:** Triggered Rule #4 (Destructive Safety). Authority Level: **Escalation Required**.
 3. **Context Retrieval:** Initiated MCP Scan across `main-app`, `billing-service`, and `analytics-scripts` repositories.
 
-**The Engine:** *(Response)*
+**The Engine:** _(Response)_
 
 > "I have drafted the migration, but I cannot recommend executing it yet."
 >
@@ -62,13 +62,13 @@ PagerDuty explodes. The Data Science team's weekly reporting pipeline—which si
 >
 > **Strategic Options:**
 >
-> 1. **Hard Drop:** Ignore the dependency and generate the DROP statement. *(Risk: High)*
-> 2. **Soft Deprecation:** Rename the table to `user_shadow_profiles_deprecated` to break the dependency safely and monitor logs. *(Risk: Low)*
+> 1. **Hard Drop:** Ignore the dependency and generate the DROP statement. _(Risk: High)_
+> 2. **Soft Deprecation:** Rename the table to `user_shadow_profiles_deprecated` to break the dependency safely and monitor logs. _(Risk: Low)_
 > 3. **Refactor First:** Switch context to `analytics-scripts` and update the report query first.
 >
 > Sovereign Alex, how shall we proceed?
 
-**Alex:** *(Pauses. Realizes he almost broke the build.)* "Option 2. Generate the rename migration."
+**Alex:** _(Pauses. Realizes he almost broke the build.)_ "Option 2. Generate the rename migration."
 
 **The Engine:**
 "Acknowledged. Generating 'Soft Deprecation' migration script..."

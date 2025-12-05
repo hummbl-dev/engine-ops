@@ -18,12 +18,12 @@
 
 ## 2. Repository Structure
 
-| Directory | Purpose |
-|-----------|---------|
-| `engine/` | **The Brain.** Python FastAPI service. Hosts the "Council" of personas and core logic. |
-| `extension/` | **The Tool.** VS Code Extension. Acts as the MCP Client and Chat Interface (`@hummbl`). |
-| `docs/` | Documentation, Playbooks, and Manifestos. |
-| `.github/workflows/` | CI/CD pipelines for Engine deployment and Extension release. |
+| Directory            | Purpose                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| `engine/`            | **The Brain.** Python FastAPI service. Hosts the "Council" of personas and core logic.  |
+| `extension/`         | **The Tool.** VS Code Extension. Acts as the MCP Client and Chat Interface (`@hummbl`). |
+| `docs/`              | Documentation, Playbooks, and Manifestos.                                               |
+| `.github/workflows/` | CI/CD pipelines for Engine deployment and Extension release.                            |
 
 ## 3. CI/CD State
 

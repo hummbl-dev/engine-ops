@@ -17,97 +17,119 @@ import { ICloudProvider, CloudProvider, CloudNode, Workload, GeoRegion } from '.
  * GCP cloud provider adapter
  */
 export class GCPProvider implements ICloudProvider {
-    private config: Record<string, unknown> = {};
-    private nodes: Map<string, CloudNode> = new Map();
-    private regions: GeoRegion[] = [
-        { id: 'us-central1', provider: 'gcp', name: 'US Central (Iowa)', latitude: 41.2619, longitude: -95.8608 },
-        { id: 'europe-west1', provider: 'gcp', name: 'Europe West (Belgium)', latitude: 50.4501, longitude: 3.8196 },
-        { id: 'asia-east1', provider: 'gcp', name: 'Asia East (Taiwan)', latitude: 24.0517, longitude: 120.5162 },
-    ];
+  private config: Record<string, unknown> = {};
+  private nodes: Map<string, CloudNode> = new Map();
+  private regions: GeoRegion[] = [
+    {
+      id: 'us-central1',
+      provider: 'gcp',
+      name: 'US Central (Iowa)',
+      latitude: 41.2619,
+      longitude: -95.8608,
+    },
+    {
+      id: 'europe-west1',
+      provider: 'gcp',
+      name: 'Europe West (Belgium)',
+      latitude: 50.4501,
+      longitude: 3.8196,
+    },
+    {
+      id: 'asia-east1',
+      provider: 'gcp',
+      name: 'Asia East (Taiwan)',
+      latitude: 24.0517,
+      longitude: 120.5162,
+    },
+  ];
 
-    getProvider(): CloudProvider {
-        return 'gcp';
+  getProvider(): CloudProvider {
+    return 'gcp';
+  }
+
+  async initialize(config: Record<string, unknown>): Promise<void> {
+    this.config = config;
+    // In a real implementation, this would initialize GCP SDK and authenticate
+    this.initializeMockNodes();
+  }
+
+  private initializeMockNodes(): void {
+    for (const region of this.regions) {
+      for (let i = 0; i < 2; i++) {
+        const nodeId = `gcp-${region.id}-node-${i}`;
+        this.nodes.set(nodeId, {
+          id: nodeId,
+          provider: 'gcp',
+          region: region.id,
+          capacity: { cpu: 16000, memory: 32000, storage: 500 },
+          utilization: { cpu: 0, memory: 0, storage: 0 },
+          status: 'available',
+          labels: {
+            provider: 'gcp',
+            region: region.id,
+            zone: `${region.id}-${String.fromCharCode(97 + i)}`,
+          },
+        });
+      }
+    }
+  }
+
+  async listNodes(region?: string): Promise<CloudNode[]> {
+    const nodes = Array.from(this.nodes.values());
+    if (region) {
+      return nodes.filter((node) => node.region === region);
+    }
+    return nodes;
+  }
+
+  async getNode(nodeId: string): Promise<CloudNode | null> {
+    return this.nodes.get(nodeId) || null;
+  }
+
+  async deployWorkload(nodeId: string, workload: Workload): Promise<boolean> {
+    const node = this.nodes.get(nodeId);
+    if (!node) {
+      return false;
     }
 
-    async initialize(config: Record<string, unknown>): Promise<void> {
-        this.config = config;
-        // In a real implementation, this would initialize GCP SDK and authenticate
-        this.initializeMockNodes();
+    const availableCpu = node.capacity.cpu - node.utilization.cpu;
+    const availableMemory = node.capacity.memory - node.utilization.memory;
+
+    if (availableCpu < workload.resources.cpu || availableMemory < workload.resources.memory) {
+      return false;
     }
 
-    private initializeMockNodes(): void {
-        for (const region of this.regions) {
-            for (let i = 0; i < 2; i++) {
-                const nodeId = `gcp-${region.id}-node-${i}`;
-                this.nodes.set(nodeId, {
-                    id: nodeId,
-                    provider: 'gcp',
-                    region: region.id,
-                    capacity: { cpu: 16000, memory: 32000, storage: 500 },
-                    utilization: { cpu: 0, memory: 0, storage: 0 },
-                    status: 'available',
-                    labels: { provider: 'gcp', region: region.id, zone: `${region.id}-${String.fromCharCode(97 + i)}` },
-                });
-            }
-        }
+    node.utilization.cpu += workload.resources.cpu;
+    node.utilization.memory += workload.resources.memory;
+    node.utilization.storage = (node.utilization.storage || 0) + (workload.resources.storage || 0);
+
+    const utilizationPercent = Math.max(
+      node.utilization.cpu / node.capacity.cpu,
+      node.utilization.memory / node.capacity.memory,
+    );
+
+    if (utilizationPercent > 0.8) {
+      node.status = 'busy';
     }
 
-    async listNodes(region?: string): Promise<CloudNode[]> {
-        const nodes = Array.from(this.nodes.values());
-        if (region) {
-            return nodes.filter(node => node.region === region);
-        }
-        return nodes;
+    return true;
+  }
+
+  async removeWorkload(nodeId: string, _workloadId: string): Promise<boolean> {
+    const node = this.nodes.get(nodeId);
+    if (!node) {
+      return false;
     }
 
-    async getNode(nodeId: string): Promise<CloudNode | null> {
-        return this.nodes.get(nodeId) || null;
-    }
+    node.status = 'available';
+    return true;
+  }
 
-    async deployWorkload(nodeId: string, workload: Workload): Promise<boolean> {
-        const node = this.nodes.get(nodeId);
-        if (!node) {
-            return false;
-        }
+  async getRegions(): Promise<GeoRegion[]> {
+    return this.regions;
+  }
 
-        const availableCpu = node.capacity.cpu - node.utilization.cpu;
-        const availableMemory = node.capacity.memory - node.utilization.memory;
-
-        if (availableCpu < workload.resources.cpu || availableMemory < workload.resources.memory) {
-            return false;
-        }
-
-        node.utilization.cpu += workload.resources.cpu;
-        node.utilization.memory += workload.resources.memory;
-        node.utilization.storage = (node.utilization.storage || 0) + (workload.resources.storage || 0);
-
-        const utilizationPercent = Math.max(
-            node.utilization.cpu / node.capacity.cpu,
-            node.utilization.memory / node.capacity.memory
-        );
-
-        if (utilizationPercent > 0.8) {
-            node.status = 'busy';
-        }
-
-        return true;
-    }
-
-    async removeWorkload(nodeId: string, _workloadId: string): Promise<boolean> {
-        const node = this.nodes.get(nodeId);
-        if (!node) {
-            return false;
-        }
-
-        node.status = 'available';
-        return true;
-    }
-
-    async getRegions(): Promise<GeoRegion[]> {
-        return this.regions;
-    }
-
-    async healthCheck(): Promise<boolean> {
-        return true;
-    }
+  async healthCheck(): Promise<boolean> {
+    return true;
+  }
 }

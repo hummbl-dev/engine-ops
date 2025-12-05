@@ -120,6 +120,7 @@ uvicorn src.main:app --host 0.0.0.0 --port 8080 --reload
 ```
 
 You should see:
+
 ```
 INFO:     Uvicorn running on http://0.0.0.0:8080
 ```
@@ -127,11 +128,13 @@ INFO:     Uvicorn running on http://0.0.0.0:8080
 ### Step 4: Access the Matrix UI
 
 Open your browser:
+
 ```
 http://localhost:8080/docs
 ```
 
 You'll see the Matrix-themed Swagger UI with:
+
 - **THEME** button (top-right) - Toggle intensity (Subtle/Medium/Intense)
 - **SHORTCUTS** button - View keyboard shortcuts
 - **TERMINAL** button - Open terminal interface
@@ -139,6 +142,7 @@ You'll see the Matrix-themed Swagger UI with:
 ### Step 5: Test the API
 
 In the Swagger UI:
+
 1. Click **POST /consult**
 2. Click **"Try it out"**
 3. Enter:
@@ -199,11 +203,11 @@ You should receive strategic advice from Marcus Aurelius!
 
 ### Available Members
 
-| Member | Focus | Best For |
-|--------|-------|----------|
-| **sun_tzu** | Military strategy, terrain, timing, deception | Strategic planning, competitive situations |
-| **marcus_aurelius** | Stoic philosophy, internal control, resilience | Personal challenges, emotional situations |
-| **machiavelli** | Power dynamics, reputation, pragmatism | Political situations, leadership challenges |
+| Member              | Focus                                          | Best For                                    |
+| ------------------- | ---------------------------------------------- | ------------------------------------------- |
+| **sun_tzu**         | Military strategy, terrain, timing, deception  | Strategic planning, competitive situations  |
+| **marcus_aurelius** | Stoic philosophy, internal control, resilience | Personal challenges, emotional situations   |
+| **machiavelli**     | Power dynamics, reputation, pragmatism         | Political situations, leadership challenges |
 
 ### Member Selection
 
@@ -236,14 +240,14 @@ The system automatically routes based on your question:
 
 ### Keyboard Shortcuts
 
-| Key | Action |
-|-----|--------|
-| `~` | Toggle Terminal |
-| `?` | Show Shortcuts |
-| `T` | Toggle Theme |
-| `ESC` | Close Modals |
+| Key          | Action          |
+| ------------ | --------------- |
+| `~`          | Toggle Terminal |
+| `?`          | Show Shortcuts  |
+| `T`          | Toggle Theme    |
+| `ESC`        | Close Modals    |
 | `CTRL+ENTER` | Execute Request |
-| `/` | Focus Search |
+| `/`          | Focus Search    |
 
 ### Terminal Commands
 
@@ -275,6 +279,7 @@ http://localhost:8080
 Root endpoint - Returns API information.
 
 **Response:**
+
 ```json
 {
   "message": "HUMMBL Sovereign Engine",
@@ -291,6 +296,7 @@ Root endpoint - Returns API information.
 Consult a council member for advice.
 
 **Request:**
+
 ```json
 {
   "topic": "How should I handle team burnout?",
@@ -299,11 +305,13 @@ Consult a council member for advice.
 ```
 
 **Valid members:**
+
 - `sun_tzu`
 - `marcus_aurelius`
 - `machiavelli`
 
 **Response:**
+
 ```json
 {
   "member": "marcus_aurelius",
@@ -316,6 +324,7 @@ Consult a council member for advice.
 Run a constitutional audit on draft text.
 
 **Request:**
+
 ```json
 {
   "draft_text": "You must implement this solution immediately."
@@ -323,6 +332,7 @@ Run a constitutional audit on draft text.
 ```
 
 **Response:**
+
 ```json
 {
   "passed": false,
@@ -413,6 +423,7 @@ print(response.json()["advice"])
 **Problem:** `Address already in use`
 
 **Solution:**
+
 ```bash
 # Find process using port 8080
 lsof -ti :8080 | xargs kill -9
@@ -426,6 +437,7 @@ uvicorn src.main:app --port 8081
 **Problem:** Getting fallback responses instead of real advice
 
 **Solution:**
+
 1. Check `engine/.env` has `GOOGLE_API_KEY` (not `GOOGLE_AI_API_KEY`)
 2. Verify API key is valid
 3. Check engine logs for errors
@@ -435,6 +447,7 @@ uvicorn src.main:app --port 8081
 **Problem:** `@hummbl` doesn't work in VS Code
 
 **Solution:**
+
 1. Ensure engine is running (`http://localhost:8080`)
 2. Check extension logs in VS Code Developer Tools
 3. Verify MCP connection in extension settings
@@ -444,6 +457,7 @@ uvicorn src.main:app --port 8081
 **Problem:** Default Swagger UI instead of Matrix theme
 
 **Solution:**
+
 1. Hard refresh browser (`CMD+SHIFT+R` or `CTRL+SHIFT+R`)
 2. Check browser console for errors
 3. Verify server is using custom `/docs` route
@@ -455,6 +469,7 @@ uvicorn src.main:app --port 8081
 ### Adding New Council Members
 
 1. Edit `engine/src/main.py`:
+
    ```python
    class CouncilMember(str, Enum):
        sun_tzu = "sun_tzu"
@@ -464,6 +479,7 @@ uvicorn src.main:app --port 8081
    ```
 
 2. Edit `engine/src/adapter.py`:
+
    ```python
    PERSONA_INSTRUCTIONS = {
        # ... existing members
@@ -479,9 +495,9 @@ Edit `engine/src/main.py` - the `matrix_css_injection` variable contains all sty
 
 ```css
 :root {
-    --matrix-green: #00ff41;      /* Change green color */
-    --matrix-bg: #000000;         /* Change background */
-    --glow-intensity: 1;          /* Adjust glow */
+  --matrix-green: #00ff41; /* Change green color */
+  --matrix-bg: #000000; /* Change background */
+  --glow-intensity: 1; /* Adjust glow */
 }
 ```
 
@@ -513,6 +529,7 @@ Edit `engine/src/main.py` - the `matrix_css_injection` variable contains all sty
 ## [LOG] License & Credits
 
 Built with:
+
 - FastAPI (Python web framework)
 - Google Gemini (LLM provider)
 - VS Code Extension API
@@ -531,4 +548,3 @@ Built with:
 5. [OK] Add your own council members
 
 **Welcome to Sovereign Intelligence. Own your AI.**
-

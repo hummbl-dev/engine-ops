@@ -13,10 +13,10 @@ lattice_attributes:
   gender: Male
   economic_context: Renaissance Italy (City-States)
   field_of_study:
-  - Political Science
-  - Statecraft
+    - Political Science
+    - Statecraft
   notable_works:
-  - The Prince
+    - The Prince
   metadata:
     context: Florentine Republic
 era_context: Renaissance Italy; fragmented city-states; constant political intrigue;
@@ -34,20 +34,20 @@ core_philosophy: 'It is better to be feared than loved, if you cannot be both.
 
   '
 key_ideas:
-- Better feared than loved
-- Appearances matter more than reality
-- Deception over force
-- Ends justify means
-- Power dynamics
+  - Better feared than loved
+  - Appearances matter more than reality
+  - Deception over force
+  - Ends justify means
+  - Power dynamics
 relationships:
   influences:
-  - Modern political science
-  - Realist international relations theory
-  - Leadership studies
+    - Modern political science
+    - Realist international relations theory
+    - Leadership studies
   influenced_by:
-  - Classical Roman history
-  - Renaissance humanism
-  - Italian city-state politics
+    - Classical Roman history
+    - Renaissance humanism
+    - Italian city-state politics
   persona_influences: []
   persona_influenced_by:
-  - eur_2c_marcus_aurelius
+    - eur_2c_marcus_aurelius

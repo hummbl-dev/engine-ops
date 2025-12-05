@@ -38,7 +38,7 @@ jobs:
       packages: write
     outputs:
       image_tag: ${{ steps.meta.outputs.tags }}
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -80,7 +80,7 @@ jobs:
     environment: ${{ inputs.environment }}
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -136,7 +136,7 @@ jobs:
     environment: ${{ inputs.environment }}
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -166,7 +166,7 @@ jobs:
             -n ${{ steps.env.outputs.namespace }} &
           PF_PID=$!
           sleep 5
-          
+
           # Health checks
           for i in {1..10}; do
             if curl -sf http://localhost:8080/api/v1/health/ready > /dev/null; then
@@ -177,7 +177,7 @@ jobs:
             echo "Health check attempt $i failed, retrying..."
             sleep 5
           done
-          
+
           kill $PF_PID
           echo "✗ Health checks failed"
           exit 1
@@ -188,11 +188,11 @@ jobs:
             -n ${{ steps.env.outputs.namespace }} &
           PF_PID=$!
           sleep 3
-          
+
           # Test critical endpoints
           curl -sf http://localhost:8080/api/v1/health || exit 1
           curl -sf http://localhost:8080/metrics || exit 1
-          
+
           kill $PF_PID
           echo "✓ Smoke tests passed"
 
@@ -202,21 +202,21 @@ jobs:
             -n ${{ steps.env.outputs.namespace }} &
           PF_PID=$!
           sleep 3
-          
+
           # Set API endpoint
           export API_URL=http://localhost:8080
-          
+
           # Run tests
           npm ci
           npm run test:integration || TEST_RESULT=$?
-          
+
           kill $PF_PID
-          
+
           if [ "${TEST_RESULT:-0}" -ne 0 ]; then
             echo "✗ Integration tests failed"
             exit 1
           fi
-          
+
           echo "✓ Integration tests passed"
 
   switch-traffic:
@@ -228,7 +228,7 @@ jobs:
       contents: read
       issues: write
     if: ${{ inputs.auto_switch || github.event_name == 'workflow_dispatch' }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -259,25 +259,25 @@ jobs:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: ${{ github.repository_owner }}
           minimum-approvals: 1
-          issue-title: "Approve traffic switch to ${{ steps.env.outputs.inactive }}"
+          issue-title: 'Approve traffic switch to ${{ steps.env.outputs.inactive }}'
           issue-body: |
             Deployment to **${{ inputs.environment }}** is ready.
-            
+
             **Version**: ${{ inputs.version }}
             **Current Active**: ${{ steps.env.outputs.active }}
             **New Version**: ${{ steps.env.outputs.inactive }}
-            
+
             All tests have passed. Please approve to switch traffic.
 
       - name: Switch traffic
         run: |
           echo "Switching traffic from ${{ steps.env.outputs.active }} to ${{ steps.env.outputs.inactive }}"
-          
+
           # Update active service
           kubectl patch service engine-ops-active \
             -n ${{ steps.env.outputs.namespace }} \
             -p "{\"spec\":{\"selector\":{\"version\":\"${{ steps.env.outputs.inactive }}\"}}}"
-          
+
           # Update preview service
           kubectl patch service engine-ops-preview \
             -n ${{ steps.env.outputs.namespace }} \
@@ -307,7 +307,7 @@ jobs:
     permissions:
       contents: read
     if: always()
-    
+
     steps:
       - name: Deployment notification
         run: |

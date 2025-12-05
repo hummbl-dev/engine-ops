@@ -117,6 +117,7 @@ A prominent, red, tactile button available at all times.
 3. **Agency Governor:** Automatically snaps from **AUTOPILOT** back to **COPILOT**.
 
 4. **Center Pane:** Pauses.
+
    > "Sovereign, I am about to delete the legacy password hashing functions. This is irreversible. Proceed?"  
    > **[YES]** **[NO]**
 

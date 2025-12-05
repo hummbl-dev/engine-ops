@@ -11,40 +11,40 @@ import { WorkloadCollector } from '../core/plugins/workload-collector.js';
  * and resource management.
  */
 export declare class EngineOps {
-    private engine;
-    constructor(config?: EngineConfig);
-    /**
-     * Initialize the engine.
-     * Must be called before submitting any requests.
-     */
-    init(): Promise<void>;
-    /**
-     * Submit an optimization request.
-     *
-     * @param request The optimization request containing type and data.
-     * @returns The optimization result.
-     */
-    optimize(request: OptimizationRequest): Promise<OptimizationResult>;
-    /**
-     * Shutdown the engine and release resources.
-     */
-    shutdown(): Promise<void>;
-    /**
-     * Get cache statistics
-     */
-    getCacheStats(): CacheStats;
-    /**
-     * Get anomaly detector for monitoring
-     */
-    getAnomalyDetector(): AnomalyDetector;
-    /**
-     * Get plugin registry
-     */
-    getPluginRegistry(): PluginRegistry;
-    /**
-     * Get workload collector
-     */
-    getWorkloadCollector(): WorkloadCollector;
+  private engine;
+  constructor(config?: EngineConfig);
+  /**
+   * Initialize the engine.
+   * Must be called before submitting any requests.
+   */
+  init(): Promise<void>;
+  /**
+   * Submit an optimization request.
+   *
+   * @param request The optimization request containing type and data.
+   * @returns The optimization result.
+   */
+  optimize(request: OptimizationRequest): Promise<OptimizationResult>;
+  /**
+   * Shutdown the engine and release resources.
+   */
+  shutdown(): Promise<void>;
+  /**
+   * Get cache statistics
+   */
+  getCacheStats(): CacheStats;
+  /**
+   * Get anomaly detector for monitoring
+   */
+  getAnomalyDetector(): AnomalyDetector;
+  /**
+   * Get plugin registry
+   */
+  getPluginRegistry(): PluginRegistry;
+  /**
+   * Get workload collector
+   */
+  getWorkloadCollector(): WorkloadCollector;
 }
 export type { EngineConfig, OptimizationRequest, OptimizationResult };
 //# sourceMappingURL=api.d.ts.map

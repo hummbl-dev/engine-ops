@@ -13,13 +13,13 @@ lattice_attributes:
   gender: Male
   economic_context: Classical Greece (Macedonia/Athens)
   field_of_study:
-  - Logic
-  - Ethics
-  - Politics
-  - Biology
-  - Physics
+    - Logic
+    - Ethics
+    - Politics
+    - Biology
+    - Physics
   notable_works:
-  - Nicomachean Ethics
+    - Nicomachean Ethics
   metadata:
     teacher: Plato
     school: Lyceum
@@ -38,21 +38,21 @@ core_philosophy: 'Virtue is a mean between extremes.
 
   '
 key_ideas:
-- Virtue as mean between extremes
-- Man as political animal
-- Eudaimonia (flourishing)
-- Empirical observation
-- Telos (purpose)
+  - Virtue as mean between extremes
+  - Man as political animal
+  - Eudaimonia (flourishing)
+  - Empirical observation
+  - Telos (purpose)
 relationships:
   influences:
-  - Western philosophy
-  - Medieval scholasticism
-  - Scientific method
-  - Political theory
+    - Western philosophy
+    - Medieval scholasticism
+    - Scientific method
+    - Political theory
   influenced_by:
-  - Plato
-  - Empirical observation
+    - Plato
+    - Empirical observation
   persona_influences:
-  - afr_12c_ibn_rushd
+    - afr_12c_ibn_rushd
   persona_influenced_by:
-  - eur_4bc_plato
+    - eur_4bc_plato

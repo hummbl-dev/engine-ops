@@ -21,14 +21,14 @@ import { SecretsManagerFactory } from './infra/secrets/secrets-factory.js';
 
 // HashiCorp Vault
 const vaultManager = SecretsManagerFactory.create({
-    provider: 'vault',
-    vault: {
-        endpoint: 'https://vault.example.com',
-        token: 'your-token',
-        // or use AppRole authentication
-        roleId: 'role-id',
-        secretId: 'secret-id'
-    }
+  provider: 'vault',
+  vault: {
+    endpoint: 'https://vault.example.com',
+    token: 'your-token',
+    // or use AppRole authentication
+    roleId: 'role-id',
+    secretId: 'secret-id',
+  },
 });
 
 await vaultManager.init();
@@ -36,12 +36,12 @@ const secret = await vaultManager.getSecret('api-key');
 
 // AWS Secrets Manager
 const awsManager = SecretsManagerFactory.create({
-    provider: 'aws',
-    aws: {
-        region: 'us-east-1',
-        accessKeyId: 'your-access-key',
-        secretAccessKey: 'your-secret-key'
-    }
+  provider: 'aws',
+  aws: {
+    region: 'us-east-1',
+    accessKeyId: 'your-access-key',
+    secretAccessKey: 'your-secret-key',
+  },
 });
 
 await awsManager.init();
@@ -65,21 +65,25 @@ Automatic security policy enforcement for Kubernetes resources through mutating 
 #### Security Policies
 
 **Non-Root Containers Policy**
+
 - Enforces `runAsNonRoot: true` for all containers
 - Adds security context automatically if missing
 - Prevents privilege escalation
 
 **Resource Limits Policy**
+
 - Ensures all containers have resource limits
 - Sets default limits if not specified
 - Prevents resource exhaustion
 
 **No Privileged Containers Policy**
+
 - Denies creation of privileged containers
 - Enforces security best practices
 - Protects cluster security
 
 **Security Labels Policy**
+
 - Validates required labels (app, version, environment)
 - Warns about missing labels
 - Improves resource tracking
@@ -142,10 +146,10 @@ Statistical anomaly detection for engine operations with configurable thresholds
 import { AnomalyDetector } from './core/anomaly/detector.js';
 
 const detector = new AnomalyDetector({
-    windowSize: 100,      // Number of data points to analyze
-    threshold: 3,         // Standard deviations for anomaly
-    minSamples: 10,       // Minimum samples before detection
-    verbose: true         // Enable logging
+  windowSize: 100, // Number of data points to analyze
+  threshold: 3, // Standard deviations for anomaly
+  minSamples: 10, // Minimum samples before detection
+  verbose: true, // Enable logging
 });
 
 // Record metrics
@@ -164,26 +168,31 @@ console.log(`Mean: ${stats.mean}, StdDev: ${stats.stddev}`);
 #### API Endpoints
 
 **Get All Alerts**
+
 ```bash
 GET /api/v1/anomaly/alerts
 ```
 
 **Get Recent Alerts**
+
 ```bash
 GET /api/v1/anomaly/alerts/recent?hours=1
 ```
 
 **Get Monitored Metrics**
+
 ```bash
 GET /api/v1/anomaly/metrics
 ```
 
 **Get Metric Details**
+
 ```bash
 GET /api/v1/anomaly/metrics/request_duration_ms
 ```
 
 **Clear Alerts**
+
 ```bash
 DELETE /api/v1/anomaly/alerts
 ```
@@ -207,7 +216,7 @@ Configure anomaly detection thresholds:
 
 ```typescript
 const engine = new OptimizationEngine({
-    verbose: true
+  verbose: true,
 });
 
 // Anomaly detector is initialized with:

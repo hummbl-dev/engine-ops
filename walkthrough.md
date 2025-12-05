@@ -352,7 +352,6 @@ We implemented safe self-modification capability through sandboxed file I/O and 
   - Restricts writes to `sandbox/` directory only
   - Prevents path traversal attacks (`../`, absolute paths)
   - Protects critical files (sovereign.py, constitution.yaml)
-  
 - **ArchitectAgent** (`agentic_workflow/agents/architect_agent.py`): Code generation agent with 4 tools:
   - `read_code()` - Read existing code (anywhere)
   - `write_code()` - Write to sandbox with policy verification

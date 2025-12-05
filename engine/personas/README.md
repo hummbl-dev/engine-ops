@@ -25,42 +25,42 @@ All 13 council members have been migrated to the new schema:
 Each persona file follows this structure:
 
 ```yaml
-persona_id: "continent_century_name"  # Unique identifier
-persona_type: "Historical"
-name: "Display Name"
+persona_id: 'continent_century_name' # Unique identifier
+persona_type: 'Historical'
+name: 'Display Name'
 version: 1.0
 
 # Primary Matrix
-continent: "Continent"
-region: "Sub-region"
-century: -5  # Negative for BCE, positive for CE
+continent: 'Continent'
+region: 'Sub-region'
+century: -5 # Negative for BCE, positive for CE
 
 # Nested Lattice (Scalable)
 lattice_attributes:
-  role: "Primary role"
-  school_of_thought: "Philosophical school"
-  language_group: "Language family"
-  religion_of_origin: "Religious background"
-  gender: "Gender"
-  economic_context: "Economic system"
-  field_of_study: "Areas of expertise"
-  extra: {}  # Additional custom attributes
+  role: 'Primary role'
+  school_of_thought: 'Philosophical school'
+  language_group: 'Language family'
+  religion_of_origin: 'Religious background'
+  gender: 'Gender'
+  economic_context: 'Economic system'
+  field_of_study: 'Areas of expertise'
+  extra: {} # Additional custom attributes
 
 # Persona Engine (LLM Data)
-era_context: "Historical context"
-tone_voice: "Voice/style description"
+era_context: 'Historical context'
+tone_voice: 'Voice/style description'
 core_philosophy: |
   Core principles...
 key_ideas:
-  - "Key idea 1"
-  - "Key idea 2"
+  - 'Key idea 1'
+  - 'Key idea 2'
 
 # System Dynamics (Relationships)
 relationships:
   influences: []
   influenced_by: []
-  persona_influences: []  # Other persona_ids
-  persona_influenced_by: []  # Other persona_ids
+  persona_influences: [] # Other persona_ids
+  persona_influenced_by: [] # Other persona_ids
 ```
 
 ## Usage
@@ -91,4 +91,3 @@ with open('personas/sun_tzu.yaml') as f:
 - ✅ **Queryable:** Filter by continent, century, role, etc.
 - ✅ **Relationships:** Track intellectual lineages
 - ✅ **Better Prompts:** `tone_voice` + `era_context` improve LLM responses
-

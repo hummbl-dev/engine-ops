@@ -8,8 +8,8 @@ Follow these steps to set up and run the Flask Todo API locally.
 
 ### Prerequisites
 
-*   Python 3.7+
-*   pip (Python package installer)
+- Python 3.7+
+- pip (Python package installer)
 
 ### Steps
 
@@ -27,31 +27,34 @@ Follow these steps to set up and run the Flask Todo API locally.
     ```
 
 3.  **Activate the virtual environment:**
+    - **On macOS/Linux:**
 
-    *   **On macOS/Linux:**
+      ```bash
+      source venv/bin/activate
+      ```
 
-        ```bash
-        source venv/bin/activate
-        ```
+    - **On Windows:**
 
-    *   **On Windows:**
-
-        ```bash
-        venv\Scripts\activate
-        ```
+      ```bash
+      venv\Scripts\activate
+      ```
 
 4.  **Install dependencies:**
 
     Create a `requirements.txt` file in your project root with the following content:
+
     ```
     Flask
     ```
+
     Then, install them:
 
     ```bash
     pip install -r requirements.txt
     ```
+
     Alternatively, if you prefer not to use `requirements.txt`:
+
     ```bash
     pip install Flask
     ```
@@ -66,6 +69,7 @@ Follow these steps to set up and run the Flask Todo API locally.
     export FLASK_APP=app.py  # On Windows, use `set FLASK_APP=app.py`
     flask run
     ```
+
     The API will typically run on `http://127.0.0.1:5000/`.
 
 ## API Endpoint Documentation
@@ -80,197 +84,210 @@ All endpoints return JSON responses. Errors are indicated by appropriate HTTP st
 
 ### 1. Welcome Message
 
-*   **Method:** `GET`
-*   **Path:** `/`
-*   **Description:** Returns a welcome message for the API.
+- **Method:** `GET`
+- **Path:** `/`
+- **Description:** Returns a welcome message for the API.
 
-*   **Request:**
-    *   No parameters.
+- **Request:**
+  - No parameters.
 
-*   **Response (Success - 200 OK):**
-    ```json
-    {
-        "message": "Welcome to the Todo API!"
-    }
-    ```
+- **Response (Success - 200 OK):**
+  ```json
+  {
+    "message": "Welcome to the Todo API!"
+  }
+  ```
 
 ---
 
 ### 2. Get All Todos
 
-*   **Method:** `GET`
-*   **Path:** `/todos`
-*   **Description:** Retrieves a list of all todo items.
+- **Method:** `GET`
+- **Path:** `/todos`
+- **Description:** Retrieves a list of all todo items.
 
-*   **Request:**
-    *   No parameters.
+- **Request:**
+  - No parameters.
 
-*   **Response (Success - 200 OK):**
-    ```json
-    [
-        {
-            "id": 1,
-            "task": "Learn Flask"
-        },
-        {
-            "id": 2,
-            "task": "Build API"
-        }
-    ]
-    ```
-    (Returns an empty array `[]` if no todos exist)
+- **Response (Success - 200 OK):**
+  ```json
+  [
+    {
+      "id": 1,
+      "task": "Learn Flask"
+    },
+    {
+      "id": 2,
+      "task": "Build API"
+    }
+  ]
+  ```
+  (Returns an empty array `[]` if no todos exist)
 
 ---
 
 ### 3. Add a New Todo
 
-*   **Method:** `POST`
-*   **Path:** `/todos`
-*   **Description:** Creates a new todo item.
+- **Method:** `POST`
+- **Path:** `/todos`
+- **Description:** Creates a new todo item.
 
-*   **Request Body (JSON):**
-    ```json
-    {
-        "task": "Buy groceries"
-    }
-    ```
+- **Request Body (JSON):**
 
-*   **Response (Success - 201 Created):**
-    ```json
-    {
-        "id": 3,
-        "task": "Buy groceries"
-    }
-    ```
+  ```json
+  {
+    "task": "Buy groceries"
+  }
+  ```
 
-*   **Response (Error - 400 Bad Request):**
-    ```json
-    {
-        "error": "Task is required"
-    }
-    ```
+- **Response (Success - 201 Created):**
+
+  ```json
+  {
+    "id": 3,
+    "task": "Buy groceries"
+  }
+  ```
+
+- **Response (Error - 400 Bad Request):**
+  ```json
+  {
+    "error": "Task is required"
+  }
+  ```
 
 ---
 
 ### 4. Get a Specific Todo
 
-*   **Method:** `GET`
-*   **Path:** `/todos/<int:todo_id>`
-*   **Description:** Retrieves a single todo item by its ID.
+- **Method:** `GET`
+- **Path:** `/todos/<int:todo_id>`
+- **Description:** Retrieves a single todo item by its ID.
 
-*   **Request:**
-    *   **Path Parameter:** `todo_id` (integer) - The ID of the todo item.
+- **Request:**
+  - **Path Parameter:** `todo_id` (integer) - The ID of the todo item.
 
-*   **Response (Success - 200 OK):**
-    ```json
-    {
-        "id": 1,
-        "task": "Learn Flask"
-    }
-    ```
+- **Response (Success - 200 OK):**
 
-*   **Response (Error - 404 Not Found):**
-    ```json
-    {
-        "error": "Todo not found"
-    }
-    ```
+  ```json
+  {
+    "id": 1,
+    "task": "Learn Flask"
+  }
+  ```
+
+- **Response (Error - 404 Not Found):**
+  ```json
+  {
+    "error": "Todo not found"
+  }
+  ```
 
 ---
 
 ### 5. Update a Todo
 
-*   **Method:** `PUT`
-*   **Path:** `/todos/<int:todo_id>`
-*   **Description:** Updates an existing todo item by its ID.
+- **Method:** `PUT`
+- **Path:** `/todos/<int:todo_id>`
+- **Description:** Updates an existing todo item by its ID.
 
-*   **Request:**
-    *   **Path Parameter:** `todo_id` (integer) - The ID of the todo item to update.
-    *   **Request Body (JSON):**
-        ```json
-        {
-            "task": "Finish Flask tutorial"
-        }
-        ```
-
-*   **Response (Success - 200 OK):**
+- **Request:**
+  - **Path Parameter:** `todo_id` (integer) - The ID of the todo item to update.
+  - **Request Body (JSON):**
     ```json
     {
-        "id": 1,
-        "task": "Finish Flask tutorial"
+      "task": "Finish Flask tutorial"
     }
     ```
 
-*   **Response (Error - 400 Bad Request):**
-    ```json
-    {
-        "error": "Task is required"
-    }
-    ```
+- **Response (Success - 200 OK):**
 
-*   **Response (Error - 404 Not Found):**
-    ```json
-    {
-        "error": "Todo not found"
-    }
-    ```
+  ```json
+  {
+    "id": 1,
+    "task": "Finish Flask tutorial"
+  }
+  ```
+
+- **Response (Error - 400 Bad Request):**
+
+  ```json
+  {
+    "error": "Task is required"
+  }
+  ```
+
+- **Response (Error - 404 Not Found):**
+  ```json
+  {
+    "error": "Todo not found"
+  }
+  ```
 
 ---
 
 ### 6. Delete a Todo
 
-*   **Method:** `DELETE`
-*   **Path:** `/todos/<int:todo_id>`
-*   **Description:** Deletes a specific todo item by its ID.
+- **Method:** `DELETE`
+- **Path:** `/todos/<int:todo_id>`
+- **Description:** Deletes a specific todo item by its ID.
 
-*   **Request:**
-    *   **Path Parameter:** `todo_id` (integer) - The ID of the todo item to delete.
+- **Request:**
+  - **Path Parameter:** `todo_id` (integer) - The ID of the todo item to delete.
 
-*   **Response (Success - 200 OK):**
-    ```json
-    {
-        "message": "Todo deleted successfully"
-    }
-    ```
+- **Response (Success - 200 OK):**
 
-*   **Response (Error - 404 Not Found):**
-    ```json
-    {
-        "error": "Todo not found"
-    }
-    ```
+  ```json
+  {
+    "message": "Todo deleted successfully"
+  }
+  ```
+
+- **Response (Error - 404 Not Found):**
+  ```json
+  {
+    "error": "Todo not found"
+  }
+  ```
 
 ## Example `curl` Commands
 
 Ensure the server is running on `http://127.0.0.1:5000` before trying these commands.
 
 ### Get Welcome Message
+
 ```bash
 curl -X GET http://127.0.0.1:5000/
 ```
 
 ### Get All Todos
+
 ```bash
 curl -X GET http://127.0.0.1:5000/todos
 ```
 
 ### Add a New Todo
+
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{"task": "Learn Docker"}' http://127.0.0.1:5000/todos
 ```
-*(Repeat this command with different tasks to add more todos)*
+
+_(Repeat this command with different tasks to add more todos)_
 
 ### Get a Specific Todo (e.g., ID 1)
+
 ```bash
 curl -X GET http://127.0.0.1:5000/todos/1
 ```
 
 ### Update a Todo (e.g., ID 1)
+
 ```bash
 curl -X PUT -H "Content-Type: application/json" -d '{"task": "Master Docker for deployment"}' http://127.0.0.1:5000/todos/1
 ```
 
 ### Delete a Todo (e.g., ID 1)
+
 ```bash
 curl -X DELETE http://127.0.0.1:5000/todos/1
 ```
@@ -283,4 +300,4 @@ No dedicated test suite is currently included with this API. For a production-re
 
 The primary dependency for this project is:
 
-*   **Flask**: A micro web framework for Python.
+- **Flask**: A micro web framework for Python.

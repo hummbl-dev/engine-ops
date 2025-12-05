@@ -31,13 +31,13 @@ const recommendationEngine = new RecommendationEngine(calculator);
  *         description: Cost estimate
  */
 costRouter.post('/estimate', (req, res) => {
-    try {
-        const usage = req.body;
-        const estimate = calculator.calculateCost(usage);
-        res.json(estimate);
-    } catch {
-        res.status(400).json({ error: 'Invalid request' });
-    }
+  try {
+    const usage = req.body;
+    const estimate = calculator.calculateCost(usage);
+    res.json(estimate);
+  } catch {
+    res.status(400).json({ error: 'Invalid request' });
+  }
 });
 
 /**
@@ -64,11 +64,11 @@ costRouter.post('/estimate', (req, res) => {
  *         description: List of recommendations
  */
 costRouter.post('/recommendations', (req, res) => {
-    try {
-        const { resourceId, usage, utilization } = req.body;
-        const recommendations = recommendationEngine.analyze(resourceId, usage, utilization);
-        res.json(recommendations);
-    } catch {
-        res.status(400).json({ error: 'Invalid request' });
-    }
+  try {
+    const { resourceId, usage, utilization } = req.body;
+    const recommendations = recommendationEngine.analyze(resourceId, usage, utilization);
+    res.json(recommendations);
+  } catch {
+    res.status(400).json({ error: 'Invalid request' });
+  }
 });

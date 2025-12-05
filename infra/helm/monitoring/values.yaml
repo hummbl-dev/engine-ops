@@ -4,7 +4,7 @@ prometheus:
     global:
       scrape_interval: 15s
       evaluation_interval: 15s
-    
+
   serverFiles:
     prometheus.yml:
       scrape_configs:
@@ -20,7 +20,7 @@ prometheus:
 # Grafana Configuration
 grafana:
   adminPassword: admin
-  
+
   datasources:
     datasources.yaml:
       apiVersion: 1

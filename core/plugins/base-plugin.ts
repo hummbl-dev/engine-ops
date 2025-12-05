@@ -12,35 +12,40 @@
  */
 
 import { OptimizationRequest, OptimizationResult } from '../interfaces.js';
-import { IOptimizationPlugin, PluginMetadata, PluginConfig, WorkloadDataPoint } from './interfaces.js';
+import {
+  IOptimizationPlugin,
+  PluginMetadata,
+  PluginConfig,
+  WorkloadDataPoint,
+} from './interfaces.js';
 
 /**
  * Base abstract class for optimization plugins
  */
 export abstract class BaseOptimizationPlugin implements IOptimizationPlugin {
-    public abstract readonly metadata: PluginMetadata;
-    protected config?: PluginConfig;
-    protected isInitialized: boolean = false;
+  public abstract readonly metadata: PluginMetadata;
+  protected config?: PluginConfig;
+  protected isInitialized: boolean = false;
 
-    public async init(config?: PluginConfig): Promise<void> {
-        this.config = config;
-        this.isInitialized = true;
+  public async init(config?: PluginConfig): Promise<void> {
+    this.config = config;
+    this.isInitialized = true;
+  }
+
+  public abstract canHandle(request: OptimizationRequest): boolean;
+
+  public abstract optimize(
+    request: OptimizationRequest,
+    historicalData?: WorkloadDataPoint[],
+  ): Promise<OptimizationResult>;
+
+  public async shutdown(): Promise<void> {
+    this.isInitialized = false;
+  }
+
+  protected checkInitialized(): void {
+    if (!this.isInitialized) {
+      throw new Error(`Plugin ${this.metadata.name} not initialized`);
     }
-
-    public abstract canHandle(request: OptimizationRequest): boolean;
-
-    public abstract optimize(
-        request: OptimizationRequest,
-        historicalData?: WorkloadDataPoint[]
-    ): Promise<OptimizationResult>;
-
-    public async shutdown(): Promise<void> {
-        this.isInitialized = false;
-    }
-
-    protected checkInitialized(): void {
-        if (!this.isInitialized) {
-            throw new Error(`Plugin ${this.metadata.name} not initialized`);
-        }
-    }
+  }
 }

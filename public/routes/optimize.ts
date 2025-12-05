@@ -26,10 +26,10 @@ let engineInitialized = false;
 
 // Ensure engine is initialized
 async function ensureEngineInitialized(): Promise<void> {
-    if (!engineInitialized) {
-        await engine.init();
-        engineInitialized = true;
-    }
+  if (!engineInitialized) {
+    await engine.init();
+    engineInitialized = true;
+  }
 }
 
 /**
@@ -37,29 +37,29 @@ async function ensureEngineInitialized(): Promise<void> {
  * Submit an optimization request
  */
 optimizeRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        await ensureEngineInitialized();
+  try {
+    await ensureEngineInitialized();
 
-        // Validate request body
-        const validation = OptimizationRequestSchema.safeParse(req.body);
-        if (!validation.success) {
-            res.status(400).json({
-                error: 'Invalid request',
-                details: validation.error.issues
-            });
-            return;
-        }
-
-        // Process optimization
-        const result = await engine.optimize(validation.data);
-
-        // Return result
-        if (result.success) {
-            res.status(200).json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error) {
-        next(error);
+    // Validate request body
+    const validation = OptimizationRequestSchema.safeParse(req.body);
+    if (!validation.success) {
+      res.status(400).json({
+        error: 'Invalid request',
+        details: validation.error.issues,
+      });
+      return;
     }
+
+    // Process optimization
+    const result = await engine.optimize(validation.data);
+
+    // Return result
+    if (result.success) {
+      res.status(200).json(result);
+    } else {
+      res.status(400).json(result);
+    }
+  } catch (error) {
+    next(error);
+  }
 });

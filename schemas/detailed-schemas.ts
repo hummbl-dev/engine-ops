@@ -17,49 +17,49 @@ import { z } from 'zod';
  * Resource optimization schemas
  */
 export const ResourceItemSchema = z.object({
-    id: z.string(),
-    cpu: z.number().min(0).max(100),
-    memory: z.number().min(0)
+  id: z.string(),
+  cpu: z.number().min(0).max(100),
+  memory: z.number().min(0),
 });
 
 export const NodeCapacitySchema = z.object({
-    cpu: z.number().min(0).max(100),
-    memory: z.number().min(0)
+  cpu: z.number().min(0).max(100),
+  memory: z.number().min(0),
 });
 
 export const ResourceOptimizationDataSchema = z.object({
-    items: z.array(ResourceItemSchema),
-    nodeCapacity: NodeCapacitySchema
+  items: z.array(ResourceItemSchema),
+  nodeCapacity: NodeCapacitySchema,
 });
 
 /**
  * Scheduling optimization schemas
  */
 export const TaskSchema = z.object({
-    id: z.string(),
-    cpuRequired: z.number().min(0).max(100),
-    memoryRequired: z.number().min(0).max(100)
+  id: z.string(),
+  cpuRequired: z.number().min(0).max(100),
+  memoryRequired: z.number().min(0).max(100),
 });
 
 export const NodeSchema = z.object({
-    id: z.string(),
-    cpuLoad: z.number().min(0).max(100),
-    memoryLoad: z.number().min(0).max(100)
+  id: z.string(),
+  cpuLoad: z.number().min(0).max(100),
+  memoryLoad: z.number().min(0).max(100),
 });
 
 export const SchedulingOptimizationDataSchema = z.object({
-    task: TaskSchema,
-    nodes: z.array(NodeSchema).min(1)
+  task: TaskSchema,
+  nodes: z.array(NodeSchema).min(1),
 });
 
 /**
  * Performance optimization schemas
  */
 export const PerformanceOptimizationDataSchema = z.object({
-    targetMetric: z.enum(['latency', 'throughput', 'cost']),
-    currentValue: z.number(),
-    targetValue: z.number(),
-    constraints: z.record(z.string(), z.unknown()).optional()
+  targetMetric: z.enum(['latency', 'throughput', 'cost']),
+  currentValue: z.number(),
+  targetValue: z.number(),
+  constraints: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**

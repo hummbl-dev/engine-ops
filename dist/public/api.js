@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.EngineOps = void 0;
-const index_js_1 = require("../core/index.js");
+const index_js_1 = require('../core/index.js');
 /**
  * EngineOps: The public facade for the Engine Optimization Platform.
  *
@@ -25,55 +25,55 @@ const index_js_1 = require("../core/index.js");
  * and resource management.
  */
 class EngineOps {
-    engine;
-    constructor(config) {
-        this.engine = new index_js_1.OptimizationEngine(config);
-    }
-    /**
-     * Initialize the engine.
-     * Must be called before submitting any requests.
-     */
-    async init() {
-        await this.engine.init();
-    }
-    /**
-     * Submit an optimization request.
-     *
-     * @param request The optimization request containing type and data.
-     * @returns The optimization result.
-     */
-    async optimize(request) {
-        return this.engine.optimize(request);
-    }
-    /**
-     * Shutdown the engine and release resources.
-     */
-    async shutdown() {
-        await this.engine.shutdown();
-    }
-    /**
-     * Get cache statistics
-     */
-    getCacheStats() {
-        return this.engine.getCacheStats();
-    }
-    /**
-     * Get anomaly detector for monitoring
-     */
-    getAnomalyDetector() {
-        return this.engine.getAnomalyDetector();
-    }
-    /**
-     * Get plugin registry
-     */
-    getPluginRegistry() {
-        return this.engine.getPluginRegistry();
-    }
-    /**
-     * Get workload collector
-     */
-    getWorkloadCollector() {
-        return this.engine.getWorkloadCollector();
-    }
+  engine;
+  constructor(config) {
+    this.engine = new index_js_1.OptimizationEngine(config);
+  }
+  /**
+   * Initialize the engine.
+   * Must be called before submitting any requests.
+   */
+  async init() {
+    await this.engine.init();
+  }
+  /**
+   * Submit an optimization request.
+   *
+   * @param request The optimization request containing type and data.
+   * @returns The optimization result.
+   */
+  async optimize(request) {
+    return this.engine.optimize(request);
+  }
+  /**
+   * Shutdown the engine and release resources.
+   */
+  async shutdown() {
+    await this.engine.shutdown();
+  }
+  /**
+   * Get cache statistics
+   */
+  getCacheStats() {
+    return this.engine.getCacheStats();
+  }
+  /**
+   * Get anomaly detector for monitoring
+   */
+  getAnomalyDetector() {
+    return this.engine.getAnomalyDetector();
+  }
+  /**
+   * Get plugin registry
+   */
+  getPluginRegistry() {
+    return this.engine.getPluginRegistry();
+  }
+  /**
+   * Get workload collector
+   */
+  getWorkloadCollector() {
+    return this.engine.getWorkloadCollector();
+  }
 }
 exports.EngineOps = EngineOps;

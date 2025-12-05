@@ -4,15 +4,15 @@
 
 ```yaml
 lattice_attributes:
-  role: "Philosopher"  # Optional string
-  school_of_thought: "Existentialism"  # Optional string
-  language_group: "Germanic"  # Optional string
-  religion_of_origin: "Lutheran"  # Optional string
-  gender: "Male"  # Optional string
-  economic_context: "Industrial Capitalism"  # Optional string
-  political_stance: "Anti-Nationalist"  # Optional string
-  field_of_study: "Philosophy"  # Optional string
-  extra: {}  # Dict for custom attributes
+  role: 'Philosopher' # Optional string
+  school_of_thought: 'Existentialism' # Optional string
+  language_group: 'Germanic' # Optional string
+  religion_of_origin: 'Lutheran' # Optional string
+  gender: 'Male' # Optional string
+  economic_context: 'Industrial Capitalism' # Optional string
+  political_stance: 'Anti-Nationalist' # Optional string
+  field_of_study: 'Philosophy' # Optional string
+  extra: {} # Dict for custom attributes
 ```
 
 ## Issues Identified
@@ -20,17 +20,19 @@ lattice_attributes:
 ### 1. ⚠️ **Unstructured `extra` Dict**
 
 **Problem:**
+
 - No schema for `extra` attributes
 - No validation
 - Hard to query
 - Inconsistent keys across personas
 
 **Example:**
+
 ```yaml
 extra:
-  text: "The Prince"  # Some use "text"
-  achievements: "Nobel Prize"  # Some use "achievements"
-  achievement: "First programmer"  # Inconsistent naming
+  text: 'The Prince' # Some use "text"
+  achievements: 'Nobel Prize' # Some use "achievements"
+  achievement: 'First programmer' # Inconsistent naming
 ```
 
 **Impact:** Can't reliably query `extra` attributes.
@@ -38,11 +40,13 @@ extra:
 ### 2. ⚠️ **No Multi-Valued Attributes**
 
 **Problem:**
+
 - What if someone has multiple roles? (e.g., "Philosopher" AND "Scientist")
 - What if they speak multiple languages?
 - Current structure only supports single strings
 
 **Example:**
+
 ```yaml
 # Current (can't represent multiple roles)
 role: "Philosopher"
@@ -56,6 +60,7 @@ role: ["Philosopher", "Scientist", "Mathematician"]
 ### 3. ⚠️ **No Type Information**
 
 **Problem:**
+
 - All attributes are strings
 - Can't distinguish between:
   - Enumerated values (gender: "Male" | "Female")
@@ -69,6 +74,7 @@ role: ["Philosopher", "Scientist", "Mathematician"]
 ### 4. ⚠️ **No Standardized Values**
 
 **Problem:**
+
 - `gender: "Male"` vs `gender: "male"` vs `gender: "M"`
 - `language_group: "Germanic (English)"` vs `language_group: "Germanic"`
 - Inconsistent formatting makes querying difficult
@@ -78,6 +84,7 @@ role: ["Philosopher", "Scientist", "Mathematician"]
 ### 5. ⚠️ **Missing Important Attributes**
 
 **Potential gaps:**
+
 - `time_period` (more specific than century)
 - `social_class` (nobility, commoner, etc.)
 - `education_level`
@@ -94,6 +101,7 @@ role: ["Philosopher", "Scientist", "Mathematician"]
 ### 6. ⚠️ **No Hierarchical Attributes**
 
 **Problem:**
+
 - Can't represent relationships like:
   - `location: {continent: "Europe", country: "Italy", city: "Florence"}`
   - `education: {institution: "Academy", teacher: "Plato"}`
@@ -103,6 +111,7 @@ role: ["Philosopher", "Scientist", "Mathematician"]
 ### 7. ⚠️ **No Query Support**
 
 **Problem:**
+
 - How do we query `lattice_attributes.role == "Philosopher"`?
 - How do we query `lattice_attributes.extra.text`?
 - How do we handle partial matches?
@@ -117,38 +126,38 @@ role: ["Philosopher", "Scientist", "Mathematician"]
 ```yaml
 lattice_attributes:
   # Standard attributes with types
-  role: ["Philosopher", "Scientist"]  # List for multi-valued
-  school_of_thought: "Existentialism"  # String
-  language_group: "Germanic"  # String (standardized)
-  languages_spoken: ["German", "French", "Latin"]  # List
-  religion_of_origin: "Lutheran"  # String (standardized)
-  gender: "Male"  # Enum: "Male" | "Female" | "Other"
-  economic_context: "Industrial Capitalism"  # String
-  political_stance: "Anti-Nationalist"  # String
-  field_of_study: ["Philosophy", "Ethics", "Logic"]  # List
-  nationality: "German"  # String (moved from extra)
-  birth_year: 1844  # Number
-  death_year: 1900  # Number
-  is_nobel_winner: false  # Boolean
-  notable_works: ["Beyond Good and Evil", "Thus Spoke Zarathustra"]  # List
-  
+  role: ['Philosopher', 'Scientist'] # List for multi-valued
+  school_of_thought: 'Existentialism' # String
+  language_group: 'Germanic' # String (standardized)
+  languages_spoken: ['German', 'French', 'Latin'] # List
+  religion_of_origin: 'Lutheran' # String (standardized)
+  gender: 'Male' # Enum: "Male" | "Female" | "Other"
+  economic_context: 'Industrial Capitalism' # String
+  political_stance: 'Anti-Nationalist' # String
+  field_of_study: ['Philosophy', 'Ethics', 'Logic'] # List
+  nationality: 'German' # String (moved from extra)
+  birth_year: 1844 # Number
+  death_year: 1900 # Number
+  is_nobel_winner: false # Boolean
+  notable_works: ['Beyond Good and Evil', 'Thus Spoke Zarathustra'] # List
+
   # Hierarchical attributes
   location:
-    continent: "Europe"
-    region: "Western Europe"
-    country: "Germany"
-    city: "Leipzig"
-  
+    continent: 'Europe'
+    region: 'Western Europe'
+    country: 'Germany'
+    city: 'Leipzig'
+
   education:
-    - institution: "University of Bonn"
-      degree: "PhD"
-      field: "Classical Philology"
-  
+    - institution: 'University of Bonn'
+      degree: 'PhD'
+      field: 'Classical Philology'
+
   # Structured extra (with schema)
   metadata:
-    text: "Beyond Good and Evil"
-    achievements: ["Philosopher", "Poet"]
-    context: "19th century Germany"
+    text: 'Beyond Good and Evil'
+    achievements: ['Philosopher', 'Poet']
+    context: '19th century Germany'
 ```
 
 ### Option B: Schema-Driven with Validation
@@ -165,19 +174,19 @@ class LatticeAttributes(BaseModel):
     economic_context: Optional[str] = None
     political_stance: Optional[str] = None
     field_of_study: List[str] = Field(default_factory=list)
-    
+
     # Temporal
     birth_year: Optional[int] = None
     death_year: Optional[int] = None
     time_period: Optional[str] = None
-    
+
     # Hierarchical
     location: Optional[Location] = None
     education: List[Education] = Field(default_factory=list)
-    
+
     # Structured metadata (replaces unstructured extra)
     metadata: Dict[str, Any] = Field(default_factory=dict)
-    
+
     # Validation
     @validator('gender')
     def validate_gender(cls, v):
@@ -239,25 +248,26 @@ class LatticeAttributes(BaseModel):
 
 ## Decision Matrix
 
-| Feature | Current | Option A | Option B | Recommendation |
-|---------|---------|----------|----------|---------------|
-| Multi-valued | ❌ | ✅ | ✅ | **Option A/B** |
-| Type safety | ❌ | ⚠️ | ✅ | **Option B** |
-| Hierarchical | ❌ | ✅ | ✅ | **Option A/B** |
-| Query support | ❌ | ⚠️ | ✅ | **Option B** |
-| Backward compat | ✅ | ⚠️ | ⚠️ | **Current** |
-| Complexity | Low | Medium | High | **Option A** |
+| Feature         | Current | Option A | Option B | Recommendation |
+| --------------- | ------- | -------- | -------- | -------------- |
+| Multi-valued    | ❌      | ✅       | ✅       | **Option A/B** |
+| Type safety     | ❌      | ⚠️       | ✅       | **Option B**   |
+| Hierarchical    | ❌      | ✅       | ✅       | **Option A/B** |
+| Query support   | ❌      | ⚠️       | ✅       | **Option B**   |
+| Backward compat | ✅      | ⚠️       | ⚠️       | **Current**    |
+| Complexity      | Low     | Medium   | High     | **Option A**   |
 
 ## Recommendation
 
 **Hybrid Approach:**
+
 1. **Immediate:** Standardize current structure, move common extras to standard
 2. **Loader Phase:** Add list support for key attributes (role, field_of_study)
 3. **Future:** Add hierarchical attributes and full query system
 
 **Priority Fixes Before Loader:**
+
 1. ✅ Standardize `gender` values (enum)
 2. ✅ Move `nationality` from `extra` to standard
 3. ✅ Document which attributes can be lists
 4. ✅ Add validation for standardized fields
-

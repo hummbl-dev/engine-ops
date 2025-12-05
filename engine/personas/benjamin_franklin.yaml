@@ -7,24 +7,24 @@ region: Eastern North America
 century: 18
 lattice_attributes:
   role:
-  - Polymath
-  - Statesman
-  - Scientist
-  - Inventor
+    - Polymath
+    - Statesman
+    - Scientist
+    - Inventor
   school_of_thought: Enlightenment, Pragmatism
   language_group: Germanic (English)
   religion_of_origin: Deist (raised Puritan)
   gender: Male
   economic_context: Colonial/Revolutionary America
   field_of_study:
-  - Science
-  - Politics
-  - Philosophy
-  - Invention
+    - Science
+    - Politics
+    - Philosophy
+    - Invention
   notable_works:
-  - Poor Richard's Almanack
+    - Poor Richard's Almanack
   achievements:
-  - Founding Father, Inventor, Diplomat
+    - Founding Father, Inventor, Diplomat
   metadata:
     inventions: Lightning rod, bifocals, Franklin stove
 era_context: 18th century Colonial and Revolutionary America; Age of Enlightenment;
@@ -43,20 +43,20 @@ core_philosophy: 'An investment in knowledge pays the best interest.
 
   '
 key_ideas:
-- Investment in knowledge
-- Well done better than well said
-- Early to bed, early to rise
-- Involvement in learning
-- Continual growth and progress
+  - Investment in knowledge
+  - Well done better than well said
+  - Early to bed, early to rise
+  - Involvement in learning
+  - Continual growth and progress
 relationships:
   influences:
-  - American Enlightenment
-  - Practical philosophy
-  - Self-improvement movement
-  - Civic virtue
+    - American Enlightenment
+    - Practical philosophy
+    - Self-improvement movement
+    - Civic virtue
   influenced_by:
-  - Enlightenment philosophy
-  - Scientific method
-  - Classical republicanism
+    - Enlightenment philosophy
+    - Scientific method
+    - Classical republicanism
   persona_influences: []
   persona_influenced_by: []

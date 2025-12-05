@@ -17,41 +17,41 @@ import { Migration } from '../../core/migrations/migration-manager.js';
  * Example migration: Add metrics retention policy
  */
 export const migration002: Migration = {
-    version: '002',
-    name: 'add-metrics-retention',
+  version: '002',
+  name: 'add-metrics-retention',
 
-    async up() {
-        console.log('Adding metrics retention policy...');
-        // Example: Configure metrics retention in storage
-        
-        console.log('- Set metrics retention period to 30 days');
-        console.log('- Added cleanup job for old metrics');
-        console.log('- Created metrics archival process');
-        
-        // Simulate async operation
-        await new Promise(resolve => setTimeout(resolve, 100));
-    },
+  async up() {
+    console.log('Adding metrics retention policy...');
+    // Example: Configure metrics retention in storage
 
-    async down() {
-        console.log('Removing metrics retention policy...');
-        
-        console.log('- Removed metrics retention configuration');
-        console.log('- Removed cleanup job');
-        console.log('- Removed archival process');
-        
-        // Simulate async operation
-        await new Promise(resolve => setTimeout(resolve, 100));
-    },
+    console.log('- Set metrics retention period to 30 days');
+    console.log('- Added cleanup job for old metrics');
+    console.log('- Created metrics archival process');
 
-    async validateUp() {
-        console.log('Validating metrics retention setup...');
-        // Validate retention policy exists
-        return true;
-    },
+    // Simulate async operation
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  },
 
-    async validateDown() {
-        console.log('Validating metrics retention removal...');
-        // Validate retention policy is removed
-        return true;
-    }
+  async down() {
+    console.log('Removing metrics retention policy...');
+
+    console.log('- Removed metrics retention configuration');
+    console.log('- Removed cleanup job');
+    console.log('- Removed archival process');
+
+    // Simulate async operation
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  },
+
+  async validateUp() {
+    console.log('Validating metrics retention setup...');
+    // Validate retention policy exists
+    return true;
+  },
+
+  async validateDown() {
+    console.log('Validating metrics retention removal...');
+    // Validate retention policy is removed
+    return true;
+  },
 };

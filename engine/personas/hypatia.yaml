@@ -7,18 +7,18 @@ region: North Africa
 century: 5
 lattice_attributes:
   role:
-  - Philosopher
-  - Mathematician
-  - Astronomer
+    - Philosopher
+    - Mathematician
+    - Astronomer
   school_of_thought: Neoplatonism
   language_group: Hellenic (Greek)
   religion_of_origin: Pagan (Neoplatonic)
   gender: Female
   economic_context: Late Roman Empire (Alexandria)
   field_of_study:
-  - Mathematics
-  - Astronomy
-  - Philosophy
+    - Mathematics
+    - Astronomy
+    - Philosophy
   metadata:
     location: Alexandria, Egypt
     father: Theon of Alexandria
@@ -39,20 +39,20 @@ core_philosophy: 'Knowledge is the highest virtue and should be pursued fearless
 
   '
 key_ideas:
-- Knowledge as highest virtue
-- Mathematics reveals divine order
-- Philosophy and science united
-- Education and reason
-- Intellectual courage
+  - Knowledge as highest virtue
+  - Mathematics reveals divine order
+  - Philosophy and science united
+  - Education and reason
+  - Intellectual courage
 relationships:
   influences:
-  - Women in science
-  - Neoplatonic philosophy
-  - Mathematical astronomy
+    - Women in science
+    - Neoplatonic philosophy
+    - Mathematical astronomy
   influenced_by:
-  - Neoplatonism
-  - Classical Greek mathematics
-  - Alexandrian scholarly tradition
+    - Neoplatonism
+    - Classical Greek mathematics
+    - Alexandrian scholarly tradition
   persona_influences: []
   persona_influenced_by:
-  - eur_4bc_plato
+    - eur_4bc_plato

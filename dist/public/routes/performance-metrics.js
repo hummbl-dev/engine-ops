@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /*
  * Copyright (c) 2025, HUMMBL, LLC
  *
@@ -14,20 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.metricsRouter = void 0;
-const express_1 = require("express");
-const metrics_js_1 = require("../../core/monitoring/metrics.js");
+const express_1 = require('express');
+const metrics_js_1 = require('../../core/monitoring/metrics.js');
 exports.metricsRouter = (0, express_1.Router)();
 /**
  * GET /api/v1/metrics
  * Get performance metrics
  */
 exports.metricsRouter.get('/', (_req, res) => {
-    const aggregated = metrics_js_1.metricsCollector.getAggregated();
-    const recent = metrics_js_1.metricsCollector.getRecent(10);
-    res.status(200).json({
-        aggregated,
-        recent
-    });
+  const aggregated = metrics_js_1.metricsCollector.getAggregated();
+  const recent = metrics_js_1.metricsCollector.getRecent(10);
+  res.status(200).json({
+    aggregated,
+    recent,
+  });
 });

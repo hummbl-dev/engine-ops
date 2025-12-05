@@ -7,21 +7,21 @@ region: North Africa
 century: 12
 lattice_attributes:
   role:
-  - Philosopher
-  - Physician
-  - Jurist
+    - Philosopher
+    - Physician
+    - Jurist
   school_of_thought: Averroism, Aristotelianism
   language_group: Semitic (Arabic)
   religion_of_origin: Islam
   gender: Male
   economic_context: Islamic Golden Age (Al-Andalus)
   field_of_study:
-  - Philosophy
-  - Medicine
-  - Law
-  - Astronomy
+    - Philosophy
+    - Medicine
+    - Law
+    - Astronomy
   notable_works:
-  - The Incoherence of the Incoherence
+    - The Incoherence of the Incoherence
   metadata:
     location: Al-Andalus (Spain) / Morocco
     context: Islamic Golden Age, translation movement
@@ -40,20 +40,20 @@ core_philosophy: 'Truth does not contradict truth; reason and revelation are in 
 
   '
 key_ideas:
-- Truth does not contradict truth
-- Reason and revelation in harmony
-- Philosophy as highest inquiry
-- Knowledge regardless of source
-- Intellect as divine gift
+  - Truth does not contradict truth
+  - Reason and revelation in harmony
+  - Philosophy as highest inquiry
+  - Knowledge regardless of source
+  - Intellect as divine gift
 relationships:
   influences:
-  - Medieval scholasticism
-  - European philosophy
-  - Harmony of reason and faith
+    - Medieval scholasticism
+    - European philosophy
+    - Harmony of reason and faith
   influenced_by:
-  - Aristotle
-  - Islamic philosophy
-  - Greek tradition
+    - Aristotle
+    - Islamic philosophy
+    - Greek tradition
   persona_influences: []
   persona_influenced_by:
-  - eur_4bc_aristotle
+    - eur_4bc_aristotle

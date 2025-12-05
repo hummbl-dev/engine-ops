@@ -29,131 +29,118 @@ from ..context import AgentContext
 class TriageAgent(Agent):
     """
     Agent responsible for triaging detected issues.
-    
+
     Prioritizes issues based on severity, impact, and urgency, and assigns
     them to appropriate resolution paths.
     """
-    
+
     def __init__(self, agent_id: str = "triage_agent", **kwargs):
         super().__init__(agent_id, **kwargs)
-        self.severity_weights = {
-            "critical": 10,
-            "high": 7,
-            "medium": 4,
-            "low": 1
-        }
-    
+        self.severity_weights = {"critical": 10, "high": 7, "medium": 4, "low": 1}
+
     def process(self, context: AgentContext) -> AgentContext:
         """
         Process context to triage detected issues.
-        
+
         Args:
             context: Input agent context with detections
-            
+
         Returns:
             Updated context with triage results
         """
         self.telemetry.info(
-            "Starting triage analysis",
-            trace_id=context.telemetry.trace_id,
-            agent_id=self.agent_id
+            "Starting triage analysis", trace_id=context.telemetry.trace_id, agent_id=self.agent_id
         )
-        
+
         self.telemetry.debug(
             f"Mission: {self.instructions.mission}",
             trace_id=context.telemetry.trace_id,
-            agent_id=self.agent_id
+            agent_id=self.agent_id,
         )
-        
+
         # Update state
         context.update_state("triaging")
-        
+
         # Get detections from previous agent
         detections = context.payload.output_data.get("detections", [])
-        
+
         if not detections:
             # Populate empty triage results for consistency
             empty_triage = {
                 "prioritized": [],
                 "critical_count": 0,
                 "requires_immediate_action": False,
-                "total_triaged": 0
+                "total_triaged": 0,
             }
             context.payload.output_data["triage_results"] = empty_triage
             context.payload.output_data["prioritized_issues"] = []
             context.update_state("triage_complete", {"triaged": 0})
             return context
-        
+
         # Perform triage
         triage_results = self._triage_issues(detections, context)
-        
+
         # Add triage results to context
         context.payload.output_data["triage_results"] = triage_results
         context.payload.output_data["prioritized_issues"] = triage_results.get("prioritized", [])
-        
+
         # Update intent based on highest priority
         if triage_results.get("prioritized"):
             highest_priority = triage_results["prioritized"][0]
             if context.intent:
                 context.intent.priority = highest_priority.get("priority", "normal")
-            context.annotation.labels["triage_priority"] = highest_priority.get("priority", "normal")
-        
+            context.annotation.labels["triage_priority"] = highest_priority.get(
+                "priority", "normal"
+            )
+
         # Add knowledge
         context.add_knowledge_fact(
             "triage_summary",
             {
                 "total_issues": len(detections),
                 "critical_count": triage_results.get("critical_count", 0),
-                "requires_immediate_action": triage_results.get("requires_immediate_action", False)
+                "requires_immediate_action": triage_results.get("requires_immediate_action", False),
             },
-            confidence=0.9
+            confidence=0.9,
         )
-        
+
         # Record metrics
+        self.telemetry.record_metric("issues_triaged", len(detections), agent_id=self.agent_id)
+
         self.telemetry.record_metric(
-            "issues_triaged",
-            len(detections),
-            agent_id=self.agent_id
+            "critical_issues", triage_results.get("critical_count", 0), agent_id=self.agent_id
         )
-        
-        self.telemetry.record_metric(
-            "critical_issues",
-            triage_results.get("critical_count", 0),
-            agent_id=self.agent_id
-        )
-        
+
         # Update state
         context.update_state(
             "triage_complete",
-            {"triaged": len(detections), "critical": triage_results.get("critical_count", 0)}
+            {"triaged": len(detections), "critical": triage_results.get("critical_count", 0)},
         )
-        
+
         self.telemetry.info(
             f"Triage complete: {len(detections)} issues processed",
             trace_id=context.telemetry.trace_id,
             agent_id=self.agent_id,
-            critical_count=triage_results.get("critical_count", 0)
+            critical_count=triage_results.get("critical_count", 0),
         )
-        
+
         return context
-    
+
     def _triage_issues(
-        self,
-        detections: List[Dict[str, Any]],
-        context: AgentContext
+        self, detections: List[Dict[str, Any]], context: AgentContext
     ) -> Dict[str, Any]:
         """
         Perform triage logic on detected issues using the Neural Link (LLM).
-        
+
         Args:
             detections: List of detected issues
             context: Agent context for additional information
-            
+
         Returns:
             Triage results with prioritization
         """
         import json
-        
+
         prompt = """
         Review the detected issues and prioritize them for resolution.
         
@@ -173,7 +160,7 @@ class TriageAgent(Agent):
         
         Do not include markdown formatting (```json) in your response, just the raw JSON string.
         """
-        
+
         response = self.ask_brain(prompt, detections)
 
         # Check if LLM is available (response doesn't start with ERROR)
@@ -203,7 +190,9 @@ class TriageAgent(Agent):
             return result
 
         except json.JSONDecodeError:
-            self.telemetry.error(f"Failed to parse LLM triage response: {response}", agent_id=self.agent_id)
+            self.telemetry.error(
+                f"Failed to parse LLM triage response: {response}", agent_id=self.agent_id
+            )
             # Fallback to rule-based triage
             return self._rule_based_triage(detections, context)
         except Exception as e:
@@ -212,9 +201,7 @@ class TriageAgent(Agent):
             return self._rule_based_triage(detections, context)
 
     def _rule_based_triage(
-        self,
-        detections: List[Dict[str, Any]],
-        context: AgentContext
+        self, detections: List[Dict[str, Any]], context: AgentContext
     ) -> Dict[str, Any]:
         """
         Perform rule-based triage when LLM is not available.
@@ -256,12 +243,14 @@ class TriageAgent(Agent):
                 resolution_path = "standard_queue"
 
             triaged_issue = detection.copy()
-            triaged_issue.update({
-                "priority": priority,
-                "priority_score": priority_score,
-                "resolution_path": resolution_path,
-                "triaged_at": context.temporal.start_time.isoformat()
-            })
+            triaged_issue.update(
+                {
+                    "priority": priority,
+                    "priority_score": priority_score,
+                    "resolution_path": resolution_path,
+                    "triaged_at": context.temporal.start_time.isoformat(),
+                }
+            )
             prioritized.append(triaged_issue)
 
         # Sort by priority score (highest first)
@@ -275,26 +264,22 @@ class TriageAgent(Agent):
             "prioritized": prioritized,
             "critical_count": critical_count,
             "requires_immediate_action": requires_immediate_action,
-            "total_triaged": len(detections)
+            "total_triaged": len(detections),
         }
 
-    def _assign_resolution_path(
-        self,
-        detection: Dict[str, Any],
-        priority: str
-    ) -> str:
+    def _assign_resolution_path(self, detection: Dict[str, Any], priority: str) -> str:
         """
         Assign an appropriate resolution path based on detection and priority.
-        
+
         Args:
             detection: Detection details
             priority: Assigned priority level
-            
+
         Returns:
             Resolution path identifier
         """
         rule_id = detection.get("rule_id", "")
-        
+
         # Map to resolution paths
         if priority == "critical":
             return "immediate_escalation"

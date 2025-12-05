@@ -18,74 +18,74 @@ import { EngineOps } from '../public/api.js';
 
 // Local interfaces for type safety
 interface ResourceItem {
-    id: string;
-    cpu: number;
-    memory: number;
+  id: string;
+  cpu: number;
+  memory: number;
 }
 
 interface Node {
-    id: string;
-    cpuAvailable: number;
-    memoryAvailable: number;
-    items: ResourceItem[];
+  id: string;
+  cpuAvailable: number;
+  memoryAvailable: number;
+  items: ResourceItem[];
 }
 
 interface BinPackingResult {
-    nodes: Node[];
-    unplacedItems: ResourceItem[];
+  nodes: Node[];
+  unplacedItems: ResourceItem[];
 }
 
 async function main(): Promise<void> {
-    console.log('Starting Algorithm Verification (Bin Packing)...');
+  console.log('Starting Algorithm Verification (Bin Packing)...');
 
-    const engine = new EngineOps({
-        verbose: true
-    });
+  const engine = new EngineOps({
+    verbose: true,
+  });
 
-    await engine.init();
+  await engine.init();
 
-    const items = [
-        { id: 'item-1', cpu: 30, memory: 300 },
-        { id: 'item-2', cpu: 50, memory: 500 },
-        { id: 'item-3', cpu: 30, memory: 300 }, // Should fit with item-1 or item-2 if space
-        { id: 'item-4', cpu: 80, memory: 800 }, // Needs new node
-        { id: 'item-5', cpu: 10, memory: 100 }
-    ];
+  const items = [
+    { id: 'item-1', cpu: 30, memory: 300 },
+    { id: 'item-2', cpu: 50, memory: 500 },
+    { id: 'item-3', cpu: 30, memory: 300 }, // Should fit with item-1 or item-2 if space
+    { id: 'item-4', cpu: 80, memory: 800 }, // Needs new node
+    { id: 'item-5', cpu: 10, memory: 100 },
+  ];
 
-    const nodeCapacity = { cpu: 100, memory: 1000 };
+  const nodeCapacity = { cpu: 100, memory: 1000 };
 
-    const result = await engine.optimize({
-        id: 'algo-test-1',
-        type: 'resource',
-        data: {
-            items,
-            nodeCapacity
-        }
-    });
+  const result = await engine.optimize({
+    id: 'algo-test-1',
+    type: 'resource',
+    data: {
+      items,
+      nodeCapacity,
+    },
+  });
 
-    console.log('Optimization Result:', JSON.stringify(result, null, 2));
+  console.log('Optimization Result:', JSON.stringify(result, null, 2));
 
-    if (result.success && result.result && (result.result as unknown as BinPackingResult).nodes) {
-        const nodes = (result.result as unknown as BinPackingResult).nodes;
-        console.log(`Packed into ${nodes.length} nodes.`);
+  if (result.success && result.result && (result.result as unknown as BinPackingResult).nodes) {
+    const nodes = (result.result as unknown as BinPackingResult).nodes;
+    console.log(`Packed into ${nodes.length} nodes.`);
 
-        // Simple validation: Total items placed should be 5
-        const placedCount = nodes.reduce((acc: number, node: Node) => acc + node.items.length, 0);
-        if (placedCount === 5) {
-            console.log('Verification PASSED: All items placed.');
-        } else {
-            console.error(`Verification FAILED: Expected 5 items placed, got ${placedCount}`);
-            process.exit(1);
-        }
+    // Simple validation: Total items placed should be 5
+    const placedCount = nodes.reduce((acc: number, node: Node) => acc + node.items.length, 0);
+    if (placedCount === 5) {
+      console.log('Verification PASSED: All items placed.');
     } else {
-        console.error('Verification FAILED: Optimization unsuccessful');
-        process.exit(1);
+      console.error(`Verification FAILED: Expected 5 items placed, got ${placedCount}`);
+      process.exit(1);
     }
+  } else {
+    console.error('Verification FAILED: Optimization unsuccessful');
+    process.exit(1);
+  }
 
-    await engine.shutdown();
+  await engine.shutdown();
 }
 
-main().catch(err => {
-    console.error('Verification Error:', err);
-    process.exit(1);
+main().catch((err) => {
+  console.error('Verification Error:', err);
+  process.exit(1);
 });

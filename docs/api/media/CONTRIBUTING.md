@@ -7,6 +7,7 @@ Thank you for your interest in contributing to Engine-Ops! This document provide
 Engine-Ops uses a dual-licensing approach based on directory structure:
 
 ### Business Source License (BSL) 1.1
+
 The following directories are licensed under the Business Source License 1.1 with Change Date 2029-01-01:
 
 - **`core/`** - Core engine optimization logic and algorithms
@@ -14,41 +15,48 @@ The following directories are licensed under the Business Source License 1.1 wit
 - **`docs/`** - Documentation and guides
 
 **BSL Implications:**
+
 - Non-production use is freely permitted
 - Production use is limited (see Additional Use Grant in LICENSE)
 - After the Change Date (2029-01-01), these components automatically convert to Apache 2.0
 - Commercial database service use requires a commercial license
 
 ### Apache License 2.0
+
 The following directories are licensed under the Apache License 2.0:
 
 - **`public/`** - Public APIs and interfaces
 - **`infra/`** - Infrastructure and deployment configurations
 
 **Apache 2.0 Implications:**
+
 - Freely usable for any purpose, including commercial production use
 - Permissive license with minimal restrictions
 
 ## How to Contribute
 
 ### 1. Fork and Clone
+
 ```bash
 git clone https://github.com/your-username/engine-ops.git
 cd engine-ops
 ```
 
 ### 2. Create a Branch
+
 ```bash
 git checkout -b feature/your-feature-name
 ```
 
 ### 3. Make Your Changes
+
 - Follow existing code style and conventions
 - Add tests for new functionality
 - Update documentation as needed
 - Ensure all tests pass
 
 ### 4. License Headers
+
 All source files **must** include appropriate license headers. Use the provided script:
 
 ```bash
@@ -60,10 +68,12 @@ All source files **must** include appropriate license headers. Use the provided 
 ```
 
 The script automatically applies:
+
 - **BSL headers** to files in `core/`, `schemas/`, `docs/`
 - **Apache 2.0 headers** to files in `public/`, `infra/`
 
 ### 5. Contributor License Agreement (CLA)
+
 By contributing to this project, you agree that:
 
 1. **For BSL-licensed directories** (`core/`, `schemas/`, `docs/`):
@@ -82,6 +92,7 @@ By contributing to this project, you agree that:
    - The contribution does not violate any third-party rights
 
 ### 6. Submit a Pull Request
+
 ```bash
 git add .
 git commit -m "Brief description of changes"
@@ -93,6 +104,7 @@ Then open a Pull Request on GitHub.
 ## Code Style Guidelines
 
 ### General Principles
+
 - Write clear, readable, maintainable code
 - Follow existing patterns in the codebase
 - Use meaningful variable and function names
@@ -102,18 +114,21 @@ Then open a Pull Request on GitHub.
 ### Language-Specific Guidelines
 
 #### TypeScript/JavaScript
+
 - Use TypeScript for type safety
 - Follow ESLint/Prettier configurations
 - Use async/await over callbacks
 - Prefer `const` over `let`, avoid `var`
 
 #### Python
+
 - Follow PEP 8 style guide
 - Use type hints where appropriate
 - Use docstrings for functions and classes
 - Prefer list comprehensions when clear
 
 #### Bash
+
 - Use `set -euo pipefail` at script start
 - Quote variables: `"$variable"`
 - Use `[[` instead of `[` for conditionals
@@ -122,6 +137,7 @@ Then open a Pull Request on GitHub.
 ## Testing
 
 ### Running Tests
+
 ```bash
 # Run all tests
 npm test
@@ -134,6 +150,7 @@ npm test -- --coverage
 ```
 
 ### Writing Tests
+
 - Write tests for all new functionality
 - Follow existing test patterns
 - Use descriptive test names
@@ -143,6 +160,7 @@ npm test -- --coverage
 ## Documentation
 
 ### Updating Documentation
+
 When making changes:
 
 1. Update relevant README files
@@ -151,6 +169,7 @@ When making changes:
 4. Update CHANGELOG.md with notable changes
 
 ### Documentation Style
+
 - Use clear, concise language
 - Include code examples
 - Document parameters and return values
@@ -159,30 +178,35 @@ When making changes:
 ## Directory-Specific Contribution Guidelines
 
 ### Contributing to `core/` (BSL)
+
 - High-quality, production-ready code required
 - Comprehensive tests mandatory
 - Performance considerations critical
 - Security review for sensitive operations
 
 ### Contributing to `schemas/` (BSL)
+
 - Schema changes require migration path
 - Backward compatibility when possible
 - Validation logic must be comprehensive
 - Document schema structure and constraints
 
 ### Contributing to `docs/` (BSL)
+
 - Clear, accurate documentation
 - Include practical examples
 - Keep documentation up-to-date with code
 - Follow existing documentation structure
 
 ### Contributing to `public/` (Apache 2.0)
+
 - API stability is critical
 - Comprehensive API documentation
 - Version public APIs carefully
 - Consider backward compatibility
 
 ### Contributing to `infra/` (Apache 2.0)
+
 - Infrastructure-as-code best practices
 - Security-first approach
 - Documentation for deployment
@@ -214,12 +238,14 @@ When making changes:
 ## Code of Conduct
 
 ### Our Standards
+
 - Be respectful and inclusive
 - Welcome newcomers and help them learn
 - Focus on constructive feedback
 - Accept differing viewpoints gracefully
 
 ### Unacceptable Behavior
+
 - Harassment or discriminatory language
 - Personal attacks or trolling
 - Spam or off-topic content
@@ -238,6 +264,7 @@ Before submitting a PR, ensure:
 ## Questions?
 
 If you have questions about licensing or contributions:
+
 - Open a GitHub Discussion
 - Email: hummbldev@gmail.com
 - Review the LICENSE file for full legal terms

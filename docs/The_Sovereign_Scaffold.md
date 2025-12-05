@@ -10,9 +10,9 @@
 
 A Sovereign Application is not a wrapper around an API. It is a **distinct organ** that consumes APIs. To achieve this, we separate the system into three hard boundaries:
 
-1. **The Cortex (State & Rules):** Your data, prompts, and constitution. *(Asset-heavy, Code-light)*.
-2. **The Engine (Logic):** The Python/Rust server that processes intent and talks to MCP. *(Stateless)*.
-3. **The Interface (The Skin):** The VS Code extension, Terminal UI, or Web Dashboard. *(Disposable)*.
+1. **The Cortex (State & Rules):** Your data, prompts, and constitution. _(Asset-heavy, Code-light)_.
+2. **The Engine (Logic):** The Python/Rust server that processes intent and talks to MCP. _(Stateless)_.
+3. **The Interface (The Skin):** The VS Code extension, Terminal UI, or Web Dashboard. _(Disposable)_.
 
 ---
 
@@ -106,7 +106,7 @@ A `.flow` file is a chain of prompts.
 ```yaml
 - Action: read_file (target)
 - Action: retrieve_context (test_framework_docs)
-- Prompt: "Write unit tests for [target] using [framework]."
+- Prompt: 'Write unit tests for [target] using [framework].'
 - Action: write_file (target_test.py)
 - Action: run_tests
 ```

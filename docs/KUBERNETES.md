@@ -73,9 +73,9 @@ curl -X POST http://localhost:3000/api/v1/optimize \
   "success": true,
   "result": {
     "placements": [
-      {"pod": "nginx-pod", "node": "node-1"},
-      {"pod": "redis-pod", "node": "node-1"},
-      {"pod": "postgres-pod", "node": "node-2"}
+      { "pod": "nginx-pod", "node": "node-1" },
+      { "pod": "redis-pod", "node": "node-1" },
+      { "pod": "postgres-pod", "node": "node-2" }
     ],
     "utilization": 0.85
   },
@@ -101,13 +101,13 @@ const result = await client.optimize({
   data: {
     tasks: [
       { id: 'batch-job-1', priority: 'low', duration: 3600 },
-      { id: 'api-server', priority: 'high', duration: -1 }
+      { id: 'api-server', priority: 'high', duration: -1 },
     ],
     nodes: [
       { id: 'spot-1', cost: 0.05, reliability: 0.8 },
-      { id: 'ondemand-1', cost: 0.15, reliability: 0.99 }
-    ]
-  }
+      { id: 'ondemand-1', cost: 0.15, reliability: 0.99 },
+    ],
+  },
 });
 ```
 
@@ -145,38 +145,38 @@ kind: ConfigMap
 metadata:
   name: optimization-config
 data:
-  target-utilization: "0.8"
-  optimization-interval: "300"
+  target-utilization: '0.8'
+  optimization-interval: '300'
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: resource-optimizer
 spec:
-  schedule: "0 */6 * * *"  # Every 6 hours
+  schedule: '0 */6 * * *' # Every 6 hours
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: optimizer
-            image: hummbl/engine-ops-cli:latest
-            env:
-            - name: ENGINE_OPS_URL
-              value: "http://engine-ops.default.svc.cluster.local"
-            - name: API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: engine-ops-api-key
-                  key: api-key
-            command:
-            - /bin/sh
-            - -c
-            - |
-              engine-ops optimize \
-                --type resource \
-                --namespace default \
-                --apply-recommendations
+            - name: optimizer
+              image: hummbl/engine-ops-cli:latest
+              env:
+                - name: ENGINE_OPS_URL
+                  value: 'http://engine-ops.default.svc.cluster.local'
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: engine-ops-api-key
+                      key: api-key
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  engine-ops optimize \
+                    --type resource \
+                    --namespace default \
+                    --apply-recommendations
 ```
 
 ### Namespace-Level Cost Analysis
@@ -220,17 +220,17 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: engine-ops-optimizer
 webhooks:
-- name: optimize.engine-ops.io
-  clientConfig:
-    service:
-      name: engine-ops
-      namespace: default
-      path: "/api/v1/webhook/mutate"
-  rules:
-  - operations: ["CREATE"]
-    apiGroups: [""]
-    apiVersions: ["v1"]
-    resources: ["pods"]
+  - name: optimize.engine-ops.io
+    clientConfig:
+      service:
+        name: engine-ops
+        namespace: default
+        path: '/api/v1/webhook/mutate'
+    rules:
+      - operations: ['CREATE']
+        apiGroups: ['']
+        apiVersions: ['v1']
+        resources: ['pods']
 ```
 
 ### Pattern 2: Custom Controller
@@ -249,7 +249,8 @@ const engineOps = new EngineOpsClient('http://engine-ops.default.svc.cluster.loc
 
 // Watch deployments
 const watch = new k8s.Watch(kc);
-watch.watch('/apis/apps/v1/deployments',
+watch.watch(
+  '/apis/apps/v1/deployments',
   {},
   async (type, deployment) => {
     if (type === 'ADDED' || type === 'MODIFIED') {
@@ -258,17 +259,17 @@ watch.watch('/apis/apps/v1/deployments',
         id: `deploy-${deployment.metadata.name}`,
         type: 'resource',
         data: {
-          deployment: deployment.spec
-        }
+          deployment: deployment.spec,
+        },
       });
-      
+
       // Apply recommendations
       if (result.success) {
         console.log('Optimization recommendations:', result.result);
       }
     }
   },
-  (err) => console.error(err)
+  (err) => console.error(err),
 );
 ```
 
@@ -282,23 +283,23 @@ kind: CronJob
 metadata:
   name: nightly-optimizer
 spec:
-  schedule: "0 2 * * *"  # 2 AM daily
+  schedule: '0 2 * * *' # 2 AM daily
   jobTemplate:
     spec:
       template:
         spec:
           serviceAccountName: engine-ops-optimizer
           containers:
-          - name: optimizer
-            image: curlimages/curl:latest
-            command:
-            - /bin/sh
-            - -c
-            - |
-              curl -X POST http://engine-ops.default.svc.cluster.local/api/v1/optimize \
-                -H "X-API-Key: $API_KEY" \
-                -H "Content-Type: application/json" \
-                -d @/config/optimization-request.json
+            - name: optimizer
+              image: curlimages/curl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  curl -X POST http://engine-ops.default.svc.cluster.local/api/v1/optimize \
+                    -H "X-API-Key: $API_KEY" \
+                    -H "Content-Type: application/json" \
+                    -d @/config/optimization-request.json
 ```
 
 ## Monitoring & Observability
@@ -317,9 +318,9 @@ spec:
     matchLabels:
       app: engine-ops
   endpoints:
-  - port: http
-    path: /metrics
-    interval: 30s
+    - port: http
+      path: /metrics
+      interval: 30s
 ```
 
 ### Grafana Dashboard
@@ -348,8 +349,10 @@ kubectl apply -f https://raw.githubusercontent.com/hummbl-dev/engine-ops/main/mo
 const result = await client.optimize({
   id: 'large-optimization',
   type: 'genetic',
-  data: { /* ... */ },
-  timeout: 60000  // 60 seconds
+  data: {
+    /* ... */
+  },
+  timeout: 60000, // 60 seconds
 });
 ```
 

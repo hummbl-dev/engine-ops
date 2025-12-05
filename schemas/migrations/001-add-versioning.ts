@@ -17,44 +17,44 @@ import { Migration } from '../../core/migrations/migration-manager.js';
  * Example migration: Add versioning support to schemas
  */
 export const migration001: Migration = {
-    version: '001',
-    name: 'add-versioning',
+  version: '001',
+  name: 'add-versioning',
 
-    async up() {
-        console.log('Adding versioning metadata to schemas...');
-        // In a real scenario, this would update database schema
-        // For this example, we're demonstrating the pattern
-        
-        // Example: Add version field to optimization request schema
-        console.log('- Added version field to OptimizationRequest');
-        console.log('- Added backward compatibility layer');
-        
-        // Simulate async operation
-        await new Promise(resolve => setTimeout(resolve, 100));
-    },
+  async up() {
+    console.log('Adding versioning metadata to schemas...');
+    // In a real scenario, this would update database schema
+    // For this example, we're demonstrating the pattern
 
-    async down() {
-        console.log('Removing versioning metadata from schemas...');
-        // Rollback the changes
-        
-        console.log('- Removed version field from OptimizationRequest');
-        console.log('- Removed backward compatibility layer');
-        
-        // Simulate async operation
-        await new Promise(resolve => setTimeout(resolve, 100));
-    },
+    // Example: Add version field to optimization request schema
+    console.log('- Added version field to OptimizationRequest');
+    console.log('- Added backward compatibility layer');
 
-    async validateUp() {
-        // Validate that the migration was successful
-        console.log('Validating schema versioning...');
-        // In real scenario: check if version field exists
-        return true;
-    },
+    // Simulate async operation
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  },
 
-    async validateDown() {
-        // Validate that the rollback was successful
-        console.log('Validating schema rollback...');
-        // In real scenario: check if version field is removed
-        return true;
-    }
+  async down() {
+    console.log('Removing versioning metadata from schemas...');
+    // Rollback the changes
+
+    console.log('- Removed version field from OptimizationRequest');
+    console.log('- Removed backward compatibility layer');
+
+    // Simulate async operation
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  },
+
+  async validateUp() {
+    // Validate that the migration was successful
+    console.log('Validating schema versioning...');
+    // In real scenario: check if version field exists
+    return true;
+  },
+
+  async validateDown() {
+    // Validate that the rollback was successful
+    console.log('Validating schema rollback...');
+    // In real scenario: check if version field is removed
+    return true;
+  },
 };

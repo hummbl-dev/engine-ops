@@ -15,11 +15,13 @@ This plan addresses all outstanding items from the SITREP, organized by priority
 ## Priority 1: Critical Maintenance (Week 1-2)
 
 ### 1.1 Security Vulnerabilities Review
+
 **Priority:** 🔴 HIGH  
 **Effort:** 2-4 hours  
 **Risk:** Security exposure
 
 **Tasks:**
+
 1. Review GitHub Dependabot alerts
    - Check: https://github.com/hummbl-dev/engine-ops/security/dependabot
    - Identify affected packages
@@ -36,11 +38,13 @@ This plan addresses all outstanding items from the SITREP, organized by priority
    - Re-scan for vulnerabilities
 
 **Deliverables:**
+
 - Updated dependency files
 - Security audit report
 - Zero high-severity vulnerabilities
 
 **Success Criteria:**
+
 - All high-severity vulnerabilities resolved
 - No breaking changes introduced
 - All tests pass
@@ -48,11 +52,13 @@ This plan addresses all outstanding items from the SITREP, organized by priority
 ---
 
 ### 1.2 Integration Tests for Loader
+
 **Priority:** 🟡 MEDIUM  
 **Effort:** 4-6 hours  
 **Risk:** Regression bugs
 
 **Tasks:**
+
 1. Create Test Suite
    - `tests/test_persona_loader.py`
    - Test YAML loading
@@ -71,11 +77,13 @@ This plan addresses all outstanding items from the SITREP, organized by priority
    - Coverage reporting
 
 **Deliverables:**
+
 - Test suite with >80% coverage
 - CI/CD integration
 - Test documentation
 
 **Success Criteria:**
+
 - All loader functions tested
 - Edge cases covered
 - CI pipeline passing
@@ -85,11 +93,13 @@ This plan addresses all outstanding items from the SITREP, organized by priority
 ## Priority 2: Feature Enhancements (Week 3-4)
 
 ### 2.1 Multi-Persona Consultations
+
 **Priority:** 🟢 MEDIUM  
 **Effort:** 8-12 hours  
 **Value:** High user value
 
 **Tasks:**
+
 1. Design API
    - New endpoint: `POST /consult/multi`
    - Request format: `{members: ["sun_tzu", "machiavelli"], topic: "strategy"}`
@@ -112,17 +122,20 @@ This plan addresses all outstanding items from the SITREP, organized by priority
    - Display format for multiple responses
 
 **Deliverables:**
+
 - New API endpoint
 - Multi-persona consultation logic
 - Extension support
 - Documentation
 
 **Success Criteria:**
+
 - Can consult 2-3 personas simultaneously
 - Responses are coherent and distinct
 - API handles errors gracefully
 
 **Example:**
+
 ```bash
 POST /consult/multi
 {
@@ -141,11 +154,13 @@ Response:
 ---
 
 ### 2.2 Relationship Graph Visualization
+
 **Priority:** 🟢 LOW  
 **Effort:** 12-16 hours  
 **Value:** High visual value
 
 **Tasks:**
+
 1. Build Graph Data Structure
    - Create graph from relationships
    - Calculate centrality metrics
@@ -168,17 +183,20 @@ Response:
    - Standalone visualization page
 
 **Deliverables:**
+
 - Graph visualization
 - API endpoint
 - Interactive web interface
 - Documentation
 
 **Success Criteria:**
+
 - Visual representation of all relationships
 - Interactive exploration
 - Clear influence flows
 
 **Tech Stack Options:**
+
 - Python: NetworkX + graphviz
 - Web: D3.js or vis.js
 - API: Return JSON for frontend rendering
@@ -188,11 +206,13 @@ Response:
 ## Priority 3: Developer Experience (Week 5-6)
 
 ### 3.1 Watch Mode for YAML Files
+
 **Priority:** 🟢 LOW  
 **Effort:** 4-6 hours  
 **Value:** Developer productivity
 
 **Tasks:**
+
 1. Implement File Watcher
    - Watch `engine/personas/` directory
    - Detect YAML file changes
@@ -214,29 +234,32 @@ Response:
    - Debounce settings
 
 **Deliverables:**
+
 - File watcher implementation
 - Hot reload functionality
 - Configuration options
 - Documentation
 
 **Success Criteria:**
+
 - Changes to YAML files auto-reload
 - No server restart needed
 - Errors don't crash server
 
 **Implementation:**
+
 ```python
 # In persona_loader.py
 class PersonaLoader:
     def enable_watch_mode(self):
         from watchdog.observers import Observer
         from watchdog.events import FileSystemEventHandler
-        
+
         class PersonaHandler(FileSystemEventHandler):
             def on_modified(self, event):
                 if event.src_path.endswith('.yaml'):
                     self.reload_persona(event.src_path)
-        
+
         observer = Observer()
         observer.schedule(PersonaHandler(), self.personas_dir, recursive=False)
         observer.start()
@@ -245,11 +268,13 @@ class PersonaLoader:
 ---
 
 ### 3.2 Advanced Query Builder UI
+
 **Priority:** 🟢 LOW  
 **Effort:** 16-20 hours  
 **Value:** User experience
 
 **Tasks:**
+
 1. Design Query Interface
    - Visual filter builder
    - Attribute selection
@@ -274,17 +299,20 @@ class PersonaLoader:
    - API documentation
 
 **Deliverables:**
+
 - Query builder UI
 - Enhanced query API
 - Documentation
 - Examples
 
 **Success Criteria:**
+
 - Users can build complex queries visually
 - Results are clear and actionable
 - Export functionality works
 
 **Example Query:**
+
 ```
 Find all:
 - Female philosophers
@@ -298,11 +326,13 @@ Find all:
 ## Priority 4: Advanced Features (Week 7-8)
 
 ### 4.1 Persona Versioning System
+
 **Priority:** 🟢 LOW  
 **Effort:** 8-10 hours  
 **Value:** Long-term maintenance
 
 **Tasks:**
+
 1. Design Versioning Schema
    - Semantic versioning (1.0, 1.1, 2.0)
    - Version metadata
@@ -324,12 +354,14 @@ Find all:
    - Version diff tool
 
 **Deliverables:**
+
 - Versioning system
 - Version API
 - Migration tools
 - Documentation
 
 **Success Criteria:**
+
 - Can store multiple versions
 - Can query by version
 - Can rollback if needed
@@ -337,11 +369,13 @@ Find all:
 ---
 
 ### 4.2 Performance Optimization
+
 **Priority:** 🟢 LOW (Future)  
 **Effort:** 8-12 hours  
 **Trigger:** Council size >50 members
 
 **Tasks:**
+
 1. Performance Profiling
    - Identify bottlenecks
    - Measure query times
@@ -365,12 +399,14 @@ Find all:
    - Dashboard
 
 **Deliverables:**
+
 - Optimized loader
 - Caching layer
 - Performance monitoring
 - Benchmarks
 
 **Success Criteria:**
+
 - Query time <50ms for 50+ personas
 - Memory usage <100MB
 - 99% cache hit rate
@@ -382,18 +418,22 @@ Find all:
 ## Implementation Timeline
 
 ### Phase 1: Critical (Weeks 1-2)
+
 - ✅ Security vulnerabilities review
 - ✅ Integration tests
 
 ### Phase 2: Features (Weeks 3-4)
+
 - ✅ Multi-persona consultations
 - ⏸️ Relationship graph (if time permits)
 
 ### Phase 3: Developer Experience (Weeks 5-6)
+
 - ✅ Watch mode
 - ⏸️ Query builder UI (if time permits)
 
 ### Phase 4: Advanced (Weeks 7-8)
+
 - ⏸️ Persona versioning
 - ⏸️ Performance optimization (when needed)
 
@@ -402,6 +442,7 @@ Find all:
 ## Resource Requirements
 
 ### Development Time
+
 - **Critical:** 6-10 hours
 - **Features:** 20-28 hours
 - **Developer Experience:** 20-26 hours
@@ -409,6 +450,7 @@ Find all:
 - **Total:** 62-86 hours
 
 ### Dependencies
+
 - Security review: None
 - Integration tests: pytest, coverage
 - Multi-persona: None (uses existing)
@@ -423,14 +465,17 @@ Find all:
 ## Risk Assessment
 
 ### High Risk
+
 - **Security vulnerabilities:** Could expose system
   - **Mitigation:** Address immediately
 
 ### Medium Risk
+
 - **Multi-persona consultations:** Complex logic
   - **Mitigation:** Start with 2 personas, expand
 
 ### Low Risk
+
 - **All other items:** Nice-to-have features
   - **Mitigation:** Implement as time permits
 
@@ -439,16 +484,19 @@ Find all:
 ## Success Metrics
 
 ### Critical Items
+
 - ✅ Zero high-severity vulnerabilities
 - ✅ >80% test coverage
 - ✅ All tests passing
 
 ### Feature Items
+
 - ✅ Multi-persona API working
 - ✅ Graph visualization functional
 - ✅ Query builder usable
 
 ### Developer Experience
+
 - ✅ Watch mode reduces dev time
 - ✅ Query builder improves UX
 
@@ -479,4 +527,3 @@ Find all:
 
 **Status:** Ready for Implementation  
 **Last Updated:** 2025-01-27
-

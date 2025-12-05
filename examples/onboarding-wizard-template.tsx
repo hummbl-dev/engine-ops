@@ -1,5 +1,3 @@
-# Engine-Ops Onboarding Wizard Template (React/TypeScript)
-
 import React, { useState } from 'react';
 
 const steps = [

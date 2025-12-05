@@ -21,7 +21,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: NODE_ENV
-              value: "production"
+              value: 'production'
           ports:
             - containerPort: 3000
-          command: ["node", "dist/k8s-operator/controller.js"]
+          command: ['node', 'dist/k8s-operator/controller.js']

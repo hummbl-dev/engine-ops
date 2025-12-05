@@ -38,4 +38,3 @@ The `.github-secrets-prep/` directory contains sensitive data. Delete it after a
 ```bash
 rm -rf .github-secrets-prep
 ```
-

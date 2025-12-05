@@ -25,10 +25,10 @@ let engineInitialized = false;
 
 // Ensure engine is initialized
 async function ensureEngineInitialized(): Promise<void> {
-    if (!engineInitialized) {
-        await engine.init();
-        engineInitialized = true;
-    }
+  if (!engineInitialized) {
+    await engine.init();
+    engineInitialized = true;
+  }
 }
 
 /**
@@ -36,18 +36,18 @@ async function ensureEngineInitialized(): Promise<void> {
  * Get all anomaly alerts
  */
 router.get('/alerts', async (req, res) => {
-    try {
-        await ensureEngineInitialized();
-        const detector = engine.getAnomalyDetector();
-        const alerts = detector.getAlerts();
-        
-        res.json({
-            count: alerts.length,
-            alerts
-        });
-    } catch {
-        res.status(500).json({ error: 'Failed to get anomaly alerts' });
-    }
+  try {
+    await ensureEngineInitialized();
+    const detector = engine.getAnomalyDetector();
+    const alerts = detector.getAlerts();
+
+    res.json({
+      count: alerts.length,
+      alerts,
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to get anomaly alerts' });
+  }
 });
 
 /**
@@ -55,21 +55,21 @@ router.get('/alerts', async (req, res) => {
  * Get recent anomaly alerts (last hour by default)
  */
 router.get('/alerts/recent', async (req, res) => {
-    try {
-        await ensureEngineInitialized();
-        const detector = engine.getAnomalyDetector();
-        const hoursAgo = parseInt(req.query.hours as string) || 1;
-        const since = Date.now() - (hoursAgo * 60 * 60 * 1000);
-        const alerts = detector.getRecentAlerts(since);
-        
-        res.json({
-            count: alerts.length,
-            since: new Date(since).toISOString(),
-            alerts
-        });
-    } catch {
-        res.status(500).json({ error: 'Failed to get recent anomaly alerts' });
-    }
+  try {
+    await ensureEngineInitialized();
+    const detector = engine.getAnomalyDetector();
+    const hoursAgo = parseInt(req.query.hours as string) || 1;
+    const since = Date.now() - hoursAgo * 60 * 60 * 1000;
+    const alerts = detector.getRecentAlerts(since);
+
+    res.json({
+      count: alerts.length,
+      since: new Date(since).toISOString(),
+      alerts,
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to get recent anomaly alerts' });
+  }
 });
 
 /**
@@ -77,26 +77,26 @@ router.get('/alerts/recent', async (req, res) => {
  * Get list of monitored metrics
  */
 router.get('/metrics', async (req, res) => {
-    try {
-        await ensureEngineInitialized();
-        const detector = engine.getAnomalyDetector();
-        const metricNames = detector.getMetricNames();
-        
-        const metrics = metricNames.map((name: string) => {
-            const stats = detector.getMetricStats(name);
-            return {
-                name,
-                stats
-            };
-        });
+  try {
+    await ensureEngineInitialized();
+    const detector = engine.getAnomalyDetector();
+    const metricNames = detector.getMetricNames();
 
-        res.json({
-            count: metrics.length,
-            metrics
-        });
-    } catch {
-        res.status(500).json({ error: 'Failed to get metrics' });
-    }
+    const metrics = metricNames.map((name: string) => {
+      const stats = detector.getMetricStats(name);
+      return {
+        name,
+        stats,
+      };
+    });
+
+    res.json({
+      count: metrics.length,
+      metrics,
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to get metrics' });
+  }
 });
 
 /**
@@ -104,27 +104,27 @@ router.get('/metrics', async (req, res) => {
  * Get details for a specific metric
  */
 router.get('/metrics/:name', async (req, res) => {
-    try {
-        await ensureEngineInitialized();
-        const detector = engine.getAnomalyDetector();
-        const { name } = req.params;
-        
-        const stats = detector.getMetricStats(name);
-        const history = detector.getMetricHistory(name);
+  try {
+    await ensureEngineInitialized();
+    const detector = engine.getAnomalyDetector();
+    const { name } = req.params;
 
-        if (!stats) {
-            return res.status(404).json({ error: 'Metric not found' });
-        }
+    const stats = detector.getMetricStats(name);
+    const history = detector.getMetricHistory(name);
 
-        res.json({
-            name,
-            stats,
-            historySize: history.length,
-            recentValues: history.slice(-10)
-        });
-    } catch {
-        res.status(500).json({ error: 'Failed to get metric details' });
+    if (!stats) {
+      return res.status(404).json({ error: 'Metric not found' });
     }
+
+    res.json({
+      name,
+      stats,
+      historySize: history.length,
+      recentValues: history.slice(-10),
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to get metric details' });
+  }
 });
 
 /**
@@ -132,17 +132,17 @@ router.get('/metrics/:name', async (req, res) => {
  * Clear all anomaly alerts
  */
 router.delete('/alerts', async (req, res) => {
-    try {
-        await ensureEngineInitialized();
-        const detector = engine.getAnomalyDetector();
-        detector.clearAlerts();
-        
-        res.json({
-            message: 'Alerts cleared successfully'
-        });
-    } catch {
-        res.status(500).json({ error: 'Failed to clear alerts' });
-    }
+  try {
+    await ensureEngineInitialized();
+    const detector = engine.getAnomalyDetector();
+    detector.clearAlerts();
+
+    res.json({
+      message: 'Alerts cleared successfully',
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to clear alerts' });
+  }
 });
 
 export { router as anomalyRouter };

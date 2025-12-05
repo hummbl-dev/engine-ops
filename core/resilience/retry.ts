@@ -15,65 +15,65 @@
  */
 
 export interface RetryConfig {
-    maxRetries: number;
-    initialDelay: number;
-    maxDelay: number;
-    backoffMultiplier: number;
-    jitter: boolean;
+  maxRetries: number;
+  initialDelay: number;
+  maxDelay: number;
+  backoffMultiplier: number;
+  jitter: boolean;
 }
 
 /**
  * Retry logic with exponential backoff and jitter
  */
 export class RetryPolicy {
-    private config: RetryConfig;
+  private config: RetryConfig;
 
-    constructor(config: Partial<RetryConfig> = {}) {
-        this.config = {
-            maxRetries: config.maxRetries ?? 3,
-            initialDelay: config.initialDelay ?? 1000,
-            maxDelay: config.maxDelay ?? 30000,
-            backoffMultiplier: config.backoffMultiplier ?? 2,
-            jitter: config.jitter ?? true
-        };
-    }
+  constructor(config: Partial<RetryConfig> = {}) {
+    this.config = {
+      maxRetries: config.maxRetries ?? 3,
+      initialDelay: config.initialDelay ?? 1000,
+      maxDelay: config.maxDelay ?? 30000,
+      backoffMultiplier: config.backoffMultiplier ?? 2,
+      jitter: config.jitter ?? true,
+    };
+  }
 
-    async execute<T>(
-        fn: () => Promise<T>,
-        shouldRetry: (error: Error) => boolean = () => true
-    ): Promise<T> {
-        let lastError: Error;
+  async execute<T>(
+    fn: () => Promise<T>,
+    shouldRetry: (error: Error) => boolean = () => true,
+  ): Promise<T> {
+    let lastError: Error;
 
-        for (let attempt = 0; attempt <= this.config.maxRetries; attempt++) {
-            try {
-                return await fn();
-            } catch (error) {
-                lastError = error as Error;
+    for (let attempt = 0; attempt <= this.config.maxRetries; attempt++) {
+      try {
+        return await fn();
+      } catch (error) {
+        lastError = error as Error;
 
-                if (attempt === this.config.maxRetries || !shouldRetry(lastError)) {
-                    throw lastError;
-                }
-
-                const delay = this.calculateDelay(attempt);
-                await this.sleep(delay);
-            }
+        if (attempt === this.config.maxRetries || !shouldRetry(lastError)) {
+          throw lastError;
         }
 
-        throw lastError!;
+        const delay = this.calculateDelay(attempt);
+        await this.sleep(delay);
+      }
     }
 
-    private calculateDelay(attempt: number): number {
-        let delay = this.config.initialDelay * Math.pow(this.config.backoffMultiplier, attempt);
-        delay = Math.min(delay, this.config.maxDelay);
+    throw lastError!;
+  }
 
-        if (this.config.jitter) {
-            delay = delay * (0.5 + Math.random() * 0.5);
-        }
+  private calculateDelay(attempt: number): number {
+    let delay = this.config.initialDelay * Math.pow(this.config.backoffMultiplier, attempt);
+    delay = Math.min(delay, this.config.maxDelay);
 
-        return delay;
+    if (this.config.jitter) {
+      delay = delay * (0.5 + Math.random() * 0.5);
     }
 
-    private sleep(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    return delay;
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 }

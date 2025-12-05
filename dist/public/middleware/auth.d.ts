@@ -1,15 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 export interface AuthenticatedRequest extends Request {
-    user?: {
-        id: string;
-        role: string;
-    };
+  user?: {
+    id: string;
+    role: string;
+  };
 }
 /**
  * Authentication middleware
  * Supports both API keys and JWT tokens
  */
-export declare function authenticate(req: AuthenticatedRequest, res: Response, next: NextFunction): void;
+export declare function authenticate(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): void;
 /**
  * Generate JWT token
  */

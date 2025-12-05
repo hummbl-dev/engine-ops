@@ -7,22 +7,22 @@ region: Central/Eastern Europe
 century: 20
 lattice_attributes:
   role:
-  - Physicist
-  - Chemist
+    - Physicist
+    - Chemist
   school_of_thought: Scientific Method
   language_group: Slavic (Polish), Romance (French)
   religion_of_origin: Catholic (Polish)
   gender: Female
   economic_context: Industrial Capitalism
   field_of_study:
-  - Physics
-  - Chemistry
-  - Radioactivity
+    - Physics
+    - Chemistry
+    - Radioactivity
   nationality: Polish-French
   notable_works:
-  - Research on Radioactivity
+    - Research on Radioactivity
   achievements:
-  - First woman Nobel Prize, first double Nobel Prize
+    - First woman Nobel Prize, first double Nobel Prize
   metadata:
     element: Discovered Radium and Polonium
 era_context: Late 19th to early 20th century Europe; scientific revolution in physics;
@@ -41,20 +41,20 @@ core_philosophy: 'Nothing in life is to be feared, it is only to be understood.
 
   '
 key_ideas:
-- Nothing to be feared, only understood
-- Rigorous method and bold intuition
-- Persistence overcomes obstacles
-- Knowledge belongs to humanity
-- Truth worth personal sacrifice
+  - Nothing to be feared, only understood
+  - Rigorous method and bold intuition
+  - Persistence overcomes obstacles
+  - Knowledge belongs to humanity
+  - Truth worth personal sacrifice
 relationships:
   influences:
-  - Women in science
-  - Radioactivity research
-  - Medical physics
-  - Scientific collaboration
+    - Women in science
+    - Radioactivity research
+    - Medical physics
+    - Scientific collaboration
   influenced_by:
-  - Pierre Curie (husband)
-  - Henri Becquerel
-  - Scientific method
+    - Pierre Curie (husband)
+    - Henri Becquerel
+    - Scientific method
   persona_influences: []
   persona_influenced_by: []
