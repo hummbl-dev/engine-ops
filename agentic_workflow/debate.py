@@ -28,6 +28,7 @@ from datetime import datetime, timezone
 import json
 
 from .instructions import SystemPrompt
+from .agents.resolution_agent import ResolutionAgent
 
 @dataclass
 class DebatePosition:

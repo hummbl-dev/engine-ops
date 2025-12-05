@@ -26,7 +26,6 @@ from ..agent_base import Agent
 from ..context import AgentContext
 from ..enforcer import get_policy_enforcer
 from ..telemetry import TelemetryCollector, EventType
-from ..debate import get_debate_orchestrator
 
 
 class ResolutionAgent(Agent):
@@ -263,7 +262,8 @@ class ResolutionAgent(Agent):
             Resolution results with debate metadata
         """
         import json
-        
+        from ..debate import get_debate_orchestrator
+
         orchestrator = get_debate_orchestrator()
         resolved = []
         failed = []
