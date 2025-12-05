@@ -175,7 +175,12 @@ class TriageAgent(Agent):
         """
         
         response = self.ask_brain(prompt, detections)
-        
+
+        # Check if LLM is available (response doesn't start with ERROR)
+        if response.startswith("ERROR:"):
+            # LLM not available, use rule-based triage
+            return self._rule_based_triage(detections, context)
+
         try:
             # Clean up response if it contains markdown
             cleaned_response = response.strip()
@@ -183,38 +188,96 @@ class TriageAgent(Agent):
                 cleaned_response = cleaned_response[7:]
             if cleaned_response.endswith("```"):
                 cleaned_response = cleaned_response[:-3]
-            
+
             result = json.loads(cleaned_response.strip())
-            
+
             # Ensure prioritized list exists
             if "prioritized" not in result:
                 result["prioritized"] = []
-                
+
             # Add triaged_at timestamp
             for item in result["prioritized"]:
                 item["triaged_at"] = context.temporal.start_time.isoformat()
-                
+
             result["total_triaged"] = len(detections)
             return result
-            
+
         except json.JSONDecodeError:
             self.telemetry.error(f"Failed to parse LLM triage response: {response}", agent_id=self.agent_id)
-            # Fallback to empty result
-            return {
-                "prioritized": [],
-                "critical_count": 0,
-                "requires_immediate_action": False,
-                "total_triaged": len(detections)
-            }
+            # Fallback to rule-based triage
+            return self._rule_based_triage(detections, context)
         except Exception as e:
             self.telemetry.error(f"Error in triage analysis: {e}", agent_id=self.agent_id)
-            return {
-                "prioritized": [],
-                "critical_count": 0,
-                "requires_immediate_action": False,
-                "total_triaged": len(detections)
-            }
-    
+            # Fallback to rule-based triage
+            return self._rule_based_triage(detections, context)
+
+    def _rule_based_triage(
+        self,
+        detections: List[Dict[str, Any]],
+        context: AgentContext
+    ) -> Dict[str, Any]:
+        """
+        Perform rule-based triage when LLM is not available.
+
+        Args:
+            detections: List of detected issues
+            context: Agent context
+
+        Returns:
+            Triage results with prioritization
+        """
+        prioritized = []
+
+        for detection in detections:
+            severity = detection.get("severity", "low")
+            confidence = detection.get("confidence", 0.0)
+
+            # Calculate priority score based on severity and confidence
+            priority_score = self.severity_weights.get(severity, 1) * confidence
+
+            # Determine priority level
+            if priority_score >= 8.0:
+                priority = "critical"
+            elif priority_score >= 5.0:
+                priority = "high"
+            elif priority_score >= 2.0:
+                priority = "normal"
+            else:
+                priority = "low"
+
+            # Assign resolution path based on priority
+            if priority == "critical":
+                resolution_path = "immediate_escalation"
+            elif priority == "high":
+                resolution_path = "resource_optimization"
+            elif severity == "high" or confidence > 0.7:
+                resolution_path = "error_mitigation"
+            else:
+                resolution_path = "standard_queue"
+
+            triaged_issue = detection.copy()
+            triaged_issue.update({
+                "priority": priority,
+                "priority_score": priority_score,
+                "resolution_path": resolution_path,
+                "triaged_at": context.temporal.start_time.isoformat()
+            })
+            prioritized.append(triaged_issue)
+
+        # Sort by priority score (highest first)
+        prioritized.sort(key=lambda x: x["priority_score"], reverse=True)
+
+        # Count critical issues
+        critical_count = sum(1 for issue in prioritized if issue["priority"] == "critical")
+        requires_immediate_action = critical_count > 0
+
+        return {
+            "prioritized": prioritized,
+            "critical_count": critical_count,
+            "requires_immediate_action": requires_immediate_action,
+            "total_triaged": len(detections)
+        }
+
     def _assign_resolution_path(
         self,
         detection: Dict[str, Any],
