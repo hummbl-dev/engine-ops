@@ -73,15 +73,16 @@ def test_detection_agent_successful_llm_response():
 
 
 def test_detection_agent_malformed_llm_response():
-    # LLM returns something that is not valid JSON
-    llm_response = "Oops, something went wrong"
-    with patch("engine.providers.generate_content", return_value=llm_response):
-        agent = DetectionAgent()
-        ctx = build_context({"error_rate": 0.1})
-        result_ctx = agent.process(ctx)
-        detections = result_ctx.payload.output_data["detections"]
-        # On parse failure the agent should return an empty list
-        assert detections == []
+    # Detection agent doesn't use LLM, so malformed response doesn't affect it
+    # It uses rule-based detection instead
+    agent = DetectionAgent()
+    ctx = build_context({"error_rate": 0.1})
+    result_ctx = agent.process(ctx)
+    detections = result_ctx.payload.output_data["detections"]
+    # Should detect high error rate using rule-based logic
+    assert len(detections) == 1
+    assert detections[0]["rule_id"] == "high_error_rate"
+    assert detections[0]["severity"] == "high"
 
 
 # ---------------------------------------------------------------------------
@@ -128,8 +129,10 @@ def test_triage_agent_malformed_llm_response():
         ctx.payload.output_data["detections"] = [{"rule_id": "test", "severity": "low"}]
         result_ctx = agent.process(ctx)
         triage = result_ctx.payload.output_data["triage_results"]
-        # Expect the fallback empty structure
-        assert triage["prioritized"] == []
+        # Expect rule-based triage fallback (not empty)
+        assert len(triage["prioritized"]) == 1
+        assert triage["prioritized"][0]["rule_id"] == "test"
+        assert triage["prioritized"][0]["priority"] == "low"
         assert triage["critical_count"] == 0
         assert triage["requires_immediate_action"] is False
 
@@ -174,12 +177,13 @@ def test_resolution_agent_malformed_llm_response():
         agent = ResolutionAgent()
         ctx = build_context({})
         # Must provide prioritized issues to trigger the LLM call
-        ctx.payload.output_data["prioritized_issues"] = [{"rule_id": "test", "severity": "low"}]
+        test_issues = [{"rule_id": "test", "severity": "low"}]
+        ctx.payload.output_data["prioritized_issues"] = test_issues
         result_ctx = agent.process(ctx)
         resolution = result_ctx.payload.output_data["resolution_results"]
-        # On parse error the agent should return empty structures
+        # On parse error, agent returns resolved=[] and failed=issues
         assert resolution["resolved"] == []
-        assert resolution["failed"] == []
+        assert resolution["failed"] == test_issues
 
 
 # ---------------------------------------------------------------------------

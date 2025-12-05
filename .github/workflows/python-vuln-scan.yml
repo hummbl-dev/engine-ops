@@ -23,5 +23,4 @@ jobs:
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run pip-audit
-        run: |
-          if [ -f requirements.txt ]; then pip-audit -r requirements.txt; else echo "No requirements.txt found"; fi
+        run: pip-audit
