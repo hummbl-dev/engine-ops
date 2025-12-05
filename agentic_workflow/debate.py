@@ -293,21 +293,24 @@ Provide your response in JSON format:
             return 0.3  # Low convergence if actions differ
 
     def _judge_decision(
-        self, issue: Dict[str, Any], red_position: Optional[DebatePosition], blue_position: Optional[DebatePosition]
+        self,
+        issue: Dict[str, Any],
+        red_position: Optional[DebatePosition],
+        blue_position: Optional[DebatePosition],
     ) -> Dict[str, Any]:
         """Have judge synthesize final decision."""
         prompt = f"""
 As a neutral judge, synthesize the best decision from these two positions:
 
 RED TEAM (Conservative):
-{json.dumps(red_position.proposal, indent=2)}
-Argument: {red_position.arguments[0] if red_position.arguments else 'None'}
-Confidence: {red_position.confidence}
+{json.dumps(red_position.proposal, indent=2) if red_position else 'No position'}
+Argument: {red_position.arguments[0] if red_position and red_position.arguments else 'None'}
+Confidence: {red_position.confidence if red_position else 'None'}
 
 BLUE TEAM (Aggressive):
-{json.dumps(blue_position.proposal, indent=2)}
-Argument: {blue_position.arguments[0] if blue_position.arguments else 'None'}
-Confidence: {blue_position.confidence}
+{json.dumps(blue_position.proposal, indent=2) if blue_position else 'No position'}
+Argument: {blue_position.arguments[0] if blue_position and blue_position.arguments else 'None'}
+Confidence: {blue_position.confidence if blue_position else 'None'}
 
 Provide your final decision in JSON format:
 {{
@@ -329,7 +332,7 @@ Provide your final decision in JSON format:
         except Exception as e:
             # Fallback: favor red team (conservative) on error
             return {
-                **red_position.proposal,
+                **(red_position.proposal if red_position else {}),
                 "rationale": f"Defaulted to conservative approach due to error: {e}",
             }
 

@@ -35,7 +35,7 @@ try:
     from engine.providers import generate_content
 except ImportError:
     # Fallback
-    def generate_content(*args, **kwargs):
+    def generate_content(*args, **kwargs):  # type: ignore[misc]
         return "ERROR: Engine not found"
 
 

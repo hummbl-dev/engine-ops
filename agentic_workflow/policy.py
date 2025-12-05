@@ -35,7 +35,7 @@ try:
     from engine.providers import generate_content
 except ImportError:
     # Fallback for when running tests in isolation or if engine not found
-    def generate_content(*args, **kwargs):
+    def generate_content(*args, **kwargs):  # type: ignore[misc]
         return "SAFE"
 
 
