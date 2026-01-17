@@ -225,7 +225,7 @@ def _generate_advice_sync(topic: str, member: CouncilMember, context: Optional[s
             except Exception as schema_error:
                 # Fallback to legacy PERSONA_INSTRUCTIONS
                 print(f"Warning: Schema-based prompt failed for {member.value}, using legacy: {schema_error}")
-        persona = PERSONA_INSTRUCTIONS[member]
+                persona = PERSONA_INSTRUCTIONS[member]
                 prompt = f"""{persona}
 
 The user is asking about: {topic}
@@ -237,7 +237,7 @@ Remember: Do not use prescriptive language like "you must" or "solution" - prese
         else:
             # Legacy path
             persona = PERSONA_INSTRUCTIONS[member]
-        prompt = f"""{persona}
+            prompt = f"""{persona}
 
 The user is asking about: {topic}
 {f"Additional context: {context}" if context else ""}

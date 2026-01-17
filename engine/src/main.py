@@ -8,6 +8,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from .adapter import generate_advice, generate_multi_advice, CouncilMember as AdapterCouncilMember
+from .prompt_packs import (
+    get_all_prompt_packs,
+    get_prompt_pack,
+    get_prompt_packs_by_category,
+    get_pack_categories,
+    search_prompts,
+    get_featured_prompts,
+    PromptCategory
+)
 
 app = FastAPI(
     title="HUMMBL Sovereign Engine",
@@ -1039,6 +1048,11 @@ async def custom_swagger_ui_html():
             flex-direction: column;
             font-family: 'JetBrains Mono', monospace;
         }
+
+        .matrix-controls-row {
+            display: flex;
+            gap: 10px;
+        }
         
         .matrix-control-btn {
             background: var(--matrix-bg-secondary);
@@ -1117,6 +1131,99 @@ async def custom_swagger_ui_html():
             border-radius: 3px;
         }
         
+        /* Prompt Packs Browser */
+        .matrix-prompt-packs {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-height: 400px;
+            background: var(--matrix-bg-secondary);
+            border: 2px solid var(--matrix-green);
+            box-shadow: 0 0 30px var(--matrix-green);
+            display: none;
+            flex-direction: column;
+            font-family: 'JetBrains Mono', monospace;
+            z-index: 16000;
+        }
+
+        .matrix-prompt-packs.active {
+            display: flex;
+        }
+
+        .matrix-prompt-packs-search {
+            padding: 12px;
+            border-bottom: 1px solid var(--matrix-border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .matrix-prompt-packs-list {
+            padding: 12px;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .matrix-prompt-pack-item {
+            margin-bottom: 12px;
+            padding: 8px;
+            border: 1px solid var(--matrix-border);
+            border-left: 3px solid var(--matrix-green);
+            background: var(--matrix-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .matrix-prompt-pack-item:hover {
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 10px var(--matrix-green);
+        }
+
+        .matrix-prompt-pack-title {
+            color: var(--matrix-green);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .matrix-prompt-pack-desc {
+            color: var(--matrix-text-dim);
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .matrix-prompt-pack-meta {
+            color: var(--matrix-text-dim);
+            font-size: 11px;
+        }
+
+        .matrix-prompt-item {
+            margin: 8px 0;
+            padding: 6px;
+            border-left: 2px solid var(--matrix-border);
+            background: var(--matrix-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .matrix-prompt-item:hover {
+            border-left-color: var(--matrix-green);
+            background: var(--matrix-bg-secondary);
+        }
+
+        .matrix-prompt-item-title {
+            color: var(--matrix-green);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .matrix-prompt-item-desc {
+            color: var(--matrix-text-dim);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
         /* Terminal Command Interface */
         .matrix-terminal {
             position: fixed;
@@ -1212,10 +1319,17 @@ async def custom_swagger_ui_html():
     
     <!-- Theme Controls and Terminal -->
     <div class="matrix-controls">
-        <a href="/readme" class="matrix-control-btn" title="View README" style="text-decoration: none; display: inline-block;">README</a>
-        <button class="matrix-control-btn" id="matrix-theme-toggle" title="Toggle Theme Intensity">THEME: MEDIUM</button>
-        <button class="matrix-control-btn" id="matrix-shortcuts-btn" title="Keyboard Shortcuts (?)">SHORTCUTS (?)</button>
-        <button class="matrix-control-btn" id="matrix-terminal-btn" title="Terminal Interface (~)">TERMINAL (~)</button>
+        <div class="matrix-controls-row">
+            <a href="/readme" class="matrix-control-btn" title="View README" style="text-decoration: none; display: inline-block;">README</a>
+            <button class="matrix-control-btn" id="matrix-prompt-packs-btn" title="Browse Prompt Packs">PROMPTS</button>
+        </div>
+        <div class="matrix-controls-row">
+            <button class="matrix-control-btn" id="matrix-theme-toggle" title="Toggle Theme Intensity">THEME: MEDIUM</button>
+            <button class="matrix-control-btn" id="matrix-shortcuts-btn" title="Keyboard Shortcuts (?)">SHORTCUTS (?)</button>
+        </div>
+        <div class="matrix-controls-row">
+            <button class="matrix-control-btn" id="matrix-terminal-btn" title="Terminal Interface (~)">TERMINAL (~)</button>
+        </div>
     </div>
     
     <!-- Keyboard Shortcuts Modal -->
@@ -1243,12 +1357,44 @@ async def custom_swagger_ui_html():
                 <span class="shortcut-key">CTRL+ENTER</span>
             </div>
             <div class="shortcut-item">
+                <span>Open Prompt Packs</span>
+                <span class="shortcut-key">P</span>
+            </div>
+            <div class="shortcut-item">
                 <span>Focus Search</span>
                 <span class="shortcut-key">/</span>
             </div>
         </div>
     </div>
     
+    <!-- Prompt Packs Browser -->
+    <div class="matrix-prompt-packs" id="matrix-prompt-packs">
+        <div class="matrix-terminal-header">
+            <span>PROMPT PACKS</span>
+            <button class="matrix-terminal-close" id="matrix-prompt-packs-close">×</button>
+        </div>
+        <div class="matrix-prompt-packs-body" id="matrix-prompt-packs-body">
+            <div class="matrix-prompt-packs-search">
+                <input type="text" class="matrix-terminal-input" id="matrix-prompt-search" placeholder="Search prompts..." autocomplete="off">
+                <select class="matrix-terminal-input" id="matrix-prompt-category">
+                    <option value="">All Categories</option>
+                    <option value="strategy">Strategy</option>
+                    <option value="leadership">Leadership</option>
+                    <option value="personal">Personal</option>
+                    <option value="business">Business</option>
+                    <option value="creative">Creative</option>
+                    <option value="technical">Technical</option>
+                </select>
+            </div>
+            <div class="matrix-prompt-packs-list" id="matrix-prompt-packs-list">
+                <div class="matrix-terminal-line">
+                    <span class="matrix-terminal-prompt">></span>
+                    <span class="matrix-terminal-output">Loading prompt packs...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Terminal Command Interface -->
     <div class="matrix-terminal" id="matrix-terminal">
         <div class="matrix-terminal-header">
@@ -1272,86 +1418,26 @@ async def custom_swagger_ui_html():
     </div>
     
     <script>
-        // Theme Intensity Toggle
-        let currentTheme = 'medium';
-        const themeToggle = document.getElementById('matrix-theme-toggle');
-        const body = document.body;
-        const html = document.documentElement;
-        
-        const themes = ['subtle', 'medium', 'intense'];
-        const themeLabels = ['SUBTLE', 'MEDIUM', 'INTENSE'];
-        
-        function applyTheme(theme) {
-            // Define theme values - More pronounced differences
-            const themeValues = {
-                subtle: { glow: '0.2', rain: '0.005', shadow: '0.2' },
-                medium: { glow: '0.6', rain: '0.02', shadow: '0.6' },
-                intense: { glow: '1.5', rain: '0.08', shadow: '1.5' }
-            };
-            
-            const values = themeValues[theme];
-            
-            // Remove all theme classes
-            html.classList.remove('theme-subtle', 'theme-medium', 'theme-intense');
-            body.classList.remove('theme-subtle', 'theme-medium', 'theme-intense');
-            
-            // Add new theme class
-            html.classList.add(`theme-${theme}`);
-            body.classList.add(`theme-${theme}`);
-            
-            // Set CSS variables on :root via document.documentElement.style (highest priority)
-            document.documentElement.style.setProperty('--glow-intensity', values.glow, 'important');
-            document.documentElement.style.setProperty('--rain-opacity', values.rain, 'important');
-            document.documentElement.style.setProperty('--text-shadow-intensity', values.shadow, 'important');
-            
-            // Also set on html and body as backup
-            html.style.setProperty('--glow-intensity', values.glow, 'important');
-            html.style.setProperty('--rain-opacity', values.rain, 'important');
-            html.style.setProperty('--text-shadow-intensity', values.shadow, 'important');
-            
-            body.style.setProperty('--glow-intensity', values.glow, 'important');
-            body.style.setProperty('--rain-opacity', values.rain, 'important');
-            body.style.setProperty('--text-shadow-intensity', values.shadow, 'important');
-            
-            // Update button text
-            const index = themes.indexOf(theme);
-            themeToggle.textContent = `THEME: ${themeLabels[index]}`;
-            
-            // Force repaint by accessing offsetHeight
-            void html.offsetHeight;
-            void body.offsetHeight;
-            
-            // Verify the values were set and force recalculation
-            const rootStyle = getComputedStyle(document.documentElement);
-            
-            // Force all elements to recalculate by toggling a data attribute
-            document.documentElement.setAttribute('data-theme', theme);
-            
-            // Trigger a reflow on all swagger-ui elements
-            const swaggerElements = document.querySelectorAll('.swagger-ui, .swagger-ui *');
-            swaggerElements.forEach(el => {
-                el.style.display = 'none';
-                void el.offsetHeight;
-                el.style.display = '';
-            });
-            
-            // Log the actual computed values
-            const glowValue = rootStyle.getPropertyValue('--glow-intensity').trim();
-            const rainValue = rootStyle.getPropertyValue('--rain-opacity').trim();
-            const shadowValue = rootStyle.getPropertyValue('--text-shadow-intensity').trim();
-            
-            console.log(`✓ Theme changed to: ${theme.toUpperCase()}`);
-            console.log(`  Glow: ${glowValue || 'NOT SET'}`);
-            console.log(`  Rain: ${rainValue || 'NOT SET'}`);
-            console.log(`  Shadow: ${shadowValue || 'NOT SET'}`);
-            
-            // Visual test - update title to show intensity
-            const title = document.querySelector('.swagger-ui .info .title');
-            if (title) {
-                const intensity = theme === 'subtle' ? '30%' : theme === 'medium' ? '70%' : '100%';
-                title.setAttribute('data-intensity', intensity);
+        console.log('Script loaded, waiting for DOMContentLoaded...');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded fired, initializing Matrix interface...');
+
+            // Theme Intensity Toggle
+            let currentTheme = 'medium';
+            const themeToggle = document.getElementById('matrix-theme-toggle');
+            const body = document.body;
+            const html = document.documentElement;
+
+            const themes = ['subtle', 'medium', 'intense'];
+            const themeLabels = ['SUBTLE', 'MEDIUM', 'INTENSE'];
+
+            function applyTheme(theme) {
+                // Simple theme application
+                const index = themes.indexOf(theme);
+                themeToggle.textContent = `THEME: ${themeLabels[index]}`;
+                console.log(`Theme changed to: ${theme}`);
             }
-        }
         
         themeToggle.addEventListener('click', () => {
             const currentIndex = themes.indexOf(currentTheme);
@@ -1371,6 +1457,23 @@ async def custom_swagger_ui_html():
             shortcutsModal.classList.toggle('active');
         });
         
+        // Prompt Packs Browser
+        const promptPacks = document.getElementById('matrix-prompt-packs');
+        const promptPacksBtn = document.getElementById('matrix-prompt-packs-btn');
+        const promptPacksClose = document.getElementById('matrix-prompt-packs-close');
+        const promptPacksList = document.getElementById('matrix-prompt-packs-list');
+        const promptSearch = document.getElementById('matrix-prompt-search');
+        const promptCategory = document.getElementById('matrix-prompt-category');
+
+        console.log('Prompt packs elements found:', {
+            promptPacks: !!promptPacks,
+            promptPacksBtn: !!promptPacksBtn,
+            promptPacksClose: !!promptPacksClose,
+            promptPacksList: !!promptPacksList,
+            promptSearch: !!promptSearch,
+            promptCategory: !!promptCategory
+        });
+
         // Terminal Interface
         const terminal = document.getElementById('matrix-terminal');
         const terminalBtn = document.getElementById('matrix-terminal-btn');
@@ -1385,6 +1488,38 @@ async def custom_swagger_ui_html():
             }
         });
         
+        if (promptPacksBtn) {
+            promptPacksBtn.addEventListener('click', () => {
+                console.log('Prompt packs button clicked');
+                if (promptPacks) {
+                    const wasActive = promptPacks.classList.contains('active');
+                    promptPacks.classList.toggle('active');
+                    const isActive = promptPacks.classList.contains('active');
+                    console.log('Modal active class toggled from', wasActive, 'to', isActive);
+                    console.log('Modal element:', promptPacks);
+                    console.log('Modal computed style display:', window.getComputedStyle(promptPacks).display);
+                    console.log('Modal bounding rect:', promptPacks.getBoundingClientRect());
+
+                    if (isActive) {
+                        console.log('Loading prompt packs...');
+                        loadPromptPacks();
+                    }
+                } else {
+                    console.error('Prompt packs modal not found');
+                }
+            });
+            console.log('Prompt packs button event listener attached');
+        } else {
+            console.error('Prompt packs button not found');
+        }
+
+        promptPacksClose.addEventListener('click', () => {
+            promptPacks.classList.remove('active');
+        });
+
+        promptSearch.addEventListener('input', filterPromptPacks);
+        promptCategory.addEventListener('change', filterPromptPacks);
+
         terminalClose.addEventListener('click', () => {
             terminal.classList.remove('active');
         });
@@ -1396,6 +1531,7 @@ async def custom_swagger_ui_html():
   help          - Show this help message
   clear         - Clear terminal
   theme [mode]  - Set theme (subtle/medium/intense)
+  prompts       - Open prompt packs browser
   endpoints     - List API endpoints
   version       - Show version info
   exit          - Close terminal`;
@@ -1414,11 +1550,20 @@ async def custom_swagger_ui_html():
                 }
                 return `Invalid theme. Use: ${themes.join(', ')}`;
             },
+            prompts: () => {
+                promptPacks.classList.add('active');
+                loadPromptPacks();
+                return 'Opening prompt packs browser...';
+            },
             endpoints: () => {
                 return `API Endpoints:
-  GET  /              - Root endpoint
-  POST /consult       - Consult council
-  POST /audit         - Run constitutional audit`;
+  GET  /                      - Root endpoint
+  POST /consult               - Consult council
+  POST /consult/multi         - Consult multiple members
+  GET  /prompt-packs          - List all prompt packs
+  GET  /prompt-packs/{id}     - Get specific pack
+  GET  /prompt-packs/search   - Search prompts
+  POST /audit                 - Run constitutional audit`;
             },
             version: () => {
                 return 'HUMMBL Sovereign Engine v0.1.0';
@@ -1461,6 +1606,221 @@ async def custom_swagger_ui_html():
             }
         });
         
+        // Prompt Packs Functions
+        async function loadPromptPacks() {
+            console.log('loadPromptPacks called');
+            if (!promptPacksList) {
+                console.error('promptPacksList element not found');
+                return;
+            }
+            try {
+                console.log('Fetching /prompt-packs...');
+                const response = await fetch('/prompt-packs');
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Data received:', data);
+
+                displayPromptPacks(data.packs);
+            } catch (error) {
+                console.error('Failed to load prompt packs:', error);
+                if (promptPacksList) {
+                    promptPacksList.innerHTML = '<div class="matrix-terminal-line"><span class="matrix-terminal-error">Failed to load prompt packs: ' + error.message + '</span></div>';
+                }
+            }
+        }
+
+        function displayPromptPacks(packs) {
+            console.log('displayPromptPacks called with', packs.length, 'packs');
+            if (!promptPacksList) {
+                console.error('promptPacksList element not found in displayPromptPacks');
+                return;
+            }
+
+            promptPacksList.innerHTML = '';
+
+            if (packs.length === 0) {
+                promptPacksList.innerHTML = '<div class="matrix-terminal-line"><span class="matrix-terminal-output">No prompt packs found</span></div>';
+                return;
+            }
+
+            packs.forEach(pack => {
+                console.log('Creating pack element for:', pack.name);
+                const packElement = document.createElement('div');
+                packElement.className = 'matrix-prompt-pack-item';
+                packElement.innerHTML = `
+                    <div class="matrix-prompt-pack-title">${pack.name}</div>
+                    <div class="matrix-prompt-pack-desc">${pack.description}</div>
+                    <div class="matrix-prompt-pack-meta">${pack.category} • ${pack.prompt_count} prompts</div>
+                `;
+
+                packElement.addEventListener('click', () => {
+                    console.log('Pack clicked:', pack.id);
+                    loadPromptPackDetails(pack.id);
+                });
+                promptPacksList.appendChild(packElement);
+            });
+            console.log('Pack elements created and appended');
+        }
+
+        async function loadPromptPackDetails(packId) {
+            try {
+                const response = await fetch(`/prompt-packs/${packId}`);
+                const pack = await response.json();
+
+                displayPromptPackDetails(pack);
+            } catch (error) {
+                console.error('Failed to load prompt pack details:', error);
+            }
+        }
+
+        function displayPromptPackDetails(pack) {
+            promptPacksList.innerHTML = `
+                <div class="matrix-terminal-line">
+                    <span class="matrix-terminal-prompt">></span>
+                    <span class="matrix-terminal-output" style="color: var(--matrix-green); font-weight: 700;">${pack.name}</span>
+                </div>
+                <div class="matrix-terminal-line">
+                    <span class="matrix-terminal-output">${pack.description}</span>
+                </div>
+                <div class="matrix-terminal-line">
+                    <span class="matrix-terminal-output" style="color: var(--matrix-text-dim); font-size: 12px;">${pack.category} • ${pack.prompts.length} prompts</span>
+                </div>
+                <div style="margin: 12px 0; border-top: 1px solid var(--matrix-border); padding-top: 8px;">
+                    ${pack.prompts.map(prompt => `
+                        <div class="matrix-prompt-item" onclick="usePrompt('${pack.id}', '${prompt.title}', '${prompt.topic.replace(/'/g, "\\'")}', '${prompt.member}')">
+                            <div class="matrix-prompt-item-title">${prompt.title}</div>
+                            <div class="matrix-prompt-item-desc">${prompt.description}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="matrix-terminal-line">
+                    <button class="matrix-control-btn" onclick="loadPromptPacks()" style="margin-top: 8px;">← Back to Packs</button>
+                </div>
+            `;
+        }
+
+        function filterPromptPacks() {
+            const searchTerm = promptSearch.value.toLowerCase();
+            const categoryFilter = promptCategory.value;
+
+            // This would need to be implemented with client-side filtering
+            // For now, just reload with search if implemented on backend
+            if (searchTerm || categoryFilter) {
+                // Could implement client-side filtering here
+                console.log('Filtering:', searchTerm, categoryFilter);
+            }
+        }
+
+        // Global function for prompt selection
+        window.usePrompt = function(packId, title, topic, member) {
+            console.log('usePrompt called with:', { packId, title, topic, member });
+
+            // Close the prompt packs modal
+            const promptPacks = document.getElementById('matrix-prompt-packs');
+            if (promptPacks) {
+                promptPacks.classList.remove('active');
+            }
+
+            // Find the consult endpoint and expand it
+            const consultEndpoint = document.querySelector('.opblock.opblock-post');
+            if (consultEndpoint) {
+                console.log('Found consult endpoint');
+
+                // Expand the endpoint if collapsed
+                if (!consultEndpoint.classList.contains('is-open')) {
+                    const summaryControl = consultEndpoint.querySelector('.opblock-summary-control');
+                    if (summaryControl) {
+                        summaryControl.click();
+                        console.log('Clicked to expand endpoint');
+                    }
+                }
+
+                // Wait for the form to be visible, then populate it
+                setTimeout(() => {
+                    console.log('Attempting to populate form...');
+
+                    // Try multiple selector strategies for the form fields
+                    let topicTextarea = null;
+                    let memberSelect = null;
+
+                    // Strategy 1: Look within the endpoint body
+                    const endpointBody = consultEndpoint.querySelector('.opblock-body');
+                    if (endpointBody) {
+                        topicTextarea = endpointBody.querySelector('textarea');
+                        memberSelect = endpointBody.querySelector('select');
+                        console.log('Strategy 1 - Found in endpoint body:', { topicTextarea: !!topicTextarea, memberSelect: !!memberSelect });
+                    }
+
+                    // Strategy 2: Look globally for form fields (more specific selectors)
+                    if (!topicTextarea) {
+                        topicTextarea = document.querySelector('textarea[placeholder*="topic"], textarea[placeholder*="Topic"]');
+                        console.log('Strategy 2 - Found topic textarea globally:', !!topicTextarea);
+                    }
+
+                    if (!memberSelect) {
+                        memberSelect = document.querySelector('select[placeholder*="member"], select[placeholder*="Member"]');
+                        console.log('Strategy 2 - Found member select globally:', !!memberSelect);
+                    }
+
+                    // Strategy 3: Look for parameters by name
+                    if (!topicTextarea) {
+                        const topicParam = document.querySelector('.parameter__name');
+                        if (topicParam && topicParam.textContent.toLowerCase().includes('topic')) {
+                            topicTextarea = topicParam.closest('.parameter').querySelector('textarea, input');
+                        }
+                        console.log('Strategy 3 - Found topic by parameter name:', !!topicTextarea);
+                    }
+
+                    if (!memberSelect) {
+                        const memberParam = Array.from(document.querySelectorAll('.parameter__name')).find(el =>
+                            el.textContent.toLowerCase().includes('member')
+                        );
+                        if (memberParam) {
+                            memberSelect = memberParam.closest('.parameter').querySelector('select');
+                        }
+                        console.log('Strategy 3 - Found member by parameter name:', !!memberSelect);
+                    }
+
+                    // Populate the fields if found
+                    if (topicTextarea) {
+                        topicTextarea.value = topic;
+                        topicTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+                        topicTextarea.dispatchEvent(new Event('change', { bubbles: true }));
+                        console.log('Populated topic textarea with:', topic);
+                    } else {
+                        console.log('Could not find topic textarea');
+                    }
+
+                    if (memberSelect) {
+                        memberSelect.value = member;
+                        memberSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                        console.log('Populated member select with:', member);
+                    } else {
+                        console.log('Could not find member select');
+                    }
+
+                    // Show success message
+                    if (topicTextarea || memberSelect) {
+                        console.log(`✅ Successfully populated form with prompt: ${title}`);
+                    } else {
+                        console.log(`❌ Could not populate form - fields not found for prompt: ${title}`);
+                    }
+                }, 500); // Give more time for the form to expand
+            } else {
+                console.log('Could not find consult endpoint');
+            }
+        };
+
+            // Close the prompt packs modal
+            promptPacks.classList.remove('active');
+
+            // Show success message
+            console.log(`Selected prompt: ${title} from ${packId}`);
+        };
+
         // Global Keyboard Shortcuts
         document.addEventListener('keydown', (e) => {
             // Toggle terminal with ~
@@ -1492,12 +1852,29 @@ async def custom_swagger_ui_html():
                     themeToggle.click();
                 }
             }
+
+            // Open prompt packs with P
+            if (e.key === 'p' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                const activeElement = document.activeElement;
+                if (activeElement.tagName !== 'INPUT' && activeElement.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    promptPacksBtn.click();
+                }
+            }
             
             // Close modals with ESC
             if (e.key === 'Escape') {
                 shortcutsModal.classList.remove('active');
                 terminal.classList.remove('active');
             }
+        });
+
+        // Initialize immediately if DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
         });
     </script>
     """
@@ -1532,6 +1909,13 @@ async def root():
         "message": "HUMMBL Sovereign Engine",
         "endpoints": {
             "/consult": "POST - Consult the council",
+            "/consult/multi": "POST - Consult multiple council members",
+            "/prompt-packs": "GET - List all prompt packs",
+            "/prompt-packs/{id}": "GET - Get specific prompt pack",
+            "/prompt-packs/categories": "GET - List categories",
+            "/prompt-packs/categories/{cat}": "GET - Get packs by category",
+            "/prompt-packs/featured": "GET - Get featured prompts",
+            "/prompt-packs/search?q=term": "GET - Search prompts",
             "/audit": "POST - Run constitutional audit",
             "/docs": "GET - Interactive API documentation",
             "/readme": "GET - Project README",
@@ -2137,6 +2521,97 @@ async def get_relationship_graph_dot():
     from .relationship_graph import relationship_graph
     from fastapi.responses import PlainTextResponse
     return PlainTextResponse(relationship_graph.to_dot(), media_type="text/plain")
+
+@app.get("/prompt-packs")
+async def get_prompt_packs():
+    """Get all available prompt packs."""
+    packs = get_all_prompt_packs()
+    return {
+        "packs": [
+            {
+                "id": pack.id,
+                "name": pack.name,
+                "description": pack.description,
+                "category": pack.category.value,
+                "prompt_count": len(pack.prompts),
+                "author": pack.author,
+                "version": pack.version
+            }
+            for pack in packs
+        ],
+        "total": len(packs)
+    }
+
+@app.get("/prompt-packs/{pack_id}")
+async def get_prompt_pack_by_id(pack_id: str):
+    """Get a specific prompt pack by ID."""
+    pack = get_prompt_pack(pack_id)
+    if not pack:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail=f"Prompt pack '{pack_id}' not found")
+
+    return {
+        "id": pack.id,
+        "name": pack.name,
+        "description": pack.description,
+        "category": pack.category.value,
+        "author": pack.author,
+        "version": pack.version,
+        "prompts": pack.prompts
+    }
+
+@app.get("/prompt-packs/categories/{category}")
+async def get_prompt_packs_by_category_endpoint(category: str):
+    """Get prompt packs by category."""
+    try:
+        category_enum = PromptCategory(category)
+    except ValueError:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail=f"Invalid category '{category}'. Valid categories: {[c.value for c in PromptCategory]}")
+
+    packs = get_prompt_packs_by_category(category_enum)
+    return {
+        "category": category,
+        "packs": [
+            {
+                "id": pack.id,
+                "name": pack.name,
+                "description": pack.description,
+                "prompt_count": len(pack.prompts)
+            }
+            for pack in packs
+        ],
+        "total": len(packs)
+    }
+
+@app.get("/prompt-packs/categories")
+async def get_categories():
+    """Get all available prompt pack categories."""
+    return {
+        "categories": [cat.value for cat in get_pack_categories()]
+    }
+
+@app.get("/prompt-packs/featured")
+async def get_featured():
+    """Get featured prompts from different categories."""
+    return {
+        "featured": get_featured_prompts(),
+        "total": len(get_featured_prompts())
+    }
+
+@app.get("/prompt-packs/search")
+async def search_prompts_endpoint(q: str):
+    """Search for prompts containing the query string."""
+    if not q or len(q.strip()) < 2:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail="Search query must be at least 2 characters long")
+
+    results = search_prompts(q.strip())
+    return {
+        "query": q,
+        "results": results,
+        "total": len(results)
+    }
 
 @app.post("/audit")
 async def run_constitutional_audit(data: dict):
